@@ -2965,82 +2965,81 @@ async function unlockUserFromList(username) {
                 });
             };
         
+            // ... بعد async function editUser(userId) وكل الكود السابق فيها ...
+// استبدل الجزء التالي:
+
             await preparePermissions(newRole);
             user.role = newRole;
         
             showConfirmModal(
-    `⚠️ هل تريد تعطيل المستخدم "${user.username}"؟\n\n` +
-    `• اضغط "نعم" ➜ تعطيل الحساب مع تغيير الصلاحية\n` +
-    `• اضغط "لا" ➜ تغيير الصلاحية فقط وإبقاء الحساب نشطاً`,
-    async function(disableUser) {
-        if (disableUser) {
-            user.status = 'inactive';
-            showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)} وتم تعطيل الحساب`, false);
-        } else {
-            user.status = 'active';
-            showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)} (الحساب نشط)`, false);
-        }
-        
-        await saveUsersToFirebase(); 
-        displayUsersList(); 
-        await addAuditLog('تعديل مستخدم', 'user', user.id, user.username, 
-            `تم تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)} بواسطة ${currentUser.name}`);
-    },
-    function() {
-        user.role = oldRole;
-        showMessage('❌ تم إلغاء التعديل', true);
-    }
-);
+                `⚠️ هل تريد تعطيل المستخدم "${user.username}"؟\n\n` +
+                `• اضغط "نعم" ➜ تعطيل الحساب مع تغيير الصلاحية\n` +
+                `• اضغط "لا" ➜ تغيير الصلاحية فقط وإبقاء الحساب نشطاً`,
+                async function(confirmed) {  // ✅ متغير واحد فقط
+                    if (confirmed) {
+                        // اختار نعم: تعطيل الحساب
+                        user.status = 'inactive';
+                        await saveUsersToFirebase();
+                        displayUsersList();
+                        await addAuditLog('تعديل مستخدم', 'user', user.id, user.username, 
+                            `تم تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)} وتم تعطيل الحساب بواسطة ${currentUser.name}`);
+                        showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)} وتم تعطيل الحساب`, false);
+                    } else if (confirmed === false) {
+                        // اختار لا: إبقاء الحساب نشطاً
+                        user.status = 'active';
+                        await saveUsersToFirebase();
+                        displayUsersList();
+                        await addAuditLog('تعديل مستخدم', 'user', user.id, user.username, 
+                            `تم تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)} بواسطة ${currentUser.name} (الحساب نشط)`);
+                        showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)} (الحساب نشط)`, false);
+                    }
+                },
+                function onCancel() {
+                    // المستخدم ألغى العملية (نقر خارج النافذة أو أغلقها)
+                    user.role = oldRole; // استعادة الصلاحية القديمة
+                    showMessage('❌ تم إلغاء تعديل صلاحية المستخدم', true);
+                }
+            );
         }
 
-        // ==================== نافذة التأكيد ====================
-        function showConfirmModal(message, onConfirm, onCancel = null) {
-            const modal = document.getElementById('confirmModal');
-            const confirmMessage = document.getElementById('confirmMessage');
-            const confirmYesBtn = document.getElementById('confirmYes');
-            const confirmNoBtn = document.getElementById('confirmNo');
-            
-            if (idleTimeout) clearTimeout(idleTimeout);
-            
-            confirmMessage.textContent = message;
-            modal.style.display = 'flex';
-            
-            const newYesBtn = confirmYesBtn.cloneNode(true);
-            const newNoBtn = confirmNoBtn.cloneNode(true);
-            confirmYesBtn.parentNode.replaceChild(newYesBtn, confirmYesBtn);
-            confirmNoBtn.parentNode.replaceChild(newNoBtn, confirmNoBtn);
-            
-            if (window.confirmModalCloseHandler) {
-                window.removeEventListener('click', window.confirmModalCloseHandler);
-            }
-            
-            const closeModal = () => {
-                modal.style.display = 'none';
-                if (window.confirmModalCloseHandler) {
-                    window.removeEventListener('click', window.confirmModalCloseHandler);
-                }
-                resetIdleTimer();
-            };
-            
-            newYesBtn.onclick = () => {
-                closeModal();
-                if (onConfirm) onConfirm(true);
-            };
-            
-            newNoBtn.onclick = () => {
-    closeModal();
-    if (onConfirm) onConfirm(false);
-    if (onCancel) onCancel();
-};
-            
-            window.confirmModalCloseHandler = (event) => {
-                if (event.target === modal) {
-                    closeModal();
-                    if (typeof onCancel === 'function') onCancel();
-                }
-            };
-            window.addEventListener('click', window.confirmModalCloseHandler);
+// ==================== نافذة التأكيد (مُصححة) ====================
+function showConfirmModal(message, onConfirm, onCancel = null) {
+    const modal = document.getElementById('confirmModal');
+    const confirmMessage = document.getElementById('confirmMessage');
+    const confirmYesBtn = document.getElementById('confirmYes');
+    const confirmNoBtn = document.getElementById('confirmNo');
+    
+    confirmMessage.textContent = message;
+    modal.style.display = 'flex';
+    
+    // إزالة المستمعات القديمة لمنع التكرار
+    const newYesBtn = confirmYesBtn.cloneNode(true);
+    const newNoBtn = confirmNoBtn.cloneNode(true);
+    confirmYesBtn.parentNode.replaceChild(newYesBtn, confirmYesBtn);
+    confirmNoBtn.parentNode.replaceChild(newNoBtn, confirmNoBtn);
+    
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+    
+    newYesBtn.onclick = () => {
+        closeModal();
+        if (onConfirm) onConfirm(true);  // ✅ استدعاء مرة واحدة فقط
+    };
+    
+    newNoBtn.onclick = () => {
+        closeModal();
+        if (onConfirm) onConfirm(false); // ✅ استدعاء false لرفض التغيير
+    };
+    
+    // النقر خارج النافذة يعتبر إلغاء
+    modal.onclick = (event) => {
+        if (event.target === modal) {
+            closeModal();
+            if (onCancel) onCancel();
         }
+    };
+}
 
         // ==================== دوال البحث ====================
         document.querySelectorAll('input[name="searchMethod"]').forEach(radio => {
