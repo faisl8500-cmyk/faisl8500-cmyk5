@@ -11,8 +11,8 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
+      "src": "icon-100.png",
+      "sizes": "100×100",
       "type": "image/png"
     },
     {
