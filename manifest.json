@@ -2,7 +2,7 @@
   "name": "منظومة فرع المرقب",
   "short_name": "فرع المرقب",
   "description": "إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب - فرع المرقب",
-  "start_url": "/faisl8500-cmyk.github.io/faisl8500-cmyk5/",
+  "start_url": "http://faisl8500-cmyk.github.io/faisl8500-cmyk5/",
   "display": "standalone",
   "background_color": "#f0f2f5",
   "theme_color": "#667eea",
