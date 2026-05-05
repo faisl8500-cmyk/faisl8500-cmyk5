@@ -2,7 +2,7 @@
   "name": "منظومة فرع المرقب",
   "short_name": "فرع المرقب",
   "description": "إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب - فرع المرقب",
-  "start_url": "/",
+  "start_url": "/faisl8500-cmyk5/",
   "display": "standalone",
   "background_color": "#f0f2f5",
   "theme_color": "#667eea",
@@ -11,12 +11,12 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "img/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "img/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
