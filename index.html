@@ -4431,6 +4431,8 @@ function startChatListener() {
     if (currentUser && lastMsg.username !== currentUser.name) {
         unreadCount++;
         updateUnreadBadge();
+        // تشغيل نغمة تنبيه قصيرة
+window.navigator.vibrate && window.navigator.vibrate(200);
         playNotificationSound(); // 🔊 تشغيل صوت التنبيه
     }
 }
