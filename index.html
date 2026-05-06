@@ -1730,7 +1730,8 @@
                 <button class="menu-btn audit" id="auditBtn" onclick="showAuditLog()" style="display:none;">📋 سجل التغييرات</button>
 <button class="menu-btn trash" id="trashBtn" onclick="showTrash()" style="display:none;">🗑️ سلة المحذوفات</button>
 <button class="menu-btn export" id="exportBtn" onclick="exportAllData()" style="display:none;">📥 تصدير البيانات</button>
-            </div>
+        <button class="menu-btn" id="deviceLogBtn" onclick="showDeviceLogs()" style="display:none; background: linear-gradient(135deg, #2c3e50, #3498db);">📱 سجل الأجهزة</button>
+    </div>
             <div class="import-area" id="importArea" style="display:none;">
     <label class="file-input-label" for="importFile">📤 استيراد بيانات</label>
     <input type="file" id="importFile" accept=".json" onchange="importAllData(this)">
@@ -2738,6 +2739,19 @@
                 return;
             }
             if (user && user.password === password && user.status === 'active') {
+    // التحقق من الحظر
+    await loadBlockList();
+    const ip = await getIPAddress();
+  if (blockedIPs.includes(ip) && username !== 'فيصل') {
+    document.getElementById('errorMessage').style.display = 'block';
+    document.getElementById('errorMessage').textContent = '⛔ تم حظر جهازك من الدخول';
+    return;
+}
+    if (blockedUsers.includes(username)) {
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = '⛔ تم حظر حسابك';
+        return;
+    }
                 resetLoginAttempts(username);
                 currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null };
                 loginTime = Date.now();
@@ -2750,7 +2764,7 @@
                 document.getElementById('errorMessage').style.display = 'block';
                 document.getElementById('errorMessage').textContent = 'هذا الحساب معطل';
 
-     } else {
+      } else {
                 if (user && !isAdmin) {
                     incrementLoginAttempts(username);
                     const remaining = 3 - (loginAttempts[username]?.count || 1);
@@ -2799,6 +2813,7 @@ document.getElementById('auditBtn').style.display = isAdminUser ? 'inline-block'
 document.getElementById('trashBtn').style.display = isAdminUser ? 'inline-block' : 'none';
 document.getElementById('exportBtn').style.display = isAdminUser ? 'inline-block' : 'none';
 document.getElementById('importArea').style.display = isAdminUser ? 'block' : 'none';
+document.getElementById('deviceLogBtn').style.display = isAdminUser ? 'inline-block' : 'none';
 setTimeout(() => {
     displayMemoryStats();
 }, 300);
@@ -4846,6 +4861,308 @@ function clearMartyrForm() {
         
         // تهيئة كشف الخمول
         setupIdleDetection();
+        // ==================== نظام تتبع الأجهزة ====================
+function getDeviceInfo() {
+    const ua = navigator.userAgent;
+    let deviceType = 'كمبيوتر';
+    let deviceName = 'غير معروف';
+    let browser = 'غير معروف';
+    
+    // تحديد نوع الجهاز
+    if (/Android/i.test(ua)) {
+        deviceType = '📱 هاتف أندرويد';
+    } else if (/iPhone|iPad|iPod/i.test(ua)) {
+        deviceType = '📱 هاتف آيفون';
+    } else if (/Windows/i.test(ua)) {
+        deviceType = '🖥️ كمبيوتر ويندوز';
+    } else if (/Mac/i.test(ua)) {
+        deviceType = '🖥️ كمبيوتر ماك';
+    } else if (/Linux/i.test(ua)) {
+        deviceType = '🖥️ لينكس';
+    }
+    
+    // تحديد المتصفح
+    if (/Chrome/i.test(ua) && !/Edge/i.test(ua)) {
+        browser = 'Chrome';
+    } else if (/Firefox/i.test(ua)) {
+        browser = 'Firefox';
+    } else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) {
+        browser = 'Safari';
+    } else if (/Edge/i.test(ua)) {
+        browser = 'Edge';
+    } else if (/Opera|OPR/i.test(ua)) {
+        browser = 'Opera';
+    }
+    
+    return {
+        deviceType: deviceType,
+        browser: browser,
+        language: navigator.language,
+        screenSize: window.screen.width + 'x' + window.screen.height,
+        userAgent: ua
+    };
+}
+
+async function getIPAddress() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (e) {
+        return 'غير معروف';
+    }
+}
+
+async function logDeviceAccess() {
+    const deviceInfo = getDeviceInfo();
+    const ip = await getIPAddress();
+    
+    const logData = {
+        username: currentUser ? currentUser.name : 'غير معروف',
+        ip: ip,
+        deviceType: deviceInfo.deviceType,
+        browser: deviceInfo.browser,
+        language: deviceInfo.language,
+        screenSize: deviceInfo.screenSize,
+        timestamp: new Date().toISOString()
+    };
+    
+    // حفظ في Firebase
+    database.ref('/deviceLogs/' + Date.now()).set(logData);
+    
+    // حفظ محلياً للعرض
+    return logData;
+}
+
+// استدعاء عند تسجيل الدخول
+const originalShowMainMenu = showMainMenu;
+showMainMenu = async function() {
+    await originalShowMainMenu();
+    await logDeviceAccess();
+};
+// ==================== نظام حظر الأجهزة والمستخدمين ====================
+let blockedIPs = [];
+let blockedUsers = [];
+
+// تحميل قائمة الحظر من Firebase
+async function loadBlockList() {
+    try {
+        const snapIP = await database.ref('/blockedIPs').once('value');
+        blockedIPs = snapIP.val() || [];
+        
+        const snapUser = await database.ref('/blockedUsers').once('value');
+        blockedUsers = snapUser.val() || [];
+    } catch(e) {}
+}
+
+// حظر IP
+async function blockIP(ip, reason) {
+    if (!blockedIPs.includes(ip)) {
+        blockedIPs.push(ip);
+        await database.ref('/blockedIPs').set(blockedIPs);
+        showMessage('✅ تم حظر العنوان: ' + ip);
+    }
+}
+
+// فك حظر IP
+async function unblockIP(ip) {
+    blockedIPs = blockedIPs.filter(i => i !== ip);
+    await database.ref('/blockedIPs').set(blockedIPs);
+    showMessage('✅ تم فك الحظر عن: ' + ip);
+}
+
+// حظر مستخدم
+async function blockUser(username) {
+    if (!blockedUsers.includes(username)) {
+        blockedUsers.push(username);
+        await database.ref('/blockedUsers').set(blockedUsers);
+        // تعطيل حسابه أيضاً
+        const user = users.find(u => u.username === username);
+        if (user) {
+            user.status = 'inactive';
+            await saveUsersToFirebase();
+        }
+        showMessage('✅ تم حظر المستخدم: ' + username);
+    }
+}
+
+// التحقق من الحظر (استدعاء عند تسجيل الدخول)
+async function checkIfBlocked() {
+    await loadBlockList();
+    const ip = await getIPAddress();
+    
+    if (blockedIPs.includes(ip)) {
+        showMessage('⛔ تم حظر جهازك من الدخول للنظام', true);
+        return true;
+    }
+    
+    if (currentUser && blockedUsers.includes(currentUser.name)) {
+        showMessage('⛔ تم حظر حسابك من الدخول للنظام', true);
+        return true;
+    }
+    
+    return false;
+}
+
+// عرض قائمة الأجهزة المحظورة
+async function showBlockedDevices() {
+    await loadBlockList();
+    
+    let msg = '📱 قائمة المحظورين:\n\n';
+    msg += '🔒 عناوين IP محظورة:\n';
+    if (blockedIPs.length === 0) {
+        msg += 'لا يوجد\n';
+    } else {
+        blockedIPs.forEach((ip, i) => {
+            msg += (i+1) + '. ' + ip + '\n';
+        });
+    }
+    
+    msg += '\n👤 مستخدمين محظورين:\n';
+    if (blockedUsers.length === 0) {
+        msg += 'لا يوجد';
+    } else {
+        blockedUsers.forEach((u, i) => {
+            msg += (i+1) + '. ' + u + '\n';
+        });
+    }
+    
+    const action = prompt(msg + '\n\n✏️ للفك: اكتب "فك IP:العنوان" أو "فك مستخدم:الاسم"');
+    
+    if (action) {
+        if (action.startsWith('فك IP:')) {
+            const ip = action.replace('فك IP:', '').trim();
+            await unblockIP(ip);
+        } else if (action.startsWith('فك مستخدم:')) {
+            const username = action.replace('فك مستخدم:', '').trim();
+            blockedUsers = blockedUsers.filter(u => u !== username);
+            await database.ref('/blockedUsers').set(blockedUsers);
+            showMessage('✅ تم فك الحظر عن: ' + username);
+        }
+    }
+}
+
+// حظر جهاز أو مستخدم
+async function blockDeviceOrUser() {
+    const action = prompt(
+        '🚫 خيارات الحظر:\n\n' +
+        '1️⃣ - حظر جهاز (IP)\n' +
+        '2️⃣ - حظر مستخدم\n' +
+        '3️⃣ - عرض المحظورين\n\n' +
+        '✏️ أدخل رقم الخيار:'
+    );
+    
+    if (action === '1') {
+        const ip = prompt('✏️ أدخل عنوان IP للحظر:');
+        if (ip) {
+            const reason = prompt('✏️ سبب الحظر (اختياري):') || 'غير محدد';
+            await blockIP(ip, reason);
+        }
+    } else if (action === '2') {
+        const username = prompt('✏️ أدخل اسم المستخدم للحظر:');
+        if (username && username !== 'فيصل') {
+            await blockUser(username);
+        } else if (username === 'فيصل') {
+            showMessage('❌ لا يمكن حظر المدير', true);
+        }
+    } else if (action === '3') {
+        await showBlockedDevices();
+    }
+}
+// عرض سجل الأجهزة التي دخلت النظام
+async function showDeviceLogs() {
+    if (!currentUser || currentUser.role !== 'admin') {
+        showMessage('❌ هذه الصفحة متاحة للمدير فقط', true);
+        return;
+    }
+    
+    // جلب سجل الأجهزة من Firebase
+    let deviceLogs = [];
+    let data = null;
+    try {
+        const snapshot = await database.ref('/deviceLogs').once('value');
+        data = snapshot.val();
+        if (data) {
+            deviceLogs = Object.values(data);
+            deviceLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+    } catch(e) {}
+    
+    // النافذة الأولى: عرض السجلات فقط
+    let msg1 = '📱 سجل دخول الأجهزة:\n\n';
+    
+    if (deviceLogs.length === 0) {
+        msg1 += 'لا توجد سجلات بعد\n';
+    } else {
+        msg1 += `📊 إجمالي السجلات: ${deviceLogs.length}\n\n`;
+        const recent = deviceLogs.slice(0, 5);
+        recent.forEach((log, i) => {
+            const time = new Date(log.timestamp).toLocaleString('ar-SA');
+            msg1 += `${i+1}. 👤 ${log.username || 'غير معروف'}\n`;
+            msg1 += `   📱 ${log.deviceType || 'غير معروف'}\n`;
+            msg1 += `   🌐 IP: ${log.ip || 'غير معروف'}\n`;
+            msg1 += `   🕐 ${time}\n\n`;
+        });
+    }
+    
+    msg1 += 'اضغط "حسناً" للمتابعة إلى الخيارات';
+    
+    // عرض النافذة الأولى
+    const step1 = prompt(msg1);
+    if (step1 === null) return; // ألغى المستخدم
+    
+    // النافذة الثانية: خيارات المسح
+    let msg2 = '🗑️ خيارات المسح:\n\n';
+    msg2 += '1️⃣ - مسح جميع السجلات\n';
+    msg2 += '2️⃣ - الاحتفاظ بآخر عدد\n';
+    msg2 += '3️⃣ - حظر جهاز أو مستخدم\n';
+    msg2 += '0️⃣ - إغلاق بدون تغيير\n\n';
+    msg2 += '✏️ أدخل رقم الخيار:';
+    
+    const action = prompt(msg2);
+    
+    if (action === '1') {
+        showConfirmModal('⚠️ هل أنت متأكد من مسح جميع سجلات الأجهزة؟', async function(confirmed) {
+            if (confirmed) {
+                await database.ref('/deviceLogs').remove();
+                showMessage('✅ تم مسح جميع سجلات الأجهزة');
+            }
+        });
+    }
+    else if (action === '2') {
+        const count = prompt('✏️ كم سجل تريد الاحتفاظ به؟\n(سيتم حذف السجلات الأقدم)');
+        if (count && !isNaN(count) && parseInt(count) > 0) {
+            const num = parseInt(count);
+            if (num >= deviceLogs.length) {
+                showMessage('⚠️ العدد المطلوب أكبر من عدد السجلات الحالية');
+                return;
+            }
+            showConfirmModal('⚠️ سيتم حذف السجلات الأقدم والاحتفاظ بآخر ' + num + ' سجل. متأكد؟', async function(confirmed) {
+                if (confirmed) {
+                    const keys = Object.keys(data || {});
+                    const sortedKeys = keys.sort((a, b) => {
+                        const timeA = data[a].timestamp || '';
+                        const timeB = data[b].timestamp || '';
+                        return new Date(timeB) - new Date(timeA);
+                    });
+                    
+                    const keysToDelete = sortedKeys.slice(num);
+                    const updates = {};
+                    keysToDelete.forEach(key => { updates[key] = null; });
+                    
+                    if (Object.keys(updates).length > 0) {
+                        await database.ref('/deviceLogs').update(updates);
+                    }
+                    
+                    showMessage('✅ تم حذف ' + keysToDelete.length + ' سجل');
+                }
+            });
+        }
+    }
+    else if (action === '3') {
+        await blockDeviceOrUser();
+    }
+}
     </script>
 </body>
 </html>
