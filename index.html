@@ -4248,40 +4248,7 @@ function scrollChatToBottom() {
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }, 100);
 }
-// ==================== صوت الإشعارات ====================
-// ==================== إعداد الصوت ====================
-let notificationAudio = null;
 
-function initAudio() {
-    try {
-        notificationAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4=');
-        notificationAudio.volume = 0.5;
-    } catch(e) {}
-}
-
-function playNotificationSound() {
-    try {
-        if (notificationAudio) {
-            notificationAudio.currentTime = 0;
-            notificationAudio.play().catch(function() {
-                initAudio();
-                if (notificationAudio) {
-                    notificationAudio.play().catch(function() {});
-                }
-            });
-        } else {
-            initAudio();
-            if (notificationAudio) {
-                notificationAudio.play().catch(function() {});
-            }
-        }
-    } catch(e) {}
-}
-
-// تهيئة الصوت عند تحميل الصفحة
-document.addEventListener('click', function() {
-    initAudio();
-}, { once: true });
 
 function displayChatMessages() {
     const messagesDiv = document.getElementById('chatMessages');
@@ -4433,7 +4400,7 @@ function startChatListener() {
         updateUnreadBadge();
         // تشغيل نغمة تنبيه قصيرة
 window.navigator.vibrate && window.navigator.vibrate(200);
-        
+
     }
 }
         displayChatMessages();
