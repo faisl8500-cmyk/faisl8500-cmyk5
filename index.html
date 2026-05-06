@@ -2071,9 +2071,12 @@
 <!-- نافذة الدردشة -->
 <div class="chat-container" id="chatContainer">
     <div class="chat-header">
-        <h4>💬 محادثة المستخدمين</h4>
+    <h4>💬 محادثة المستخدمين</h4>
+    <div>
+        <button class="chat-close" onclick="clearChat()" style="background:#e53e3e;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;margin-right:5px;">🗑️ مسح</button>
         <button class="chat-close" onclick="toggleChat()">✕</button>
     </div>
+</div>
     <div class="chat-messages" id="chatMessages">
         <div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:13px;">لا توجد رسائل بعد</div>
     </div>
@@ -4266,7 +4269,74 @@ function displayChatMessages() {
     messagesDiv.innerHTML = html;
     if (chatOpen) scrollChatToBottom();
 }
-
+async function clearChat() {
+    if (!currentUser || currentUser.role !== 'admin') {
+        showMessage('❌ فقط المدير يمكنه مسح المحادثة', true);
+        return;
+    }
+    
+    const option = prompt(
+        '🗑️ خيارات مسح المحادثة:\n\n' +
+        '1️⃣ - مسح آخر عدد من الرسائل\n' +
+        '2️⃣ - مسح رسائل مستخدم معين\n' +
+        '3️⃣ - مسح كل المحادثة\n\n' +
+        '✏️ أدخل رقم الخيار:'
+    );
+    
+    if (option === '1') {
+        const count = prompt('✏️ كم رسالة تريد مسحها من النهاية؟');
+        if (count && !isNaN(count) && parseInt(count) > 0) {
+            const num = parseInt(count);
+            if (num >= chatMessages.length) {
+                showConfirmModal('⚠️ العدد المطلوب أكبر من أو يساوي عدد الرسائل. سيتم مسح كل المحادثة. هل أنت متأكد؟', async function(confirmed) {
+                    if (confirmed) {
+                        chatMessages = [];
+                        await saveChatMessagesToFirebase();
+                        displayChatMessages();
+                        showMessage('✅ تم مسح كل المحادثة');
+                    }
+                });
+            } else {
+                showConfirmModal(`⚠️ هل أنت متأكد من مسح آخر ${num} رسالة؟`, async function(confirmed) {
+                    if (confirmed) {
+                        chatMessages = chatMessages.slice(0, chatMessages.length - num);
+                        await saveChatMessagesToFirebase();
+                        displayChatMessages();
+                        showMessage(`✅ تم مسح آخر ${num} رسالة`);
+                    }
+                });
+            }
+        }
+    }
+    else if (option === '2') {
+        const username = prompt('✏️ أدخل اسم المستخدم المراد مسح رسائله:');
+        if (username) {
+            const count = chatMessages.filter(m => m.username === username).length;
+            if (count === 0) {
+                showMessage('❌ لا توجد رسائل لهذا المستخدم', true);
+                return;
+            }
+            showConfirmModal(`⚠️ هل أنت متأكد من مسح ${count} رسالة للمستخدم "${username}"؟`, async function(confirmed) {
+                if (confirmed) {
+                    chatMessages = chatMessages.filter(m => m.username !== username);
+                    await saveChatMessagesToFirebase();
+                    displayChatMessages();
+                    showMessage(`✅ تم مسح رسائل "${username}"`);
+                }
+            });
+        }
+    }
+    else if (option === '3') {
+        showConfirmModal('⚠️ هل أنت متأكد من مسح جميع رسائل المحادثة؟\n\nلا يمكن التراجع عن هذا الإجراء!', async function(confirmed) {
+            if (confirmed) {
+                chatMessages = [];
+                await saveChatMessagesToFirebase();
+                displayChatMessages();
+                showMessage('✅ تم مسح المحادثة بنجاح');
+            }
+        });
+    }
+}
 async function sendMessage() {
     const input = document.getElementById('chatInput');
     const text = input.value.trim();
