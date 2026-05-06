@@ -4248,7 +4248,19 @@ function scrollChatToBottom() {
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }, 100);
 }
-
+// ==================== صوت الإشعارات ====================
+function playNotificationSound() {
+    try {
+        const audio = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
+        audio.volume = 0.5;
+        audio.play().catch(function() {
+            // إذا فشل الصوت الخارجي، جرب المحلي
+            const localAudio = new Audio('notification.mp3');
+            localAudio.volume = 0.5;
+            localAudio.play().catch(function() {});
+        });
+    } catch(e) {}
+}
 function displayChatMessages() {
     const messagesDiv = document.getElementById('chatMessages');
     if (chatMessages.length === 0) {
@@ -4392,13 +4404,14 @@ function startChatListener() {
         } else {
             chatMessages = newMessages;
         }
-        if (!chatOpen && chatMessages.length > 0) {
-            const lastMsg = chatMessages[chatMessages.length - 1];
-            if (currentUser && lastMsg.username !== currentUser.name) {
-                unreadCount++;
-                updateUnreadBadge();
-            }
-        }
+       if (!chatOpen && chatMessages.length > 0) {
+    const lastMsg = chatMessages[chatMessages.length - 1];
+    if (currentUser && lastMsg.username !== currentUser.name) {
+        unreadCount++;
+        updateUnreadBadge();
+        playNotificationSound(); // 🔊 تشغيل صوت التنبيه
+    }
+}
         displayChatMessages();
     });
 }
