@@ -5163,6 +5163,66 @@ async function showDeviceLogs() {
         await blockDeviceOrUser();
     }
 }
+// ==================== حماية شاشة الدخول ====================
+(function() {
+    // منع الزر الأيمن للماوس
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // منع اختصارات لوحة المفاتيح
+    document.addEventListener('keydown', function(e) {
+        // F12
+        if (e.keyCode === 123) {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+U (عرض المصدر)
+        if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 117)) {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+S (حفظ)
+        if (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 115)) {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+Shift+I (أدوات المطور)
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 105)) {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+Shift+J (كونسول)
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.keyCode === 106)) {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+Shift+C (فحص العنصر)
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 67 || e.keyCode === 99)) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // منع تحديد النص
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // منع النسخ
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // منع القص
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        return false;
+    });
+})();
     </script>
 </body>
 </html>
