@@ -2074,6 +2074,8 @@
     <button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_not_retired')">🩸 جرحى (غير متقاعد)</button>
     <button class="report-btn" style="background: #f1948a;" onclick="showMartyrsReport('injured_suspended')">🩸 جرحى (موقوف)</button>
     <button class="report-btn" style="background: #6c3483;" onclick="showMartyrsReport('martyrs_rank_not_retired')">🎖️ شهداء المراتب (غير متقاعدين)</button>
+    <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_rank_not_retired')">🩸 جرحى المراتب (غير متقاعدين)</button>
+<button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_rank_retired')">🩸 جرحى المراتب (متقاعدين)</button>
 <button class="report-btn" style="background: #7d3c98;" onclick="showMartyrsReport('martyrs_rank_retired')">🎖️ شهداء المراتب (متقاعدين)</button>
     <!-- أزرار تقارير الضباط (الجديدة) -->
     <button class="report-btn" style="background: #1a5276;" onclick="showOfficersReport('martyrs')">🎖️ ضباط شهداء غير متقاعدين وموقوفين</button>
@@ -3909,6 +3911,20 @@ function showMartyrsReport(reportType) {
         ranksList1.includes(m.rank) && (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف')
     )].sort((a, b) => parseInt(a.id) - parseInt(b.id));
     break;
+    case 'injured_rank_not_retired':
+    title = 'كشف بأسماء الجرحى المراتب الغير متقاعدين\nالتابعين لفرع شؤون الشهداء المرقب';
+    const injuredRanks1 = ['موظف', 'جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    filteredData = [...allInjured.filter(m => 
+        injuredRanks1.includes(m.rank) && (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف')
+    )].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
+case 'injured_rank_retired':
+    title = 'كشف بأسماء الجرحى المراتب المتقاعدين\nالتابعين لفرع شؤون الشهداء المرقب';
+    const injuredRanks2 = ['موظف', 'جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    filteredData = [...allInjured.filter(m => 
+        injuredRanks2.includes(m.rank) && m.employmentStatus === 'متقاعد'
+    )].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
 case 'martyrs_rank_retired':
     title = 'كشف بأسماء الشهداء المراتب المتقاعدين\nالتابعين لفرع شؤون الشهداء المرقب';
     const ranksList2 = ['موظف', 'جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
@@ -3974,7 +3990,7 @@ if (reportType === 'martyrs_suspended') {
         m.salaryType || '-'
     ]);
     showReportTable(shortHeaders, shortRows);
-} else if (reportType === 'martyrs_rank_not_retired' || reportType === 'martyrs_rank_retired') {
+} else if (reportType === 'martyrs_rank_not_retired' || reportType === 'martyrs_rank_retired' || reportType === 'injured_rank_not_retired' || reportType === 'injured_rank_retired') {
     const shortHeaders = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة'];
     const shortRows = filteredData.map((m, i) => [
         i + 1,
