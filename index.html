@@ -1920,7 +1920,29 @@
             <button class="btn btn-edit" id="updateMartyrBtn" onclick="updateMartyr()" style="display:none;">💾 حفظ التعديل</button>
         </div>
     </div>
-
+<!-- صفحة خدمة الاستعلام (للمستعلم فقط) -->
+<!-- صفحة خدمة الاستعلام (للمستعلم فقط) -->
+<div id="inquiryPage" class="search-container" style="display:none;">
+    <div class="search-card">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
+            <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
+            <div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.0</div>
+        </div>
+        <div class="form-header">
+            <h1>🔍 خدمة الاستعلام</h1>
+            <div>
+                <button class="btn btn-back" onclick="logout()">🚪 تسجيل خروج</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>🔎 بحث بالرقم العسكري أو الوظيفي</label>
+            <input type="number" id="inquiryNumber" placeholder="أدخل الرقم العسكري أو الوظيفي" style="font-size: 18px; padding: 15px;">
+        </div>
+        <button class="btn" onclick="inquirySearch()" style="width:100%; padding:15px; font-size:18px;">🔍 بحث</button>
+        <div id="inquiryResults" class="search-results" style="margin-top:20px;"></div>
+    </div>
+</div>
     <!-- صفحة البحث -->
     <div id="searchPage" class="search-container">
         <div class="search-card">
@@ -1964,13 +1986,14 @@
                     <div class="form-group"><label>🔑 كلمة المرور</label><input type="password" id="newPassword"></div>
                     <div class="form-group"><label>⭐ الصلاحية</label>
                         <select id="newRole">
-                            <option value="">اختر الصلاحية</option>
-                            <option value="modifier">✏️ معدل (تعديل ومشاهدة)</option>
-                            <option value="adder">➕ مضيف (إضافة ومشاهدة)</option>
-                            <option value="deleter">🗑️ محذف (حذف ومشاهدة)</option>
-                            <option value="editor">✏️➕ كاتب (إضافة وتعديل)</option>
-                            <option value="viewer">👁️ مشاهد (قراءة فقط)</option>
-                        </select>
+    <option value="">اختر الصلاحية</option>
+    <option value="modifier">✏️ معدل (تعديل ومشاهدة)</option>
+    <option value="adder">➕ مضيف (إضافة ومشاهدة)</option>
+    <option value="deleter">🗑️ محذف (حذف ومشاهدة)</option>
+    <option value="editor">✏️➕ كاتب (إضافة وتعديل)</option>
+    <option value="viewer">👁️ مشاهد (قراءة فقط)</option>
+    <option value="inquirer">🔍 مستعلم (خدمة استعلام فقط)</option>
+</select>
                     </div>
                 </div>
                 <button class="btn btn-users" onclick="addUser()">➕ إضافة مستخدم</button>
@@ -2050,7 +2073,8 @@
     <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_retired')">🩸 جرحى (متقاعد)</button>
     <button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_not_retired')">🩸 جرحى (غير متقاعد)</button>
     <button class="report-btn" style="background: #f1948a;" onclick="showMartyrsReport('injured_suspended')">🩸 جرحى (موقوف)</button>
-    
+    <button class="report-btn" style="background: #6c3483;" onclick="showMartyrsReport('martyrs_rank_not_retired')">🎖️ شهداء المراتب (غير متقاعدين)</button>
+<button class="report-btn" style="background: #7d3c98;" onclick="showMartyrsReport('martyrs_rank_retired')">🎖️ شهداء المراتب (متقاعدين)</button>
     <!-- أزرار تقارير الضباط (الجديدة) -->
     <button class="report-btn" style="background: #1a5276;" onclick="showOfficersReport('martyrs')">🎖️ ضباط شهداء غير متقاعدين وموقوفين</button>
     <button class="report-btn" style="background: #2471a3;" onclick="showOfficersReport('injured')">🎖️ ضباط جرحى غير متقاعدين وموقوفين</button>
@@ -2352,13 +2376,14 @@
                 }
                 let roleClass = '';
                 switch (data.role) {
-                    case 'admin': roleClass = 'role-admin'; break;
-                    case 'modifier': roleClass = 'role-modifier'; break;
-                    case 'adder': roleClass = 'role-adder'; break;
-                    case 'deleter': roleClass = 'role-deleter'; break;
-                    case 'editor': roleClass = 'role-editor'; break;
-                    default: roleClass = 'role-viewer';
-                }
+    case 'admin': roleClass = 'role-admin'; break;
+    case 'modifier': roleClass = 'role-modifier'; break;
+    case 'adder': roleClass = 'role-adder'; break;
+    case 'deleter': roleClass = 'role-deleter'; break;
+    case 'editor': roleClass = 'role-editor'; break;
+    case 'inquirer': roleClass = 'role-inquirer'; break;
+    default: roleClass = 'role-viewer';
+}
                 html += `<tr>
                     <td>${index++}</td>
                     <td><strong>${username}</strong></td>
@@ -2413,7 +2438,8 @@
                         { id: '3', username: 'كاتب', password: '123', role: 'editor', status: 'active', createdAt: new Date().toISOString() },
                         { id: '4', username: 'معدل', password: '123', role: 'modifier', status: 'active', createdAt: new Date().toISOString() },
                         { id: '5', username: 'مضيف', password: '123', role: 'adder', status: 'active', createdAt: new Date().toISOString() },
-                        { id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString() }
+                       { id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString() },
+{ id: '7', username: 'مستعلم', password: '123', role: 'inquirer', status: 'active', createdAt: new Date().toISOString() }
                     ];
                     await saveUsersToFirebase();
                 }
@@ -2541,14 +2567,14 @@
 
         // ==================== دوال المستخدمين والصلاحيات (المعدلة) ====================
         function getRoleName(role) {
-            const roles = { admin: 'مدير', modifier: 'معدل', adder: 'مضيف', deleter: 'محذف', editor: 'كاتب', viewer: 'مشاهد' };
-            return roles[role] || role;
-        }
+    const roles = { admin: 'مدير', modifier: 'معدل', adder: 'مضيف', deleter: 'محذف', editor: 'كاتب', viewer: 'مشاهد', inquirer: 'مستعلم' };
+    return roles[role] || role;
+}
 
         function getRoleDesc(role) {
-            const desc = { admin: 'كل الصلاحيات', modifier: 'تعديل ومشاهدة', adder: 'إضافة ومشاهدة', deleter: 'حذف ومشاهدة', editor: 'إضافة وتعديل', viewer: 'قراءة فقط' };
-            return desc[role] || '';
-        }
+    const desc = { admin: 'كل الصلاحيات', modifier: 'تعديل ومشاهدة', adder: 'إضافة ومشاهدة', deleter: 'حذف ومشاهدة', editor: 'إضافة وتعديل', viewer: 'قراءة فقط', inquirer: 'خدمة استعلام فقط' };
+    return desc[role] || '';
+}
 
         function hasPermission(permission, recordType = null) {
             if (!currentUser) return false;
@@ -2783,9 +2809,18 @@
         }
 
         async function showMainMenu() {
-            await loadAllDataFromFirebase();
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('mainMenu').style.display = 'block';
+    await loadAllDataFromFirebase();
+    
+    // إذا كان المستخدم مستعلم، وجهه مباشرة لصفحة الاستعلام
+    if (currentUser.role === 'inquirer') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('inquiryPage').style.display = 'block';
+        return;
+    }
+    
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('mainMenu').style.display = 'block';
+
             document.getElementById('userName').textContent = currentUser.name;
             document.getElementById('userRole').textContent = `${getRoleName(currentUser.role)} (${getRoleDesc(currentUser.role)})`;
             document.getElementById('usersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
@@ -2820,6 +2855,8 @@ setTimeout(() => {
    }
 
         async function logout() {
+
+         document.getElementById('inquiryPage').style.display = 'none';
             stopAutoRefresh();
             stopConnectionMonitoring();
             stopChatListener();
@@ -3805,13 +3842,22 @@ function exportAuditLogToPDF() {
         }
 
         // ==================== دوال التقارير ====================
-        function showMilitarySummary() { currentReportTitle = 'كشف العسكريين (ملخص)'; showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], militaries.map((m, i) => [i+1, m.id, m.rank, m.name])); }
+function showMilitarySummary() { 
+    currentReportTitle = 'كشف بأسماء جميع العسكريين التابعين لفرع المرقب\n(ضباط-ضباط صف-جنود)'; 
+    const sorted = [...militaries].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], sorted.map((m, i) => [i+1, m.id, m.rank, m.name])); 
+}
         function showMilitaryFull() { currentReportTitle = 'بيانات العسكريين (كاملة)'; showReportTable(['م', 'الرقم', 'الرتبة', 'الاسم', 'الأم', 'الحالة', 'الرتبة الحالية', 'تاريخ الترقية', 'القرار', 'الوطني', 'البطاقة', 'الجواز', 'القيد', 'الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف'], militaries.map((m, i) => [i+1, m.id, m.rank, m.name, m.motherName, m.maritalStatus, m.promotionRank, m.lastPromotionDate, m.decisionInfo, m.nationalId, m.idCardNumber, m.passportNumber, m.recordNo, m.birthDate, m.birthPlace, m.address, m.phone])); }
-        function showCivilianSummary() { currentReportTitle = 'كشف الموظفين (ملخص)'; showReportTable(['م', 'الرقم الوظيفي', 'الرتبة', 'الاسم'], civilians.map((c, i) => [i+1, c.id, c.rank, c.name])); }
+        function showCivilianSummary() { 
+    currentReportTitle = 'كشف بأسماء الموظفين التابعين لفرع المرقب'; 
+    const sorted = [...civilians].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    showReportTable(['م', 'الرقم الوظيفي', 'الرتبة', 'الاسم'], sorted.map((c, i) => [i+1, c.id, c.rank, c.name])); 
+}
         function showCivilianFull() { currentReportTitle = 'بيانات الموظفين (كاملة)'; showReportTable(['م', 'الرقم', 'الرتبة', 'الاسم', 'الأم', 'الحالة', 'الدرجة', 'تاريخ الترقية', 'القرار', 'الوطني', 'البطاقة', 'الجواز', 'القيد', 'الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف'], civilians.map((c, i) => [i+1, c.id, c.rank, c.name, c.motherName, c.maritalStatus, c.promotionRank, c.lastPromotionDate, c.decisionInfo, c.nationalId, c.idCardNumber, c.passportNumber, c.recordNo, c.birthDate, c.birthPlace, c.address, c.phone])); }
 
         function showReportTable(headers, rows) {
-    let html = `<div class="report-title">📊 ${currentReportTitle}</div><div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+    let html = `<div class="report-title" style="text-align: center; white-space: pre-line; font-size: 18px; font-weight: bold; margin-bottom: 15px;">${currentReportTitle}</div>`;
+    html += `<div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
     if (rows.length === 0) {
         html += `<tr><td colspan="${headers.length}" style="text-align:center; padding: 20px;">لا توجد بيانات متطابقة</td></tr>`;
     } else {
@@ -3841,37 +3887,51 @@ function showMartyrsReport(reportType) {
 
     switch (reportType) {
         case 'all_martyrs':
-            title = '🕊️ كشف بأسماء الشهداء (شهداء العمليات والواجب)';
-            filteredData = allMartyrs;
-            break;
+    title = 'كشف بأسماء جميع الشهداء التابعين الي\nفرع شؤون الشهداء المرقب';
+    filteredData = [...allMartyrs].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
         case 'all_injured':
-            title = '🩸 كشف بأسماء الجرحى';
-            filteredData = allInjured;
-            break;
+    title = 'كشف بأسماء جميع الجرحى التابعين الي\nفرع شؤون الشهداء المرقب';
+    filteredData = [...allInjured].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
         case 'martyrs_retired':
-            title = '🕊️ كشف شهداء العمليات والواجب (الحالة: متقاعد)';
-            filteredData = allMartyrs.filter(m => m.employmentStatus === 'متقاعد');
-            break;
+    title = 'كشف الشهداء المتقاعدين التابعين الي\nفرع شؤون الشهداء المرقب';
+    filteredData = [...allMartyrs.filter(m => m.employmentStatus === 'متقاعد')].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
         case 'martyrs_not_retired':
-            title = '🕊️ كشف شهداء العمليات والواجب (الحالة: غير متقاعد)';
-            filteredData = allMartyrs.filter(m => m.employmentStatus === 'غير متقاعد');
-            break;
+    title = 'كشف بأسماء الشهداء الغير متقاعدين التابعين الي\nفرع شؤون الشهداء المرقب';
+    filteredData = [...allMartyrs.filter(m => m.employmentStatus === 'غير متقاعد')].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
+    case 'martyrs_rank_not_retired':
+    title = 'كشف بأسماء الشهداء المراتب الغير متقاعدين\nالتابعين لفرع شؤون الشهداء المرقب';
+    const ranksList1 = ['موظف', 'جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    filteredData = [...allMartyrs.filter(m => 
+        ranksList1.includes(m.rank) && (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف')
+    )].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
+case 'martyrs_rank_retired':
+    title = 'كشف بأسماء الشهداء المراتب المتقاعدين\nالتابعين لفرع شؤون الشهداء المرقب';
+    const ranksList2 = ['موظف', 'جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    filteredData = [...allMartyrs.filter(m => 
+        ranksList2.includes(m.rank) && m.employmentStatus === 'متقاعد'
+    )].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
         case 'martyrs_suspended':
-            title = '🕊️ كشف شهداء العمليات والواجب (الحالة: موقوف)';
-            filteredData = allMartyrs.filter(m => m.employmentStatus === 'موقوف');
-            break;
+    title = 'كشف بأسماء الشهداء الموقوفة مرتباتهم\nالتابعين لفرع شؤون الشهداء المرقب';
+    filteredData = allMartyrs.filter(m => m.employmentStatus === 'موقوف');
+    break;
         case 'injured_retired':
-            title = '🩸 كشف الجرحى (الحالة: متقاعد)';
-            filteredData = allInjured.filter(m => m.employmentStatus === 'متقاعد');
-            break;
+    title = 'كشف الجرحى المتقاعدين التابعين الي\nفرع شؤون الشهداء المرقب';
+    filteredData = [...allInjured.filter(m => m.employmentStatus === 'متقاعد')].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
         case 'injured_not_retired':
-            title = '🩸 كشف الجرحى (الحالة: غير متقاعد)';
-            filteredData = allInjured.filter(m => m.employmentStatus === 'غير متقاعد');
-            break;
+    title = 'كشف بأسماء الجرحى الغير متقاعدين التابعين الي\nفرع شؤون الشهداء المرقب';
+    filteredData = [...allInjured.filter(m => m.employmentStatus === 'غير متقاعد')].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    break;
         case 'injured_suspended':
-            title = '🩸 كشف الجرحى (الحالة: موقوف)';
-            filteredData = allInjured.filter(m => m.employmentStatus === 'موقوف');
-            break;
+    title = 'كشف بأسماء الجرحى الموقوفه مرتباتهم\nالتابعين الي فرع شؤون الشهداء المرقب';
+    filteredData = allInjured.filter(m => m.employmentStatus === 'موقوف');
+    break;
         default:
             return;
     }
@@ -3889,10 +3949,46 @@ function showMartyrsReport(reportType) {
         m.salaryType || '-'
     ]);
 
-    // تعيين العنوان العام للتقرير
-    currentReportTitle = title;
-    // عرض الجدول
-    showReportTable(headers, rows);
+  // تعيين العنوان العام للتقرير
+currentReportTitle = title;
+// عرض الجدول مع تنسيق خاص للموقوفين
+if (reportType === 'martyrs_suspended') {
+    const shortHeaders = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'نوع المرتب'];
+    const shortRows = filteredData.map((m, i) => [
+        i + 1,
+        m.id || '-',
+        m.rank || '-',
+        m.name || '-',
+        `<strong style="color: #e53e3e;">${m.status || '-'}</strong>`,
+        m.salaryType || '-'
+    ]);
+    showReportTable(shortHeaders, shortRows);
+}else if (reportType === 'injured_suspended') {
+    const shortHeaders = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'نوع المرتب'];
+    const shortRows = filteredData.map((m, i) => [
+        i + 1,
+        m.id || '-',
+        m.rank || '-',
+        m.name || '-',
+        `<strong style="color: #e53e3e;">${m.status || '-'}</strong>`,
+        m.salaryType || '-'
+    ]);
+    showReportTable(shortHeaders, shortRows);
+} else if (reportType === 'martyrs_rank_not_retired' || reportType === 'martyrs_rank_retired') {
+    const shortHeaders = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة'];
+    const shortRows = filteredData.map((m, i) => [
+        i + 1,
+        m.id || '-',
+        m.rank || '-',
+        m.name || '-',
+        '<strong style="color:#e53e3e;">' + (m.status || '-') + '</strong>'
+    ]);
+    showReportTable(shortHeaders, shortRows);
+} else {
+    const sortedRows = rows.sort((a, b) => parseInt(a[1]) - parseInt(b[1]));
+    const renumberedRows = sortedRows.map((row, i) => [i + 1, ...row.slice(1)]);
+    showReportTable(headers, renumberedRows);
+}
 }
 
 // ==================== دالة تقارير الضباط ====================
@@ -4851,6 +4947,113 @@ function clearMartyrForm() {
     document.getElementById('martyrEmploymentStatus').value = '';
     document.getElementById('martyrSalaryType').value = '';
 }
+// ==================== دالة بحث المستعلم ====================
+function inquirySearch() {
+    const num = document.getElementById('inquiryNumber').value.trim();
+    const resultsDiv = document.getElementById('inquiryResults');
+    
+    resultsDiv.style.display = 'block';
+    
+    if (!num) {
+        resultsDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#e53e3e;">❌ الرجاء إدخال رقم للبحث</div>';
+        return;
+    }
+    
+    let result = null;
+    let type = '';
+    
+    result = militaries.find(m => m.id.toString() === num.toString());
+    if (result) { type = 'military'; }
+    
+    if (!result) {
+        result = civilians.find(c => c.id.toString() === num.toString());
+        if (result) { type = 'civilian'; }
+    }
+    
+    if (!result) {
+        result = martyrs.find(m => m.id.toString() === num.toString());
+        if (result) { type = 'martyr'; }
+    }
+    
+    if (!result) {
+        resultsDiv.innerHTML = '<div style="text-align:center;padding:40px;color:#e53e3e;">❌ لا توجد نتائج للرقم: ' + num + '</div>';
+        return;
+    }
+    
+    let html = '';
+    
+    if (type === 'military') {
+        html = '<div class="result-card"><h3>🎖️ بيانات العسكري</h3><div class="result-grid">' +
+            '<div class="result-item"><span class="result-label">الرقم العسكري:</span><span class="result-value">' + (result.id || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">' + (result.rank || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الاسم الكامل:</span><span class="result-value">' + (result.name || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">اسم الأم:</span><span class="result-value">' + (result.motherName || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الحالة الاجتماعية:</span><span class="result-value">' + (result.maritalStatus || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرتبة الحالية:</span><span class="result-value">' + (result.promotionRank || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ آخر ترقية:</span><span class="result-value">' + (result.lastPromotionDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم القرار وتاريخه:</span><span class="result-value">' + (result.decisionInfo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرقم الوطني:</span><span class="result-value">' + (result.nationalId || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم البطاقة الشخصية:</span><span class="result-value">' + (result.idCardNumber || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم جواز السفر:</span><span class="result-value">' + (result.passportNumber || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم القيد:</span><span class="result-value">' + (result.recordNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ الميلاد:</span><span class="result-value">' + (result.birthDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">مكان الميلاد:</span><span class="result-value">' + (result.birthPlace || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">عنوان السكن:</span><span class="result-value">' + (result.address || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">' + (result.phone || '-') + '</span></div>' +
+        '</div></div>';
+    } else if (type === 'civilian') {
+        html = '<div class="result-card"><h3>👨‍💼 بيانات الموظف</h3><div class="result-grid">' +
+            '<div class="result-item"><span class="result-label">الرقم الوظيفي:</span><span class="result-value">' + (result.id || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">' + (result.rank || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الاسم الكامل:</span><span class="result-value">' + (result.name || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">اسم الأم:</span><span class="result-value">' + (result.motherName || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الحالة الاجتماعية:</span><span class="result-value">' + (result.maritalStatus || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الدرجة الحالية:</span><span class="result-value">' + (result.promotionRank || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ آخر ترقية:</span><span class="result-value">' + (result.lastPromotionDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم القرار وتاريخه:</span><span class="result-value">' + (result.decisionInfo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرقم الوطني:</span><span class="result-value">' + (result.nationalId || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم البطاقة الشخصية:</span><span class="result-value">' + (result.idCardNumber || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم جواز السفر:</span><span class="result-value">' + (result.passportNumber || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم القيد:</span><span class="result-value">' + (result.recordNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ الميلاد:</span><span class="result-value">' + (result.birthDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">مكان الميلاد:</span><span class="result-value">' + (result.birthPlace || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">عنوان السكن:</span><span class="result-value">' + (result.address || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">' + (result.phone || '-') + '</span></div>' +
+        '</div></div>';
+    } else if (type === 'martyr') {
+        html = '<div class="result-card"><h3>🕊️ بيانات الشهيد/الجريح</h3><div class="result-grid">' +
+            '<div class="result-item"><span class="result-label">الرقم العسكري:</span><span class="result-value">' + (result.id || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">' + (result.rank || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الاسم الكامل:</span><span class="result-value">' + (result.name || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الصفة:</span><span class="result-value"><strong style="color:#e53e3e;">' + (result.status || '-') + '</strong></span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ الحدث:</span><span class="result-value">' + (result.eventDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">المكان:</span><span class="result-value">' + (result.location || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم المذكرة القانونية:</span><span class="result-value">' + (result.legalMemoNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ المذكرة القانونية:</span><span class="result-value">' + (result.legalMemoDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم قرار إثبات الصفة:</span><span class="result-value">' + (result.attestationNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ قرار إثبات الصفة:</span><span class="result-value">' + (result.attestationDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرتبة الحالية:</span><span class="result-value">' + (result.promotionRank || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ استحقاق الترقية:</span><span class="result-value">' + (result.promotionDueDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم قرار الترقية:</span><span class="result-value">' + (result.promotionDecisionNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الرقم الوطني:</span><span class="result-value">' + (result.nationalId || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم القيد:</span><span class="result-value">' + (result.recordNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">تاريخ الميلاد:</span><span class="result-value">' + (result.birthDate || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">عنوان السكن:</span><span class="result-value">' + (result.address || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">اسم الأم:</span><span class="result-value">' + (result.motherName || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الحالة الاجتماعية:</span><span class="result-value">' + (result.maritalStatus || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">اسم الوكيل:</span><span class="result-value">' + (result.agentName || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">اسم المصرف:</span><span class="result-value">' + (result.bankName || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم الحساب:</span><span class="result-value">' + (result.accountNo || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">' + (result.phone || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">الحالة الوظيفية:</span><span class="result-value">' + (result.employmentStatus || '-') + '</span></div>' +
+            '<div class="result-item"><span class="result-label">نوع المرتب:</span><span class="result-value">' + (result.salaryType || '-') + '</span></div>' +
+        '</div></div>';
+    }
+    
+    resultsDiv.innerHTML = html;
+    document.getElementById('inquiryNumber').value = '';
+}
+
         // ==================== تهيئة النظام ====================
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
