@@ -4148,23 +4148,29 @@ function resetIdleTimer() {
     // إذا كان في صفحة تسجيل الدخول، لا نفعل شيئاً
     if (isLoginPage) return;
     
-    if (isMainMenu) {
-        // في القائمة الرئيسية - تسجيل خروج بعد 2 دقيقة
-        idleTimeout = setTimeout(() => {
-            showMessage('⚠️ تم تسجيل الخروج تلقائياً بسبب الخمول لمدة دقيقتين', true);
-            setTimeout(() => {
-                logout();
-            }, 1500);
-        }, IDLE_TIME_MAIN);
-    } else {
-        // في أي صفحة أخرى - العودة للقائمة الرئيسية بعد 2 دقيقة
-        idleTimeout = setTimeout(() => {
-            showMessage('⚠️ تم العودة للقائمة الرئيسية بسبب الخمول لمدة دقيقتين', false);
-            setTimeout(() => {
-                backToMenu();
-            }, 1500);
-        }, IDLE_TIME_MAIN);
-    }
+ if (isMainMenu) {
+    idleTimeout = setTimeout(() => {
+        showMessage('⚠️ تم تسجيل الخروج تلقائياً بسبب الخمول لمدة دقيقتين', true);
+        setTimeout(() => {
+            logout();
+        }, 1500);
+    }, IDLE_TIME_MAIN);
+} else if (document.getElementById('inquiryPage').style.display === 'block') {
+    // للمستعلم: تسجيل خروج بعد الخمول
+    idleTimeout = setTimeout(() => {
+        showMessage('⚠️ تم تسجيل الخروج تلقائياً بسبب الخمول لمدة دقيقتين', true);
+        setTimeout(() => {
+            logout();
+        }, 1500);
+    }, IDLE_TIME_MAIN);
+} else {
+    idleTimeout = setTimeout(() => {
+        showMessage('⚠️ تم العودة للقائمة الرئيسية بسبب الخمول لمدة دقيقتين', false);
+        setTimeout(() => {
+            backToMenu();
+        }, 1500);
+    }, IDLE_TIME_MAIN);
+}
 }
 
 // أحداث إعادة تعيين مؤقت الخمول
