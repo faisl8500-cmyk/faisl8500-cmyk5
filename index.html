@@ -3880,7 +3880,7 @@ function showMilitarySummary() {
  */
 function showMartyrsReport(reportType) {
     // تصفية البيانات الأساسية
-    const allMartyrs = martyrs.filter(m => m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
+    const allMartyrs = martyrs.filter(m => m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
     const allInjured = martyrs.filter(m => m.status === 'جريح حرب');
 
     let filteredData = [];
