@@ -296,7 +296,42 @@
             flex-wrap: wrap;
             gap: 15px;
         }
+/* ========== الساعة الرقمية ========== */
+.digital-clock {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #00ffcc;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    border: 1px solid rgba(0, 255, 204, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    direction: ltr;
+    animation: clockPulse 2s infinite;
+}
 
+.digital-clock .clock-icon {
+    font-size: 18px;
+}
+
+.digital-clock .clock-date {
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: 1px;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    padding-right: 8px;
+    margin-right: 4px;
+}
+
+@keyframes clockPulse {
+    0%, 100% { border-color: rgba(0, 255, 204, 0.3); }
+    50% { border-color: rgba(0, 255, 204, 0.7); }
+}
         .user-info {
             display: flex;
             align-items: center;
@@ -1030,7 +1065,10 @@
             background: #2c3e50;
             color: white;
         }
-
+.role-salary {
+    background: #d97706;
+    color: white;
+}
         /* صفحات السجل والمحذوفات */
         .audit-container,
         .trash-container {
@@ -1709,7 +1747,13 @@
                     <span class="sync-status" id="syncStatus">☁️ متزامن</span>
                     <!-- >>> زر الوضع المظلم مضاف هنا <<< -->
                     <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>
-                </div>
+                              <!-- >>>الساعة الرقمية<<< -->
+          <span class="digital-clock" id="digitalClock">
+    <span class="clock-icon">🕐</span>
+    <span id="clockTime">00:00:00</span>
+    <span class="clock-date" id="clockDate"></span>
+</span>
+               </div>
                 <div>
                     <button class="btn-refresh" id="refreshDataBtn" onclick="refreshAllData()">🔄 تحديث البيانات</button>
                     <button class="btn-logout" onclick="logout()">🚪 تسجيل خروج</button>
@@ -1985,7 +2029,7 @@
                     <div class="form-group"><label>👤 اسم المستخدم</label><input type="text" id="newUsername"></div>
                     <div class="form-group"><label>🔑 كلمة المرور</label><input type="password" id="newPassword"></div>
                     <div class="form-group"><label>⭐ الصلاحية</label>
-                        <select id="newRole">
+<select id="newRole">
     <option value="">اختر الصلاحية</option>
     <option value="modifier">✏️ معدل (تعديل ومشاهدة)</option>
     <option value="adder">➕ مضيف (إضافة ومشاهدة)</option>
@@ -1993,6 +2037,7 @@
     <option value="editor">✏️➕ كاتب (إضافة وتعديل)</option>
     <option value="viewer">👁️ مشاهد (قراءة فقط)</option>
     <option value="inquirer">🔍 مستعلم (خدمة استعلام فقط)</option>
+    <option value="salary">💰 مرتبات (تعديل المرتب والحالة)</option>  <!-- ← الجديد -->
 </select>
                     </div>
                 </div>
@@ -2065,21 +2110,21 @@
     <button class="report-btn civilian-full" onclick="showCivilianFull()">📄 بيانات الموظفين (كامل)</button>
     
     <!-- أزرار التقارير الجديدة للشهداء والجرحى -->
-    <button class="report-btn" style="background: #800000;" onclick="showMartyrsReport('all_martyrs')">🕊️ كشف الشهداء</button>
-    <button class="report-btn" style="background: #cc0000;" onclick="showMartyrsReport('all_injured')">🩸 كشف الجرحى</button>
-    <button class="report-btn" style="background: #2c3e50;" onclick="showMartyrsReport('martyrs_retired')">🕊️ شهداء (متقاعد)</button>
-    <button class="report-btn" style="background: #34495e;" onclick="showMartyrsReport('martyrs_not_retired')">🕊️ شهداء (غير متقاعد)</button>
-    <button class="report-btn" style="background: #7f8c8d;" onclick="showMartyrsReport('martyrs_suspended')">🕊️ شهداء (موقوف)</button>
-    <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_retired')">🩸 جرحى (متقاعد)</button>
+    <button class="report-btn" style="background: #800000;" onclick="showMartyrsReport('all_martyrs')">🕊️ كشف جميع الشهداء</button>
+    <button class="report-btn" style="background: #cc0000;" onclick="showMartyrsReport('all_injured')">🩸 كشف جميع الجرحى</button>
+    <button class="report-btn" style="background: #2c3e50;" onclick="showMartyrsReport('martyrs_retired')">🕊️ شهداء (المتقاعدين)</button>
+    <button class="report-btn" style="background: #34495e;" onclick="showMartyrsReport('martyrs_not_retired')">🕊️ شهداء (الغير متقاعدين)</button>
+    <button class="report-btn" style="background: #7f8c8d;" onclick="showMartyrsReport('martyrs_suspended')">🕊️ شهداء (موقوفه مرتباهم)</button>
+    <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_retired')">🩸 جرحى (المتقاعدين)</button>
     <button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_not_retired')">🩸 جرحى (غير متقاعد)</button>
-    <button class="report-btn" style="background: #f1948a;" onclick="showMartyrsReport('injured_suspended')">🩸 جرحى (موقوف)</button>
+    <button class="report-btn" style="background: #f1948a;" onclick="showMartyrsReport('injured_suspended')">🩸 جرحى (موقوفه مرتباتهم)</button>
     <button class="report-btn" style="background: #6c3483;" onclick="showMartyrsReport('martyrs_rank_not_retired')">🎖️ شهداء المراتب (غير متقاعدين)</button>
     <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_rank_not_retired')">🩸 جرحى المراتب (غير متقاعدين)</button>
-<button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_rank_retired')">🩸 جرحى المراتب (متقاعدين)</button>
-<button class="report-btn" style="background: #7d3c98;" onclick="showMartyrsReport('martyrs_rank_retired')">🎖️ شهداء المراتب (متقاعدين)</button>
+<button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_rank_retired')">🩸 جرحى المراتب (المتقاعدين)</button>
+<button class="report-btn" style="background: #7d3c98;" onclick="showMartyrsReport('martyrs_rank_retired')">🎖️ شهداء المراتب (المتقاعدين)</button>
     <!-- أزرار تقارير الضباط (الجديدة) -->
-    <button class="report-btn" style="background: #1a5276;" onclick="showOfficersReport('martyrs')">🎖️ ضباط شهداء غير متقاعدين وموقوفين</button>
-    <button class="report-btn" style="background: #2471a3;" onclick="showOfficersReport('injured')">🎖️ ضباط جرحى غير متقاعدين وموقوفين</button>
+    <button class="report-btn" style="background: #1a5276;" onclick="showOfficersReport('martyrs')">🎖️ ضباط شهداء غير متقاعدين</button>
+    <button class="report-btn" style="background: #2471a3;" onclick="showOfficersReport('injured')">🎖️ ضباط جرحى غير متقاعدين</button>
 </div>
             </div>
             
@@ -2383,7 +2428,8 @@
     case 'adder': roleClass = 'role-adder'; break;
     case 'deleter': roleClass = 'role-deleter'; break;
     case 'editor': roleClass = 'role-editor'; break;
-    case 'inquirer': roleClass = 'role-inquirer'; break;
+        case 'inquirer': roleClass = 'role-inquirer'; break;
+    case 'salary': roleClass = 'role-salary'; break;
     default: roleClass = 'role-viewer';
 }
                 html += `<tr>
@@ -2442,6 +2488,8 @@
                         { id: '5', username: 'مضيف', password: '123', role: 'adder', status: 'active', createdAt: new Date().toISOString() },
                        { id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString() },
 { id: '7', username: 'مستعلم', password: '123', role: 'inquirer', status: 'active', createdAt: new Date().toISOString() }
+,
+{ id: '8', username: 'مرتبات', password: '123', role: 'salary', status: 'active', createdAt: new Date().toISOString() } 
                     ];
                     await saveUsersToFirebase();
                 }
@@ -2569,12 +2617,30 @@
 
         // ==================== دوال المستخدمين والصلاحيات (المعدلة) ====================
         function getRoleName(role) {
-    const roles = { admin: 'مدير', modifier: 'معدل', adder: 'مضيف', deleter: 'محذف', editor: 'كاتب', viewer: 'مشاهد', inquirer: 'مستعلم' };
+    const roles = { 
+        admin: 'مدير', 
+        modifier: 'معدل', 
+        adder: 'مضيف', 
+        deleter: 'محذف', 
+        editor: 'كاتب', 
+        viewer: 'مشاهد', 
+        inquirer: 'مستعلم',
+        salary: 'مرتبات'  // ← الجديد
+    };
     return roles[role] || role;
 }
 
-        function getRoleDesc(role) {
-    const desc = { admin: 'كل الصلاحيات', modifier: 'تعديل ومشاهدة', adder: 'إضافة ومشاهدة', deleter: 'حذف ومشاهدة', editor: 'إضافة وتعديل', viewer: 'قراءة فقط', inquirer: 'خدمة استعلام فقط' };
+function getRoleDesc(role) {
+    const desc = { 
+        admin: 'كل الصلاحيات', 
+        modifier: 'تعديل ومشاهدة', 
+        adder: 'إضافة ومشاهدة', 
+        deleter: 'حذف ومشاهدة', 
+        editor: 'إضافة وتعديل', 
+        viewer: 'قراءة فقط', 
+        inquirer: 'خدمة استعلام فقط',
+        salary: 'تعديل المرتبات والحالة'  // ← الجديد
+    };
     return desc[role] || '';
 }
 
@@ -2809,52 +2875,89 @@
                 }
             }
         }
+// ==================== الساعة الرقمية ====================
+function updateDigitalClock() {
+    const now = new Date();
+    
+    // تحديث الوقت
+    const timeEl = document.getElementById('clockTime');
+    if (timeEl) {
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    
+    // تحديث التاريخ
+    const dateEl = document.getElementById('clockDate');
+    if (dateEl) {
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        dateEl.textContent = now.toLocaleDateString('ar-SA', options);
+    }
+}
 
-        async function showMainMenu() {
+let clockInterval = null;
+
+function startDigitalClock() {
+    updateDigitalClock();
+    if (clockInterval) clearInterval(clockInterval);
+    clockInterval = setInterval(updateDigitalClock, 1000);
+}
+
+function stopDigitalClock() {
+    if (clockInterval) {
+        clearInterval(clockInterval);
+        clockInterval = null;
+    }
+}
+async function showMainMenu() {
     await loadAllDataFromFirebase();
     
     // إذا كان المستخدم مستعلم، وجهه مباشرة لصفحة الاستعلام
     if (currentUser.role === 'inquirer') {
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('inquiryPage').style.display = 'block';
+        startDigitalClock(); // تشغيل الساعة الرقمية للمستعلم
         return;
     }
     
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('mainMenu').style.display = 'block';
+    
+    startDigitalClock(); // ✅ تشغيل الساعة هنا (وليس إيقافها)
 
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userRole').textContent = `${getRoleName(currentUser.role)} (${getRoleDesc(currentUser.role)})`;
-            document.getElementById('usersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
-            document.getElementById('onlineUsersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
-            startAutoRefresh();
-            startConnectionMonitoring();
-            if (currentUser.role === 'admin') startOnlineUsersMonitor();
-            const canAddMilitary = hasPermission('add', 'military');
-            const canAddCivilian = hasPermission('add', 'civilian');
-            const canAddMartyrs = hasPermission('add', 'martyr');
-            document.getElementById('addMilitaryBtn').disabled = !canAddMilitary;
-            document.getElementById('addMilitaryBtn').classList.toggle('disabled', !canAddMilitary);
-            document.getElementById('addCivilianBtn').disabled = !canAddCivilian;
-            document.getElementById('addCivilianBtn').classList.toggle('disabled', !canAddCivilian);
-            document.getElementById('addMartyrsBtn').disabled = !canAddMartyrs;
-            document.getElementById('addMartyrsBtn').classList.toggle('disabled', !canAddMartyrs);
-            // تحديث إحصائيات الذاكرة
-            // إظهار زر الدردشة وتحميل الرسائل
-document.getElementById('chatToggleBtn').style.display = 'block';
-loadChatMessages();
-startChatListener();
-            // إظهار/إخفاء أزرار المدير فقط (فيصل)
-const isAdminUser = currentUser.role === 'admin';
-document.getElementById('auditBtn').style.display = isAdminUser ? 'inline-block' : 'none';
-document.getElementById('trashBtn').style.display = isAdminUser ? 'inline-block' : 'none';
-document.getElementById('exportBtn').style.display = isAdminUser ? 'inline-block' : 'none';
-document.getElementById('importArea').style.display = isAdminUser ? 'block' : 'none';
-document.getElementById('deviceLogBtn').style.display = isAdminUser ? 'inline-block' : 'none';
-setTimeout(() => {
-    displayMemoryStats();
-}, 300);
-   }
+    document.getElementById('userName').textContent = currentUser.name;
+    document.getElementById('userRole').textContent = `${getRoleName(currentUser.role)} (${getRoleDesc(currentUser.role)})`;
+    document.getElementById('usersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
+    document.getElementById('onlineUsersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
+    startAutoRefresh();
+    startConnectionMonitoring();
+    if (currentUser.role === 'admin') startOnlineUsersMonitor();
+    const canAddMilitary = hasPermission('add', 'military');
+    const canAddCivilian = hasPermission('add', 'civilian');
+    const canAddMartyrs = hasPermission('add', 'martyr');
+    document.getElementById('addMilitaryBtn').disabled = !canAddMilitary;
+    document.getElementById('addMilitaryBtn').classList.toggle('disabled', !canAddMilitary);
+    document.getElementById('addCivilianBtn').disabled = !canAddCivilian;
+    document.getElementById('addCivilianBtn').classList.toggle('disabled', !canAddCivilian);
+    document.getElementById('addMartyrsBtn').disabled = !canAddMartyrs;
+    document.getElementById('addMartyrsBtn').classList.toggle('disabled', !canAddMartyrs);
+    // تحديث إحصائيات الذاكرة
+    // إظهار زر الدردشة وتحميل الرسائل
+    document.getElementById('chatToggleBtn').style.display = 'block';
+    loadChatMessages();
+    startChatListener();
+    // إظهار/إخفاء أزرار المدير فقط (فيصل)
+    const isAdminUser = currentUser.role === 'admin';
+    document.getElementById('auditBtn').style.display = isAdminUser ? 'inline-block' : 'none';
+    document.getElementById('trashBtn').style.display = isAdminUser ? 'inline-block' : 'none';
+    document.getElementById('exportBtn').style.display = isAdminUser ? 'inline-block' : 'none';
+    document.getElementById('importArea').style.display = isAdminUser ? 'block' : 'none';
+    document.getElementById('deviceLogBtn').style.display = isAdminUser ? 'inline-block' : 'none';
+    setTimeout(() => {
+        displayMemoryStats();
+    }, 300);
+}
 
         async function logout() {
 
@@ -3238,13 +3341,17 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
                 
                 html += `</div>`;
                 
-                // أزرار التعديل والحذف
-                if (canEdit || canDelete) {
-                    html += `<div class="result-actions">`;
-                    if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
-                    if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
-                    html += `</div>`;
-                }
+              // أزرار التعديل والحذف
+if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
+    html += `<div class="result-actions">
+        <button class="btn btn-edit" onclick="showSalaryEditForm('${result.id}')">💰 تعديل المرتب والحالة</button>
+    </div>`;
+} else if (canEdit || canDelete) {
+    html += `<div class="result-actions">`;
+    if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
+    if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
+    html += `</div>`;
+}
                 
                 html += `</div>`;
             });
@@ -3673,7 +3780,14 @@ async function updateCivilian() {
 }
 
 async function updateMartyr() {
-    if (!hasPermission('edit', 'martyr')) { showMessage('ليس لديك صلاحية للتعديل', true); return; }
+       // التحقق من الصلاحية الخاصة
+    if (currentUser.role === 'salary') {
+        // مستخدم المرتبات: يسمح فقط بتعديل الحالة ونوع المرتب
+        // (سنطبق هذا في واجهة مخصصة)
+    } else if (!hasPermission('edit', 'martyr')) {
+        showMessage('ليس لديك صلاحية للتعديل', true);
+        return;
+    }
     if (!editMartyrId) { showMessage('لا يوجد سجل للتعديل', true); return; }
     
     const index = martyrs.findIndex(m => m.id.toString() === editMartyrId.toString());
@@ -4941,7 +5055,57 @@ function clearCivilianForm() {
     document.getElementById('civAddress').value = '';
     document.getElementById('civPhone').value = '';
 }
-
+// واجهة تعديل خاصة لمستخدم المرتبات
+function showSalaryEditForm(martyrId) {
+    const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+    if (!martyr) return;
+    
+    const newSalaryType = prompt(
+        `💰 تعديل نوع المرتب والحالة\n\n` +
+        `الاسم: ${martyr.name}\n` +
+        `الرتبة: ${martyr.rank}\n` +
+        `الصفة: ${martyr.status}\n\n` +
+        `📌 نوع المرتب الحالي: ${martyr.salaryType || 'غير محدد'}\n` +
+        `📌 الحالة الحالية: ${martyr.employmentStatus || 'غير محدد'}\n\n` +
+        `1️⃣ - راتب شهري\n` +
+        `2️⃣ - منحة شهرية\n` +
+        `3️⃣ - لا يتقاضي\n\n` +
+        `4️⃣ - متقاعد\n` +
+        `5️⃣ - غير متقاعد\n` +
+        `6️⃣ - موقوف\n\n` +
+        `✏️ أدخل الأرقام (مثال: 1,5 للراتب الشهري + غير متقاعد):`
+    );
+    
+    if (!newSalaryType) return;
+    
+    const parts = newSalaryType.split(',');
+    const salaryMap = { '1': 'راتب شهري', '2': 'منحة شهرية', '3': 'لا يتقاضي' };
+    const statusMap = { '4': 'متقاعد', '5': 'غير متقاعد', '6': 'موقوف' };
+    
+    let updated = false;
+    
+    parts.forEach(part => {
+        part = part.trim();
+        if (salaryMap[part]) {
+            martyr.salaryType = salaryMap[part];
+            updated = true;
+        }
+        if (statusMap[part]) {
+            martyr.employmentStatus = statusMap[part];
+            updated = true;
+        }
+    });
+    
+    if (updated) {
+        saveMartyrsToFirebase();
+        addAuditLog('تعديل مرتبات', 'martyr', martyr.id, martyr.name, 
+            `تم تعديل المرتب إلى: ${martyr.salaryType} والحالة إلى: ${martyr.employmentStatus}`);
+        showMessage('✅ تم تحديث المرتب والحالة بنجاح');
+        if (document.getElementById('searchPage').style.display === 'block') search();
+    } else {
+        showMessage('❌ لم يتم إدخال أرقام صحيحة', true);
+    }
+}
 function clearMartyrForm() {
     document.getElementById('martyrId').value = '';
     document.getElementById('martyrRank').value = '';
