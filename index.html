@@ -1603,6 +1603,196 @@
 .chat-input-area button:hover {
     background: #5a67d8;
 }
+/* ========== تنسيق الزرين الرئيسيين في صفحة التقارير ========== */
+.main-report-btn {
+    padding: 25px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    min-width: 280px;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.main-report-btn:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+}
+
+.branch-btn {
+    background: linear-gradient(135deg, #1a3a4a, #2980b9);
+}
+
+.branch-btn:hover {
+    background: linear-gradient(135deg, #1e4d6e, #3498db);
+}
+
+.martyrs-btn {
+    background: linear-gradient(135deg, #4a0000, #990000);
+}
+
+.martyrs-btn:hover {
+    background: linear-gradient(135deg, #6b0000, #b30000);
+}
+
+/* ========== تنسيق النوافذ المنبثقة للتقارير ========== */
+.reports-modal {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.reports-modal-content {
+    background: var(--card-bg);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 850px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 0.4s ease;
+}
+
+.reports-modal-header {
+    background: linear-gradient(135deg, #1a3a4a, #2980b9);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.reports-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.reports-modal-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.reports-modal-close:hover {
+    background: rgba(255,255,255,0.4);
+    transform: rotate(90deg);
+}
+
+.reports-modal-body {
+    padding: 25px;
+}
+
+.reports-modal-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.modal-report-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.modal-report-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.modal-btn-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.modal-btn-text {
+    text-align: right;
+    line-height: 1.4;
+}
+
+/* ألوان أنواع التقارير داخل النوافذ */
+.military-style {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+}
+
+.military-style:hover {
+    background: linear-gradient(135deg, #34495e, #2980b9);
+}
+
+.civilian-style {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.civilian-style:hover {
+    background: linear-gradient(135deg, #2a4a7f, #3366aa);
+}
+
+.martyr-style {
+    background: linear-gradient(135deg, #4a0000, #990000);
+}
+
+.martyr-style:hover {
+    background: linear-gradient(135deg, #660000, #b30000);
+}
+
+.injured-style {
+    background: linear-gradient(135deg, #5a1a1a, #c0392b);
+}
+
+.injured-style:hover {
+    background: linear-gradient(135deg, #6b2020, #d44637);
+}
+
+/* تنسيق متجاوب للنوافذ المنبثقة */
+@media (max-width: 600px) {
+    .main-report-btn {
+        min-width: 200px;
+        padding: 20px 25px;
+        font-size: 16px;
+    }
+    
+    .reports-modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .reports-modal-header h2 {
+        font-size: 18px;
+    }
+    
+    .reports-modal-buttons {
+        grid-template-columns: 1fr;
+    }
+}
         @media print {
             body {
                 background: white;
@@ -2103,28 +2293,18 @@
                     <button class="btn btn-back" onclick="backToMenu()">🔙 رجوع</button>
                 </div>
             </div>
-          <div class="reports-buttons">
-    <button class="report-btn military-summary" onclick="showMilitarySummary()">📋 كشف العسكريين (ملخص)</button>
-    <button class="report-btn military-full" onclick="showMilitaryFull()">📄 بيانات العسكريين (كامل)</button>
-    <button class="report-btn civilian-summary" onclick="showCivilianSummary()">📋 كشف الموظفين (ملخص)</button>
-    <button class="report-btn civilian-full" onclick="showCivilianFull()">📄 بيانات الموظفين (كامل)</button>
+<div class="reports-buttons" style="justify-content: center; gap: 30px;">
+    <!-- الزر الأول: تقارير قوة فرع المرقب -->
+    <button class="report-btn main-report-btn branch-btn" onclick="openBranchReportsModal()">
+        <span style="font-size: 28px; display: block; margin-bottom: 8px;">📊</span>
+        تقارير قوة فرع المرقب
+    </button>
     
-    <!-- أزرار التقارير الجديدة للشهداء والجرحى -->
-    <button class="report-btn" style="background: #800000;" onclick="showMartyrsReport('all_martyrs')">🕊️ كشف جميع الشهداء</button>
-    <button class="report-btn" style="background: #cc0000;" onclick="showMartyrsReport('all_injured')">🩸 كشف جميع الجرحى</button>
-    <button class="report-btn" style="background: #2c3e50;" onclick="showMartyrsReport('martyrs_retired')">🕊️ شهداء (المتقاعدين)</button>
-    <button class="report-btn" style="background: #34495e;" onclick="showMartyrsReport('martyrs_not_retired')">🕊️ شهداء (الغير متقاعدين)</button>
-    <button class="report-btn" style="background: #7f8c8d;" onclick="showMartyrsReport('martyrs_suspended')">🕊️ شهداء (موقوفه مرتباهم)</button>
-    <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_retired')">🩸 جرحى (المتقاعدين)</button>
-    <button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_not_retired')">🩸 جرحى (غير متقاعد)</button>
-    <button class="report-btn" style="background: #f1948a;" onclick="showMartyrsReport('injured_suspended')">🩸 جرحى (موقوفه مرتباتهم)</button>
-    <button class="report-btn" style="background: #6c3483;" onclick="showMartyrsReport('martyrs_rank_not_retired')">🎖️ شهداء المراتب (غير متقاعدين)</button>
-    <button class="report-btn" style="background: #c0392b;" onclick="showMartyrsReport('injured_rank_not_retired')">🩸 جرحى المراتب (غير متقاعدين)</button>
-<button class="report-btn" style="background: #e74c3c;" onclick="showMartyrsReport('injured_rank_retired')">🩸 جرحى المراتب (المتقاعدين)</button>
-<button class="report-btn" style="background: #7d3c98;" onclick="showMartyrsReport('martyrs_rank_retired')">🎖️ شهداء المراتب (المتقاعدين)</button>
-    <!-- أزرار تقارير الضباط (الجديدة) -->
-    <button class="report-btn" style="background: #1a5276;" onclick="showOfficersReport('martyrs')">🎖️ ضباط شهداء غير متقاعدين</button>
-    <button class="report-btn" style="background: #2471a3;" onclick="showOfficersReport('injured')">🎖️ ضباط جرحى غير متقاعدين</button>
+    <!-- الزر الثاني: تقارير الشهداء والجرحى -->
+    <button class="report-btn main-report-btn martyrs-btn" onclick="openMartyrsReportsModal()">
+        <span style="font-size: 28px; display: block; margin-bottom: 8px;">🕊️</span>
+        تقارير الشهداء والجرحى
+    </button>
 </div>
             </div>
             
@@ -2137,7 +2317,109 @@
     </div>
 
     <div id="successMessage" class="success-message"></div>
-     <!-- زر فتح الدردشة -->
+    <!-- ========== نافذة تقارير قوة فرع المرقب ========== -->
+<div id="branchReportsModal" class="reports-modal" style="display: none;">
+    <div class="reports-modal-content">
+        <div class="reports-modal-header">
+            <h2>📊 تقارير قوة فرع المرقب</h2>
+            <button class="reports-modal-close" onclick="closeBranchReportsModal()">✕</button>
+        </div>
+        <div class="reports-modal-body">
+            <div class="reports-modal-buttons">
+                <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showMilitarySummary();">
+                    <span class="modal-btn-icon">📋</span>
+                    <span class="modal-btn-text">كشف العسكريين (ملخص)</span>
+                </button>
+                <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showMilitaryFull();">
+                    <span class="modal-btn-icon">📄</span>
+                    <span class="modal-btn-text">بيانات العسكريين (كامل)</span>
+                </button>
+                <button class="modal-report-btn civilian-style" onclick="closeBranchReportsModal(); showCivilianSummary();">
+                    <span class="modal-btn-icon">📋</span>
+                    <span class="modal-btn-text">كشف الموظفين (ملخص)</span>
+                </button>
+                <button class="modal-report-btn civilian-style" onclick="closeBranchReportsModal(); showCivilianFull();">
+                    <span class="modal-btn-icon">📄</span>
+                    <span class="modal-btn-text">بيانات الموظفين (كامل)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== نافذة تقارير الشهداء والجرحى ========== -->
+<div id="martyrsReportsModal" class="reports-modal" style="display: none;">
+    <div class="reports-modal-content">
+        <div class="reports-modal-header" style="background: linear-gradient(135deg, #4a0000, #990000);">
+            <h2>🕊️ تقارير الشهداء والجرحى</h2>
+            <button class="reports-modal-close" onclick="closeMartyrsReportsModal()">✕</button>
+        </div>
+        <div class="reports-modal-body">
+            <div class="reports-modal-buttons">
+                <!-- تقارير الشهداء -->
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_martyrs');">
+                    <span class="modal-btn-icon">🕊️</span>
+                    <span class="modal-btn-text">كشف جميع الشهداء</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('martyrs_retired');">
+                    <span class="modal-btn-icon">🕊️</span>
+                    <span class="modal-btn-text">شهداء (المتقاعدين)</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('martyrs_not_retired');">
+                    <span class="modal-btn-icon">🕊️</span>
+                    <span class="modal-btn-text">شهداء (الغير متقاعدين)</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('martyrs_suspended');">
+                    <span class="modal-btn-icon">🕊️</span>
+                    <span class="modal-btn-text">شهداء (موقوفه مرتباتهم)</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('martyrs_rank_not_retired');">
+                    <span class="modal-btn-icon">🎖️</span>
+                    <span class="modal-btn-text">شهداء المراتب (غير متقاعدين)</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('martyrs_rank_retired');">
+                    <span class="modal-btn-icon">🎖️</span>
+                    <span class="modal-btn-text">شهداء المراتب (المتقاعدين)</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showOfficersReport('martyrs');">
+                    <span class="modal-btn-icon">🎖️</span>
+                    <span class="modal-btn-text">ضباط شهداء غير متقاعدين</span>
+                </button>
+                
+                <!-- تقارير الجرحى -->
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_injured');">
+                    <span class="modal-btn-icon">🩸</span>
+                    <span class="modal-btn-text">كشف جميع الجرحى</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('injured_retired');">
+                    <span class="modal-btn-icon">🩸</span>
+                    <span class="modal-btn-text">جرحى (المتقاعدين)</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('injured_not_retired');">
+                    <span class="modal-btn-icon">🩸</span>
+                    <span class="modal-btn-text">جرحى (غير متقاعدين)</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('injured_suspended');">
+                    <span class="modal-btn-icon">🩸</span>
+                    <span class="modal-btn-text">جرحى (موقوفه مرتباتهم)</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('injured_rank_not_retired');">
+                    <span class="modal-btn-icon">🩸</span>
+                    <span class="modal-btn-text">جرحى المراتب (غير متقاعدين)</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('injured_rank_retired');">
+                    <span class="modal-btn-icon">🩸</span>
+                    <span class="modal-btn-text">جرحى المراتب (المتقاعدين)</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showOfficersReport('injured');">
+                    <span class="modal-btn-icon">🎖️</span>
+                    <span class="modal-btn-text">ضباط جرحى غير متقاعدين</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- زر فتح الدردشة -->
 <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChat()" title="محادثة المستخدمين">💬<span class="unread-badge" id="chatUnreadBadge" style="display:none;">0</span></button>
 
 <!-- نافذة الدردشة -->
@@ -3452,7 +3734,7 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
                         .page-break {
                             page-break-before: always;
                         }
-                    }
+
                 </style>
             </head>
             <body>
@@ -5239,7 +5521,43 @@ function inquirySearch() {
     resultsDiv.innerHTML = html;
     document.getElementById('inquiryNumber').value = '';
 }
+// ==================== دوال فتح وإغلاق نوافذ التقارير ====================
 
+function openBranchReportsModal() {
+    var modal = document.getElementById('branchReportsModal');
+    modal.style.display = 'flex';
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeBranchReportsModal();
+        }
+    };
+}
+
+function closeBranchReportsModal() {
+    document.getElementById('branchReportsModal').style.display = 'none';
+}
+
+function openMartyrsReportsModal() {
+    var modal = document.getElementById('martyrsReportsModal');
+    modal.style.display = 'flex';
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeMartyrsReportsModal();
+        }
+    };
+}
+
+function closeMartyrsReportsModal() {
+    document.getElementById('martyrsReportsModal').style.display = 'none';
+}
+
+// إغلاق النوافذ بضغط Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeBranchReportsModal();
+        closeMartyrsReportsModal();
+    }
+});
         // ==================== تهيئة النظام ====================
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
