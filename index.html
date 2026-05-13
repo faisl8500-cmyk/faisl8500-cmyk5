@@ -1069,6 +1069,10 @@
     background: #d97706;
     color: white;
 }
+.role-inquirer {
+    background: #00b4db;
+    color: white;
+}
         /* صفحات السجل والمحذوفات */
         .audit-container,
         .trash-container {
@@ -1793,55 +1797,72 @@
         grid-template-columns: 1fr;
     }
 }
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-                margin: 0;
-            }
-            .btn,
-            .btn-logout,
-            .btn-reports,
-            .user-bar,
-            .tabs,
-            .reports-buttons,
-            .report-actions,
-            .menu-buttons,
-            .form-container,
-            .search-container,
-            .users-container {
-                display: none;
-            }
-            .reports-container {
-                display: block;
-                margin: 0;
-                padding: 0;
-            }
-            .reports-card {
-                box-shadow: none;
-                padding: 5px;
-            }
-           .report-table {
-    font-size: 7px;
-    min-width: auto;
-    width: 100%;
+@media print {
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+    .btn,
+    .btn-logout,
+    .btn-reports,
+    .user-bar,
+    .tabs,
+    .reports-buttons,
+    .report-actions,
+    .menu-buttons,
+    .form-container,
+    .search-container,
+    .users-container {
+        display: none;
+    }
+    .reports-container {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+    .reports-card {
+        box-shadow: none;
+        padding: 2px;
+    }
+    .report-table {
+        font-size: 7px;
+        min-width: auto;
+        width: 100%;
+        direction: rtl;
+    }
+    .report-table th {
+        padding: 2px 1px;
+        white-space: nowrap;
+        text-align: center !important;
+        font-size: 7px;
+    }
+    .report-table td {
+        padding: 2px 1px;
+        white-space: nowrap;
+        text-align: center !important;
+        font-size: 7px;
+    }
+    .report-table tr {
+        page-break-inside: avoid;
+    }
+    .report-title {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    .program-header {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    @page {
+        size: A4 portrait;
+        margin: 3mm;
+    }
 }
-.report-table th,
-.report-table td {
-    padding: 1px 2px;
-    white-space: nowrap;
-}
-            .program-header {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            @page {
-                size: landscape;
-                margin: 0.5cm;
-            }
-        }
     </style>
     <link rel="manifest" href="manifest.json">
+    <!-- مكتبة الباركود JsBarcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
     <!-- نافذة معلومات المستخدم -->
@@ -1937,7 +1958,11 @@
                     <span class="sync-status" id="syncStatus">☁️ متزامن</span>
                     <!-- >>> زر الوضع المظلم مضاف هنا <<< -->
                     <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>
-                              <!-- >>>الساعة الرقمية<<< -->
+ 
+<span id="logoutTimeDisplay" style="background: #fed7d7; color: #c53030; padding: 5px 12px; border-radius: 20px; font-size: 11px; direction: rtl; font-weight: bold;">
+    🚪 الإغلاق: <span id="logoutTimeValue">--:--:--</span>
+</span>
+                    <!-- >>>الساعة الرقمية<<< -->
           <span class="digital-clock" id="digitalClock">
     <span class="clock-icon">🕐</span>
     <span id="clockTime">00:00:00</span>
@@ -1958,8 +1983,8 @@
                 <button class="menu-btn add-civilian" id="addCivilianBtn" onclick="showAddCivilian()">👨‍💼 إضافة موظف</button>
                 <button class="menu-btn add-martyrs" id="addMartyrsBtn" onclick="showAddMartyrs()">🕊️ إضافة شهداء وجرحى</button>
                 <button class="menu-btn search" onclick="showSearch()">🔍 بحث</button>
-                <button class="menu-btn reports" onclick="showReports()">📊 التقارير</button>
-                <button class="menu-btn users" id="usersBtn" onclick="showUsersManagement()" style="display:none;">👥 إدارة المستخدمين</button>
+                <button class="menu-btn reports" onclick="showReports()">💼 التقارير</button>
+                <button class="menu-btn users" id="usersBtn" onclick="showUsersManagement()" style="display:none;">🚻 إدارة المستخدمين</button>
                 <button class="menu-btn online-users" id="onlineUsersBtn" onclick="showOnlineUsers()" style="display:none;">🟢 المستخدمين المتصلين</button>
                 <button class="menu-btn audit" id="auditBtn" onclick="showAuditLog()" style="display:none;">📋 سجل التغييرات</button>
 <button class="menu-btn trash" id="trashBtn" onclick="showTrash()" style="display:none;">🗑️ سلة المحذوفات</button>
@@ -2112,7 +2137,7 @@
                 <div class="form-group"><label>الصفة <span class="required">*</span></label>
                     <select id="martyrStatus">
                         <option value="">اختر الصفة</option>
-                        <option value="شهيد عمليات">🕊️ شهيد عمليات</option><option value="شهيد واجب">🕊️ شهيد واجب</option><option value="جريح حرب">🩸 جريح حرب</option><option value="اسير">⛓️ أسير</option><option value="مفقود">❓ مفقود</option>
+<option value="شهيد.">🕊️ شهيد.</option><option value="شهيد عمليات">🕊️ شهيد عمليات</option><option value="شهيد واجب">🕊️ شهيد واجب</option><option value="جريح حرب">🩸 جريح حرب</option><option value="اسير">⛓️ أسير</option><option value="مفقود">❓ مفقود</option>
                     </select>
                 </div>
             </div>
@@ -2154,7 +2179,6 @@
             <button class="btn btn-edit" id="updateMartyrBtn" onclick="updateMartyr()" style="display:none;">💾 حفظ التعديل</button>
         </div>
     </div>
-<!-- صفحة خدمة الاستعلام (للمستعلم فقط) -->
 <!-- صفحة خدمة الاستعلام (للمستعلم فقط) -->
 <div id="inquiryPage" class="search-container" style="display:none;">
     <div class="search-card">
@@ -2287,7 +2311,7 @@
         <div class="reports-card">
             <div class="program-header" style="margin-bottom: 20px; padding: 12px;"><div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div></div>
             <div class="form-header">
-                <h1>📊 التقارير</h1>
+                <h1>💼 التقارير</h1>
                 <div>
                     <button class="btn btn-user-info" onclick="showUserInfo()">👤 معلومات المستخدم المتصل</button>
                     <button class="btn btn-back" onclick="backToMenu()">🔙 رجوع</button>
@@ -2296,7 +2320,7 @@
 <div class="reports-buttons" style="justify-content: center; gap: 30px;">
     <!-- الزر الأول: تقارير قوة فرع المرقب -->
     <button class="report-btn main-report-btn branch-btn" onclick="openBranchReportsModal()">
-        <span style="font-size: 28px; display: block; margin-bottom: 8px;">📊</span>
+        <span style="font-size: 28px; display: block; margin-bottom: 8px;">🗂️ </span>
         تقارير قوة فرع المرقب
     </button>
     
@@ -2317,26 +2341,45 @@
     </div>
 
     <div id="successMessage" class="success-message"></div>
-    <!-- ========== نافذة تقارير قوة فرع المرقب ========== -->
+    <!-- >>> تايمر وقت الرجوع ووقت الإغلاق (ثابت في جميع الصفحات) <<< -->
+<div id="timersContainer" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; gap: 10px; direction: rtl;">
+    <span id="returnTimeDisplay" style="background: #fef3c7; color: #d97706; padding: 8px 16px; border-radius: 25px; font-size: 13px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        ⏳ الرجوع: <span id="returnTimeValue">--:--:--</span>
+    </span>
+    <span id="logoutTimeDisplay" style="background: #fed7d7; color: #c53030; padding: 8px 16px; border-radius: 25px; font-size: 13px; font-weight: bold; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        🚪 الإغلاق: <span id="logoutTimeValue">--:--:--</span>
+    </span>
+</div>
+<!-- ========== نافذة تقارير قوة فرع المرقب (مُعدّلة بزرين جديدين) ========== -->
 <div id="branchReportsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content">
         <div class="reports-modal-header">
-            <h2>📊 تقارير قوة فرع المرقب</h2>
+            <h2>📁 تقارير قوة فرع المرقب</h2>
             <button class="reports-modal-close" onclick="closeBranchReportsModal()">✕</button>
         </div>
         <div class="reports-modal-body">
             <div class="reports-modal-buttons">
+                <!-- >>> الزر الجديد الأول: كشف ضباط الفرع <<< -->
+                <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showOfficersReport_Branch();">
+                    <span class="modal-btn-icon">🎖️</span>
+                    <span class="modal-btn-text">كشف ضباط الفرع</span>
+                </button>
+                <!-- >>> الزر الجديد الثاني: كشف العسكريين المراتب <<< -->
+                <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showSoldiersReport_Branch();">
+                    <span class="modal-btn-icon">🪖</span>
+                    <span class="modal-btn-text">كشف العسكريين المراتب</span>
+                </button>
                 <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showMilitarySummary();">
                     <span class="modal-btn-icon">📋</span>
-                    <span class="modal-btn-text">كشف العسكريين (ملخص)</span>
+                    <span class="modal-btn-text">كشف بأسماء جميع العسكريين </span>
                 </button>
                 <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showMilitaryFull();">
                     <span class="modal-btn-icon">📄</span>
-                    <span class="modal-btn-text">بيانات العسكريين (كامل)</span>
+                    <span class="modal-btn-text">بيانات جميع العسكريين </span>
                 </button>
                 <button class="modal-report-btn civilian-style" onclick="closeBranchReportsModal(); showCivilianSummary();">
                     <span class="modal-btn-icon">📋</span>
-                    <span class="modal-btn-text">كشف الموظفين (ملخص)</span>
+                    <span class="modal-btn-text">كشف بأسماء الموظفين </span>
                 </button>
                 <button class="modal-report-btn civilian-style" onclick="closeBranchReportsModal(); showCivilianFull();">
                     <span class="modal-btn-icon">📄</span>
@@ -2346,7 +2389,6 @@
         </div>
     </div>
 </div>
-
 <!-- ========== نافذة تقارير الشهداء والجرحى ========== -->
 <div id="martyrsReportsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content">
@@ -3036,6 +3078,7 @@ function getRoleDesc(role) {
             hideAllPages();
             document.getElementById('onlineUsersPage').style.display = 'block';
             loadOnlineUsers();
+            startTimers();
         }
 
         function showAddMilitary() {
@@ -3047,6 +3090,7 @@ function getRoleDesc(role) {
             hideAllPages();
             document.getElementById('addMilitaryForm').style.display = 'block';
             clearMilitaryForm();
+            startTimers();
         }
 
         function showAddCivilian() {
@@ -3058,6 +3102,7 @@ function getRoleDesc(role) {
             hideAllPages();
             document.getElementById('addCivilianForm').style.display = 'block';
             clearCivilianForm();
+            startTimers();
         }
 
         function showAddMartyrs() {
@@ -3068,17 +3113,42 @@ function getRoleDesc(role) {
             hideAllPages();
             document.getElementById('addMartyrsForm').style.display = 'block';
             clearMartyrForm();
+            startTimers();
         }
 
-        function showSearch() { hideAllPages(); document.getElementById('searchPage').style.display = 'block'; document.getElementById('searchResults').style.display = 'none'; }
-        function showReports() { hideAllPages(); document.getElementById('reportsPage').style.display = 'block'; document.getElementById('reportActions').style.display = 'none'; }
-        function showAuditLog() { hideAllPages(); document.getElementById('auditPage').style.display = 'block'; displayAuditLog(); }
-        function showTrash() { hideAllPages(); document.getElementById('trashPage').style.display = 'block'; displayTrash(); }
-        function showUsersManagement() {
+function showSearch() { 
+    hideAllPages(); 
+    document.getElementById('searchPage').style.display = 'block'; 
+    document.getElementById('searchResults').style.display = 'none'; 
+    startTimers();
+}
+
+function showReports() { 
+    hideAllPages(); 
+    document.getElementById('reportsPage').style.display = 'block'; 
+    document.getElementById('reportActions').style.display = 'none'; 
+    startTimers();
+}
+
+function showAuditLog() { 
+    hideAllPages(); 
+    document.getElementById('auditPage').style.display = 'block'; 
+    displayAuditLog(); 
+    startTimers();
+}
+
+function showTrash() { 
+    hideAllPages(); 
+    document.getElementById('trashPage').style.display = 'block'; 
+    displayTrash(); 
+    startTimers();
+}
+  function showUsersManagement() {
             if (currentUser.role !== 'admin') { showMessage('ليس لديك صلاحية', true); return; }
             hideAllPages();
             document.getElementById('usersPage').style.display = 'block';
             displayUsersList();
+                  startTimers();
         }
 
         function hideAllPages() {
@@ -3095,10 +3165,11 @@ function getRoleDesc(role) {
         }
 
         function backToMenu() {
-            hideAllPages();
-            document.getElementById('mainMenu').style.display = 'block';
-            refreshAllData();
-        }
+    hideAllPages();
+    document.getElementById('mainMenu').style.display = 'block';
+    startTimers();    // هذا سيستدعي updateTimersVisibility تلقائياً
+    refreshAllData();
+}
 
         // ==================== دوال تسجيل الدخول والخروج ====================
         async function login() {
@@ -3200,14 +3271,15 @@ async function showMainMenu() {
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('inquiryPage').style.display = 'block';
         startDigitalClock(); // تشغيل الساعة الرقمية للمستعلم
-        return;
+     startTimers(); // تشغيل تايمر الرجوع والإغلاق
+   return;
     }
     
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('mainMenu').style.display = 'block';
     
     startDigitalClock(); // ✅ تشغيل الساعة هنا (وليس إيقافها)
-
+startTimers(); // ✅ تشغيل تايمر الرجوع والإغلاق
     document.getElementById('userName').textContent = currentUser.name;
     document.getElementById('userRole').textContent = `${getRoleName(currentUser.role)} (${getRoleDesc(currentUser.role)})`;
     document.getElementById('usersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
@@ -3547,8 +3619,9 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
                     canEdit = canEditMartyr;
                     canDelete = canDeleteMartyr;
                     currentRecordType = 'martyr';
-                    if (result.status === 'شهيد عمليات') title = '🕊️ بيانات شهيد عمليات';
-                    else if (result.status === 'شهيد واجب') title = '🕊️ بيانات شهيد واجب';
+if (result.status === 'شهيد.') title = '🕊️ بيانات شهيد';
+else if (result.status === 'شهيد عمليات') title = '🕊️ بيانات شهيد عمليات';
+else if (result.status === 'شهيد واجب') title = '🕊️ بيانات شهيد واجب';
                     else if (result.status === 'جريح حرب') title = '🩸 بيانات جريح حرب';
                     else if (result.status === 'اسير') title = '⛓️ بيانات أسير';
                     else if (result.status === 'مفقود') title = '❓ بيانات مفقود';
@@ -3727,6 +3800,11 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
                         width: 100%;
                         border-collapse: collapse;
                     }
+                    /* ========== محاذاة وسط لجميع جداول التقارير ========== */
+.report-table th,
+.report-table td {
+    text-align: center !important;
+}
                     @media print {
                         body {
                             padding: 10px;
@@ -3734,6 +3812,7 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
                         .page-break {
                             page-break-before: always;
                         }
+
 
                 </style>
             </head>
@@ -4239,7 +4318,7 @@ function exportAuditLogToPDF() {
             showConfirmModal('حذف نهائي؟', async () => { if (await permanentDeleteFromTrash(id)) { showMessage('تم الحذف'); displayTrash(); } });
         }
 
-        // ==================== دوال التقارير ====================
+        // ==================== دوال  ====================
 function showMilitarySummary() { 
     currentReportTitle = 'كشف بأسماء جميع العسكريين التابعين لفرع المرقب\n(ضباط-ضباط صف-جنود)'; 
     const sorted = [...militaries].sort((a, b) => parseInt(a.id) - parseInt(b.id));
@@ -4253,9 +4332,35 @@ function showMilitarySummary() {
 }
         function showCivilianFull() { currentReportTitle = 'بيانات الموظفين (كاملة)'; showReportTable(['م', 'الرقم', 'الرتبة', 'الاسم', 'الأم', 'الحالة', 'الدرجة', 'تاريخ الترقية', 'القرار', 'الوطني', 'البطاقة', 'الجواز', 'القيد', 'الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف'], civilians.map((c, i) => [i+1, c.id, c.rank, c.name, c.motherName, c.maritalStatus, c.promotionRank, c.lastPromotionDate, c.decisionInfo, c.nationalId, c.idCardNumber, c.passportNumber, c.recordNo, c.birthDate, c.birthPlace, c.address, c.phone])); }
 
-        function showReportTable(headers, rows) {
-    let html = `<div class="report-title" style="text-align: center; white-space: pre-line; font-size: 18px; font-weight: bold; margin-bottom: 15px;">${currentReportTitle}</div>`;
+function showReportTable(headers, rows) {
+    const now = new Date();
+    const printDate = now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // استخراج أول وآخر سجل
+    let firstId = '';
+    let lastId = '';
+    if (rows.length > 0) {
+        firstId = rows[0][1] || '';  // الرقم في العمود الثاني
+        lastId = rows[rows.length - 1][1] || '';
+    }
+    
+    // إنشاء باركود ID فريد (لتجنب التعارض)
+    const barcodeId = 'barcode_' + Date.now();
+    
+    let html = `<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+    <div style="text-align: center; flex-grow: 1;"></div>
+    <div style="text-align: left; direction: ltr; min-width: 120px; flex-shrink: 0;">
+        <span style="font-size: 9px; color: #555; font-weight: bold;">📅 ${printDate}</span>
+        ${rows.length > 0 ? `<div style="margin-top: 5px;">
+            <svg id="${barcodeId}" style="width: 100px; height: 35px;"></svg>
+        </div>` : ''}
+    </div>
+</div>`;
+
+
+    html += `<div class="report-title" style="text-align: center; white-space: pre-line; font-size: 18px; font-weight: bold; margin-bottom: 15px;">${currentReportTitle}</div>`;
     html += `<div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+    
     if (rows.length === 0) {
         html += `<tr><td colspan="${headers.length}" style="text-align:center; padding: 20px;">لا توجد بيانات متطابقة</td></tr>`;
     } else {
@@ -4263,10 +4368,33 @@ function showMilitarySummary() {
             html += `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`;
         });
     }
+    
     html += '</tbody></table></div>';
+    
     document.getElementById('reportContent').innerHTML = html;
     document.getElementById('reportActions').style.display = 'flex';
     currentReportHtml = html;
+    
+    // توليد الباركود بعد إدراج الـ HTML
+    if (rows.length > 0 && firstId && lastId) {
+        setTimeout(() => {
+            try {
+                const barcodeText = `${firstId}-${lastId}`;
+                JsBarcode(`#${barcodeId}`, barcodeText, {
+                    format: 'CODE128',
+                    width: 1,
+                    height: 30,
+                    fontSize: 8,
+                    textMargin: 2,
+                    margin: 2,
+                    displayValue: true,
+                    text: `${firstId} / ${lastId}`
+                });
+            } catch(e) {
+                console.log('خطأ في توليد الباركود:', e);
+            }
+        }, 200);
+    }
 }
 // ==================== دوال التقارير الجديدة ====================
 
@@ -4520,97 +4648,254 @@ function showOfficersReport(type) {
             URL.revokeObjectURL(link.href);
         }
 
-        function printReport() {
-            const win = window.open('', '_blank');
-            win.document.write(`<html dir="rtl"><head><title>تقرير</title><style>body{font-family:'Segoe UI';padding:20px;direction:rtl}table{width:100%;border-collapse:collapse}th{background:#667eea;color:white;padding:6px;border:1px solid #5568d3}td{padding:4px;border:1px solid #ddd}@media print{@page{size:landscape;margin:0.5cm}}</style></head><body>${currentReportHtml}</body></html>`);
-            win.document.close();
-            win.print();
+function printReport() {
+    // نسخ الباركود كـ SVG مع إجباره على الظهور
+    const originalSvg = document.querySelector('#reportContent svg');
+    let barcodeHtml = '';
+    if (originalSvg) {
+        // إنشاء نسخة جديدة من SVG
+        const svgClone = originalSvg.cloneNode(true);
+        svgClone.setAttribute('width', '100px');
+        svgClone.setAttribute('height', '35px');
+        svgClone.style.display = 'block';
+        svgClone.style.visibility = 'visible';
+        barcodeHtml = svgClone.outerHTML;
+    }
+    
+    // استبدال SVG في التقرير بنسخة مضمونة الظهور
+    let reportHtml = currentReportHtml;
+    if (barcodeHtml) {
+        reportHtml = reportHtml.replace(/<svg[^>]*>[\s\S]*?<\/svg>/, barcodeHtml);
+    }
+    
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تقرير</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-// ==================== نظام الخمول (Idle Timeout) ====================
-let idleTimeout = null;
-let idleWarningTimeout = null;
-const IDLE_TIME_MAIN = 120000; // 2 دقائق لتسجيل الخروج
-
-// إعادة تعيين مؤقت الخمول
-function resetIdleTimer() {
-    // إلغاء المؤقتات الحالية
-    if (idleTimeout) clearTimeout(idleTimeout);
-    if (idleWarningTimeout) clearTimeout(idleWarningTimeout);
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 3mm;
+            direction: rtl;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 7px;
+            page-break-inside: auto;
+        }
+        thead {
+            display: table-header-group;
+        }
+        tbody {
+            display: table-row-group;
+        }
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 2px 1px;
+            border: 0.5px solid #5568d3;
+            text-align: center !important;
+            font-size: 7px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 2px 1px;
+            border: 0.5px solid #ddd;
+            text-align: center !important;
+            font-size: 7px;
+            white-space: nowrap;
+        }
+        .report-title {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            white-space: pre-line;
+        }
+        /* ضمان ظهور التاريخ والباركود في اليسار */
+        div[style*="display: flex"] > div:first-child {
+            text-align: left !important;
+            direction: ltr !important;
+        }
+        div[style*="display: flex"] svg {
+            display: block !important;
+            visibility: visible !important;
+            width: 100px !important;
+            height: 35px !important;
+        }
+        @page {
+            size: A4;
+            margin: 3mm;
+        }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            svg {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    ${reportHtml}
+</body>
+</html>`);
+    win.document.close();
     
-    // التحقق من الصفحة الحالية
-    const isMainMenu = document.getElementById('mainMenu').style.display === 'block';
-    const isLoginPage = document.getElementById('loginPage').style.display === 'block';
-    
-    // إذا كان في صفحة تسجيل الدخول، لا نفعل شيئاً
-    if (isLoginPage) return;
-    
- if (isMainMenu) {
-    idleTimeout = setTimeout(() => {
-        showMessage('⚠️ تم تسجيل الخروج تلقائياً بسبب الخمول لمدة دقيقتين', true);
-        setTimeout(() => {
-            logout();
-        }, 1500);
-    }, IDLE_TIME_MAIN);
-} else if (document.getElementById('inquiryPage').style.display === 'block') {
-    // للمستعلم: تسجيل خروج بعد الخمول
-    idleTimeout = setTimeout(() => {
-        showMessage('⚠️ تم تسجيل الخروج تلقائياً بسبب الخمول لمدة دقيقتين', true);
-        setTimeout(() => {
-            logout();
-        }, 1500);
-    }, IDLE_TIME_MAIN);
-} else {
-    idleTimeout = setTimeout(() => {
-        showMessage('⚠️ تم العودة للقائمة الرئيسية بسبب الخمول لمدة دقيقتين', false);
-        setTimeout(() => {
-            backToMenu();
-        }, 1500);
-    }, IDLE_TIME_MAIN);
+    // انتظار تحميل الصفحة ثم الطباعة
+    setTimeout(() => {
+        win.print();
+    }, 800);
 }
+// ==================== تايمر وقت الرجوع ووقت الإغلاق (عرض فقط) ====================
+let returnTime = null;
+let logoutTime = null;
+let timerInterval = null;
+
+const RETURN_MINUTES = 1;
+const LOGOUT_MINUTES = 2;
+
+function hideAllTimers() {
+    var timersContainer = document.getElementById('timersContainer');
+    if (timersContainer) timersContainer.style.display = 'none';
+}
+function updateTimersVisibility() {
+    var timersContainer = document.getElementById('timersContainer');
+    var returnTimer = document.getElementById('returnTimeDisplay');
+    var logoutTimer = document.getElementById('logoutTimeDisplay');
+    
+    // إظهار الحاوية دائماً
+    if (timersContainer) timersContainer.style.display = 'flex';
+    
+    var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
+    var isInquiry = document.getElementById('inquiryPage').style.display === 'block';
+    var isLoginPage = document.getElementById('loginPage').style.display === 'block';
+    
+    // في صفحة الدخول: إخفاء التايمر تماماً
+    if (isLoginPage) {
+        if (timersContainer) timersContainer.style.display = 'none';
+        return;
+    }
+    
+    if (isMainMenu || isInquiry) {
+        // في القائمة الرئيسية أو الاستعلام: إظهار تايمر الخروج فقط
+        if (returnTimer) returnTimer.style.display = 'none';
+        if (logoutTimer) logoutTimer.style.display = 'inline-block';
+    } else {
+        // في باقي النماذج: إظهار تايمر الرجوع فقط
+        if (returnTimer) returnTimer.style.display = 'inline-block';
+        if (logoutTimer) logoutTimer.style.display = 'none';
+    }
+}
+function updateTimersDisplay() {
+    var now = new Date().getTime();
+    var returnEl = document.getElementById('returnTimeValue');
+    var logoutEl = document.getElementById('logoutTimeValue');
+    
+    // ========== تايمر الرجوع (النماذج الأخرى) ==========
+    if (returnTime && returnEl) {
+        var diff = returnTime - now;
+        if (diff > 0) {
+            var h = Math.floor(diff / 3600000);
+            var m = Math.floor((diff % 3600000) / 60000);
+            var s = Math.floor((diff % 60000) / 1000);
+            returnEl.textContent = 
+                String(h).padStart(2, '0') + ':' + 
+                String(m).padStart(2, '0') + ':' + 
+                String(s).padStart(2, '0');
+        } else {
+            returnEl.textContent = '00:00:00';
+            // ✅ انتهى وقت الرجوع - العودة للقائمة الرئيسية
+            stopTimers();
+            var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
+            var isLoginPage = document.getElementById('loginPage').style.display === 'block';
+            if (!isMainMenu && !isLoginPage) {
+                showMessage('🏠 تم العودة للقائمة الرئيسية تلقائياً', false);
+                setTimeout(function() {
+                    backToMenu(); // العودة للقائمة + إعادة تشغيل التايمر (للإغلاق)
+                }, 500);
+            }
+        }
+    }
+    
+    // ========== تايمر الإغلاق (القائمة الرئيسية) ==========
+    if (logoutTime && logoutEl) {
+        var diff = logoutTime - now;
+        if (diff > 0) {
+            var h = Math.floor(diff / 3600000);
+            var m = Math.floor((diff % 3600000) / 60000);
+            var s = Math.floor((diff % 60000) / 1000);
+            logoutEl.textContent = 
+                String(h).padStart(2, '0') + ':' + 
+                String(m).padStart(2, '0') + ':' + 
+                String(s).padStart(2, '0');
+        } else {
+            logoutEl.textContent = '00:00:00';
+            // ✅ انتهى وقت الإغلاق - تسجيل الخروج
+            var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
+            if (isMainMenu) {
+                stopTimers();
+                showMessage('🚪 تم تسجيل الخروج تلقائياً', true);
+                setTimeout(function() {
+                    logout();
+                }, 1000);
+            }
+        }
+    }
 }
 
-// أحداث إعادة تعيين مؤقت الخمول
+function startTimers() {
+    var now = new Date().getTime();
+    returnTime = now + (RETURN_MINUTES * 60 * 1000);
+    logoutTime = now + (LOGOUT_MINUTES * 60 * 1000);
+    
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimersDisplay, 1000);
+    updateTimersDisplay();
+    updateTimersVisibility(); // 👈 إظهار/إخفاء التايمرات حسب الصفحة
+}
+
+function resetTimers() {
+    var now = new Date().getTime();
+    returnTime = now + (RETURN_MINUTES * 60 * 1000);
+    logoutTime = now + (LOGOUT_MINUTES * 60 * 1000);
+}
+
+function stopTimers() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    hideAllTimers();
+}
+
 function setupIdleDetection() {
-    // أحداث النشاط
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click', 'keydown'];
-    
-    events.forEach(event => {
-        document.addEventListener(event, () => {
-            resetIdleTimer();
+    var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click', 'keydown'];
+    events.forEach(function(event) {
+        document.addEventListener(event, function() {
+            resetTimers();
         });
     });
-    
-    // بدء المؤقت الأول
-    resetIdleTimer();
-    
-    // مراقبة التبديل بين الصفحات
-    const observer = new MutationObserver(() => {
-        resetIdleTimer();
-    });
-    
-    // مراقبة تغييرات display للصفحات الرئيسية
-    const pagesToObserve = [
-        'mainMenu', 'addMilitaryForm', 'addCivilianForm', 'addMartyrsForm',
-        'searchPage', 'reportsPage', 'usersPage', 'auditPage', 
-        'trashPage', 'onlineUsersPage'
-    ];
-    
-    pagesToObserve.forEach(pageId => {
-        const page = document.getElementById(pageId);
-        if (page) {
-            observer.observe(page, {
-                attributes: true,
-                attributeFilter: ['style', 'class']
-            });
-        }
-    });
 }
-
-// تعديل دالة الخروج لإلغاء المؤقتات
-const originalLogout = logout;
+// تعديل دالة الخروج لإيقاف التايمر
+var originalLogout = logout;
 logout = async function() {
-    if (idleTimeout) clearTimeout(idleTimeout);
-    if (idleWarningTimeout) clearTimeout(idleWarningTimeout);
+    stopTimers();
     await originalLogout();
 };
 
@@ -5568,6 +5853,36 @@ document.addEventListener('keydown', function(e) {
         
         // تهيئة كشف الخمول
         setupIdleDetection();
+// ==================== تقرير كشف ضباط الفرع (من بيانات العسكريين) ====================
+/**
+ * يستبعد الرتب: جندي، جندي أول، نائب عريف، عريف، رع س، رع و
+ * أي يظهر من ملازم تان فما فوق
+ */
+function showOfficersReport_Branch() {
+    const excludedRanks = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    const filtered = militaries.filter(m => !excludedRanks.includes(m.rank));
+    const sorted = [...filtered].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    
+    currentReportTitle = 'كشف بأسماء الضباط التابعين الي فرع المرقب';
+    
+    const rows = sorted.map((m, i) => [i + 1, m.id || '-', m.rank || '-', m.name || '-']);
+    showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], rows);
+}
+
+// ==================== تقرير كشف العسكريين المراتب (من بيانات العسكريين) ====================
+/**
+ * يشمل فقط الرتب: جندي، جندي أول، نائب عريف، عريف، رع س، رع و
+ */
+function showSoldiersReport_Branch() {
+    const includedRanks = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    const filtered = militaries.filter(m => includedRanks.includes(m.rank));
+    const sorted = [...filtered].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    
+    currentReportTitle = 'كشف بأسماء العسكريين التابعين الي فرع المرقب';
+    
+    const rows = sorted.map((m, i) => [i + 1, m.id || '-', m.rank || '-', m.name || '-']);
+    showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], rows);
+}
         // ==================== نظام تتبع الأجهزة ====================
 function getDeviceInfo() {
     const ua = navigator.userAgent;
