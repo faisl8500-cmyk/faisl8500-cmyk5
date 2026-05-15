@@ -1911,7 +1911,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.0</p>
+                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.1</p>
                 </div>
             </div>
             <div class="form-group">
@@ -1946,7 +1946,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
                 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-                    📌 الإصدار 2.0
+                    📌 الإصدار 2.1
                 </div>
             </div>
             <div class="user-bar">
@@ -1957,8 +1957,8 @@
                     <span class="online-indicator" id="onlineIndicator">🟢 متصل</span>
                     <span class="sync-status" id="syncStatus">☁️ متزامن</span>
                     <!-- >>> زر الوضع المظلم مضاف هنا <<< -->
-                    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>
- 
+                    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>           
+<button class="dark-mode-toggle" onclick="openTimerSettings()" title="إعدادات التايمر" style="font-size: 14px;">⏰</button>         
 <span id="logoutTimeDisplay" style="background: #fed7d7; color: #c53030; padding: 5px 12px; border-radius: 20px; font-size: 11px; direction: rtl; font-weight: bold;">
     🚪 الإغلاق: <span id="logoutTimeValue">--:--:--</span>
 </span>
@@ -2185,7 +2185,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-            <div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.0</div>
+            <div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2341,7 +2341,35 @@
     </div>
 
     <div id="successMessage" class="success-message"></div>
-    <!-- >>> تايمر وقت الرجوع ووقت الإغلاق (ثابت في جميع الصفحات) <<< -->
+  <!-- نافذة إعدادات التايمر -->
+<div id="timerSettingsModal" class="reports-modal" style="display: none;">
+    <div class="reports-modal-content" style="max-width: 450px;">
+        <div class="reports-modal-header" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
+            <h2>⏰ إعدادات التايمر</h2>
+            <button class="reports-modal-close" onclick="closeTimerSettings()">✕</button>
+        </div>
+        <div class="reports-modal-body">
+            <div class="form-group">
+                <label>⏳ وقت الرجوع للنماذج (دقائق)</label>
+                <input type="number" id="returnMinutesInput" value="1" min="1" max="60" style="font-size: 18px; text-align: center;">
+                <p style="font-size: 11px; color: #888; margin-top: 5px;">يطبق على نماذج الإضافة والبحث والتقارير</p>
+            </div>
+            <div class="form-group">
+                <label>🚪 وقت الإغلاق للقائمة الرئيسية (دقائق)</label>
+                <input type="number" id="logoutMinutesInput" value="2" min="1" max="60" style="font-size: 18px; text-align: center;">
+                <p style="font-size: 11px; color: #888; margin-top: 5px;">يطبق على القائمة الرئيسية وخدمة الاستعلام</p>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="saveTimerSettings()" style="flex: 1; background: #11998e; font-size: 16px;">💾 حفظ الإعدادات</button>
+                <button class="btn" onclick="resetTimerToDefault()" style="flex: 1; background: #667eea; font-size: 16px;">🔄 الوضع الافتراضي</button>
+            </div>
+            <p style="text-align: center; margin-top: 12px; font-size: 11px; color: #888;">
+                ⏳ الافتراضي: الرجوع 1 دقيقة | 🚪 الإغلاق 2 دقيقة
+            </p>
+        </div>
+    </div>
+</div>
+  <!-- >>> تايمر وقت الرجوع ووقت الإغلاق (ثابت في جميع الصفحات) <<< -->
 <div id="timersContainer" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; gap: 10px; direction: rtl;">
     <span id="returnTimeDisplay" style="background: #fef3c7; color: #d97706; padding: 8px 16px; border-radius: 25px; font-size: 13px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
         ⏳ الرجوع: <span id="returnTimeValue">--:--:--</span>
@@ -3780,7 +3808,7 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
             const footer = `
                 <div style="text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 11px; color: #888;">
                     <p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p>
-                    <p>فرع المرقب - الإصدار 2.0</p>
+                    <p>فرع المرقب - الإصدار 2.1</p>
                 </div>
             `;
             
@@ -4282,14 +4310,14 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-    '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.0</p>' +
+    '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
     '<thead><tr><th>#</th><th>التاريخ والوقت</th><th>المستخدم</th><th>نوع العملية</th><th>نوع السجل</th><th>رقم السجل</th><th>الاسم</th><th>التفاصيل</th></tr></thead>' +
     '<tbody>' + tableRows + '</tbody>' +
     '</table>' +
-    '<div class="footer"><p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p><p>فرع المرقب - الإصدار 2.0</p></div>' +
+    '<div class="footer"><p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p><p>فرع المرقب - الإصدار 2.1</p></div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };' +
     '</' + 'script>' +
     '</body>' +
@@ -4653,7 +4681,6 @@ function printReport() {
     const originalSvg = document.querySelector('#reportContent svg');
     let barcodeHtml = '';
     if (originalSvg) {
-        // إنشاء نسخة جديدة من SVG
         const svgClone = originalSvg.cloneNode(true);
         svgClone.setAttribute('width', '100px');
         svgClone.setAttribute('height', '35px');
@@ -4662,6 +4689,27 @@ function printReport() {
         barcodeHtml = svgClone.outerHTML;
     }
     
+    // ✅ استخراج أول وآخر اسم من الجدول (قبل فتح النافذة)
+    var firstName = '';
+    var lastName = '';
+    var tableRows = document.querySelectorAll('#reportContent .report-table tbody tr');
+    if (tableRows.length > 0) {
+        var firstRow = tableRows[0];
+        var lastRow = tableRows[tableRows.length - 1];
+        var firstCells = firstRow.querySelectorAll('td');
+        var lastCells = lastRow.querySelectorAll('td');
+        // العمود الرابع (index 3) يحتوي على الاسم
+        if (firstCells.length >= 4) firstName = firstCells[3].textContent.trim();
+        if (lastCells.length >= 4) lastName = lastCells[3].textContent.trim();
+    }
+
+    var footerText = '';
+    if (firstName && lastName) {
+        footerText = `<div style="text-align: center; margin-top: 15px; padding-top: 10px; border-top: 2px solid #667eea; font-size: 14px; font-weight: bold; color: #333;">
+            📋 يبدأ الكشف بـ: <span style="color: #667eea;">${firstName}</span> &nbsp;|&nbsp; وينتهي بـ: <span style="color: #667eea;">${lastName}</span>
+        </div>`;
+    }
+
     // استبدال SVG في التقرير بنسخة مضمونة الظهور
     let reportHtml = currentReportHtml;
     if (barcodeHtml) {
@@ -4688,14 +4736,11 @@ function printReport() {
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 7px;
+            font-size: 10px;
             page-break-inside: auto;
         }
         thead {
             display: table-header-group;
-        }
-        tbody {
-            display: table-row-group;
         }
         tr {
             page-break-inside: avoid;
@@ -4704,36 +4749,25 @@ function printReport() {
         th {
             background: #667eea;
             color: white;
-            padding: 2px 1px;
+            padding: 4px 2px;
             border: 0.5px solid #5568d3;
             text-align: center !important;
-            font-size: 7px;
+            font-size: 10px;
             white-space: nowrap;
         }
         td {
-            padding: 2px 1px;
+            padding: 4px 2px;
             border: 0.5px solid #ddd;
             text-align: center !important;
-            font-size: 7px;
+            font-size: 10px;
             white-space: nowrap;
         }
         .report-title {
             text-align: center;
-            font-size: 12px;
+            font-size: 16px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             white-space: pre-line;
-        }
-        /* ضمان ظهور التاريخ والباركود في اليسار */
-        div[style*="display: flex"] > div:first-child {
-            text-align: left !important;
-            direction: ltr !important;
-        }
-        div[style*="display: flex"] svg {
-            display: block !important;
-            visibility: visible !important;
-            width: 100px !important;
-            height: 35px !important;
         }
         @page {
             size: A4;
@@ -4753,11 +4787,11 @@ function printReport() {
 </head>
 <body>
     ${reportHtml}
+    ${footerText}
 </body>
 </html>`);
     win.document.close();
     
-    // انتظار تحميل الصفحة ثم الطباعة
     setTimeout(() => {
         win.print();
     }, 800);
@@ -4767,113 +4801,159 @@ let returnTime = null;
 let logoutTime = null;
 let timerInterval = null;
 
-const RETURN_MINUTES = 1;
-const LOGOUT_MINUTES = 2;
+let RETURN_MINUTES = parseInt(localStorage.getItem('returnMinutes') || '1');
+let LOGOUT_MINUTES = parseInt(localStorage.getItem('logoutMinutes') || '2');
+// ==================== دوال إعدادات التايمر ====================
+function openTimerSettings() {
+    var modal = document.getElementById('timerSettingsModal');
+    document.getElementById('returnMinutesInput').value = RETURN_MINUTES;
+    document.getElementById('logoutMinutesInput').value = LOGOUT_MINUTES;
+    modal.style.display = 'flex';
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeTimerSettings();
+        }
+    };
+}
 
+function closeTimerSettings() {
+    document.getElementById('timerSettingsModal').style.display = 'none';
+}
+
+function saveTimerSettings() {
+    var returnMin = parseInt(document.getElementById('returnMinutesInput').value);
+    var logoutMin = parseInt(document.getElementById('logoutMinutesInput').value);
+    
+    if (isNaN(returnMin) || returnMin < 1) returnMin = 1;
+    if (isNaN(logoutMin) || logoutMin < 1) logoutMin = 1;
+    
+    RETURN_MINUTES = returnMin;
+    LOGOUT_MINUTES = logoutMin;
+    
+    localStorage.setItem('returnMinutes', returnMin);
+    localStorage.setItem('logoutMinutes', logoutMin);
+    
+    closeTimerSettings();
+    startTimers();
+    showMessage('✅ تم حفظ إعدادات التايمر بنجاح');
+}
+
+function resetTimerToDefault() {
+    RETURN_MINUTES = 1;
+    LOGOUT_MINUTES = 2;
+    
+    localStorage.setItem('returnMinutes', 1);
+    localStorage.setItem('logoutMinutes', 2);
+    
+    document.getElementById('returnMinutesInput').value = 1;
+    document.getElementById('logoutMinutesInput').value = 2;
+    
+    closeTimerSettings();
+    startTimers();
+    showMessage('✅ تم استعادة الإعدادات الافتراضية');
+}
 function hideAllTimers() {
     var timersContainer = document.getElementById('timersContainer');
+    var returnTimer = document.getElementById('returnTimeDisplay');
+    var logoutTimer = document.getElementById('logoutTimeDisplay');
+    
     if (timersContainer) timersContainer.style.display = 'none';
+    if (returnTimer) returnTimer.style.display = 'none';
+    if (logoutTimer) logoutTimer.style.display = 'none';
 }
 function updateTimersVisibility() {
     var timersContainer = document.getElementById('timersContainer');
     var returnTimer = document.getElementById('returnTimeDisplay');
     var logoutTimer = document.getElementById('logoutTimeDisplay');
     
-    // إظهار الحاوية دائماً
-    if (timersContainer) timersContainer.style.display = 'flex';
-    
     var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
     var isInquiry = document.getElementById('inquiryPage').style.display === 'block';
     var isLoginPage = document.getElementById('loginPage').style.display === 'block';
     
-    // في صفحة الدخول: إخفاء التايمر تماماً
+    // في صفحة الدخول: إخفاء الكل
     if (isLoginPage) {
         if (timersContainer) timersContainer.style.display = 'none';
+        if (logoutTimer) logoutTimer.style.display = 'none';
         return;
     }
     
     if (isMainMenu || isInquiry) {
-        // في القائمة الرئيسية أو الاستعلام: إظهار تايمر الخروج فقط
-        if (returnTimer) returnTimer.style.display = 'none';
+        // القائمة الرئيسية: إخفاء العائم، إظهار الإغلاق في user-bar
+        if (timersContainer) timersContainer.style.display = 'none';
         if (logoutTimer) logoutTimer.style.display = 'inline-block';
     } else {
-        // في باقي النماذج: إظهار تايمر الرجوع فقط
-        if (returnTimer) returnTimer.style.display = 'inline-block';
+        // النماذج الأخرى: إظهار الرجوع في الأعلى، إخفاء الإغلاق
         if (logoutTimer) logoutTimer.style.display = 'none';
+        if (timersContainer) timersContainer.style.display = 'flex';
+        if (returnTimer) returnTimer.style.display = 'inline-block';
     }
 }
 function updateTimersDisplay() {
     var now = new Date().getTime();
     var returnEl = document.getElementById('returnTimeValue');
     var logoutEl = document.getElementById('logoutTimeValue');
+    var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
+    var isInquiry = document.getElementById('inquiryPage').style.display === 'block';
+    var isLoginPage = document.getElementById('loginPage').style.display === 'block';
     
-    // ========== تايمر الرجوع (النماذج الأخرى) ==========
-    if (returnTime && returnEl) {
+    // ========== تايمر الرجوع (فقط في النماذج الأخرى) ==========
+    if (!isMainMenu && !isInquiry && !isLoginPage && returnTime && returnEl) {
         var diff = returnTime - now;
         if (diff > 0) {
-            var h = Math.floor(diff / 3600000);
-            var m = Math.floor((diff % 3600000) / 60000);
+            var m = Math.floor(diff / 60000);
             var s = Math.floor((diff % 60000) / 1000);
-            returnEl.textContent = 
-                String(h).padStart(2, '0') + ':' + 
-                String(m).padStart(2, '0') + ':' + 
-                String(s).padStart(2, '0');
+            returnEl.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
         } else {
-            returnEl.textContent = '00:00:00';
-            // ✅ انتهى وقت الرجوع - العودة للقائمة الرئيسية
+            returnEl.textContent = '00:00';
             stopTimers();
-            var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
-            var isLoginPage = document.getElementById('loginPage').style.display === 'block';
-            if (!isMainMenu && !isLoginPage) {
-                showMessage('🏠 تم العودة للقائمة الرئيسية تلقائياً', false);
-                setTimeout(function() {
-                    backToMenu(); // العودة للقائمة + إعادة تشغيل التايمر (للإغلاق)
-                }, 500);
-            }
+            showMessage('تم العودة للقائمة الرئيسية', false);
+            setTimeout(function() { backToMenu(); }, 500);
         }
     }
     
-    // ========== تايمر الإغلاق (القائمة الرئيسية) ==========
-    if (logoutTime && logoutEl) {
+    // ========== تايمر الإغلاق (فقط في القائمة الرئيسية والاستعلام) ==========
+    if ((isMainMenu || isInquiry) && logoutTime && logoutEl) {
         var diff = logoutTime - now;
         if (diff > 0) {
-            var h = Math.floor(diff / 3600000);
-            var m = Math.floor((diff % 3600000) / 60000);
+            var m = Math.floor(diff / 60000);
             var s = Math.floor((diff % 60000) / 1000);
-            logoutEl.textContent = 
-                String(h).padStart(2, '0') + ':' + 
-                String(m).padStart(2, '0') + ':' + 
-                String(s).padStart(2, '0');
+            logoutEl.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
         } else {
-            logoutEl.textContent = '00:00:00';
-            // ✅ انتهى وقت الإغلاق - تسجيل الخروج
-            var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
-            if (isMainMenu) {
-                stopTimers();
-                showMessage('🚪 تم تسجيل الخروج تلقائياً', true);
-                setTimeout(function() {
-                    logout();
-                }, 1000);
-            }
+            logoutEl.textContent = '00:00';
+            stopTimers();
+            showMessage('تم تسجيل الخروج تلقائياً', true);
+            setTimeout(function() { logout(); }, 1000);
         }
     }
 }
 
 function startTimers() {
+    stopTimers();
     var now = new Date().getTime();
     returnTime = now + (RETURN_MINUTES * 60 * 1000);
     logoutTime = now + (LOGOUT_MINUTES * 60 * 1000);
-    
-    if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(updateTimersDisplay, 1000);
     updateTimersDisplay();
-    updateTimersVisibility(); // 👈 إظهار/إخفاء التايمرات حسب الصفحة
+    updateTimersVisibility();
 }
 
 function resetTimers() {
     var now = new Date().getTime();
     returnTime = now + (RETURN_MINUTES * 60 * 1000);
     logoutTime = now + (LOGOUT_MINUTES * 60 * 1000);
+    
+    // إعادة تشغيل المؤقت إذا كان متوقفاً
+    if (!timerInterval) {
+        timerInterval = setInterval(updateTimersDisplay, 1000);
+    }
+    
+    // إظهار التايمر في مكانه الصحيح
+    var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
+    var logoutTimer = document.getElementById('logoutTimeDisplay');
+    
+    if (isMainMenu && logoutTimer) {
+        logoutTimer.style.display = 'inline-block';
+    }
 }
 
 function stopTimers() {
@@ -4881,7 +4961,7 @@ function stopTimers() {
         clearInterval(timerInterval);
         timerInterval = null;
     }
-    hideAllTimers();
+    // لا تخفي التايمر - اتركه يظهر 00:00:00
 }
 
 function setupIdleDetection() {
@@ -5841,6 +5921,7 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeBranchReportsModal();
         closeMartyrsReportsModal();
+        closeTimerSettings();
     }
 });
         // ==================== تهيئة النظام ====================
