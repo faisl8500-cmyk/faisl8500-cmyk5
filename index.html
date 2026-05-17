@@ -1859,6 +1859,74 @@
         margin: 3mm;
     }
 }
+/* ========== تنسيق بطاقة الباركود للطباعة ========== */
+.barcode-card {
+    width: 85mm;
+    height: 54mm;
+    padding: 5mm;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 5mm;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    direction: rtl;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.barcode-card .card-header {
+    font-size: 10px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.barcode-card .card-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #667eea;
+    margin: 3px 0;
+}
+
+.barcode-card .card-info {
+    font-size: 11px;
+    color: #555;
+    margin: 2px 0;
+}
+
+.barcode-card .card-barcode {
+    margin: 5px auto;
+    text-align: center;
+}
+
+.barcode-card .card-footer {
+    font-size: 8px;
+    color: #888;
+    margin-top: 3px;
+    border-top: 1px solid #ddd;
+    padding-top: 3px;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #barcodePrintCard, #barcodePrintCard * {
+        visibility: visible;
+    }
+    #barcodePrintCard {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+}
     </style>
     <link rel="manifest" href="manifest.json">
     <!-- مكتبة الباركود JsBarcode -->
@@ -1900,7 +1968,18 @@
             </div>
         </div>
     </div>
-
+<!-- شاشة الانتظار أثناء تسجيل الدخول -->
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div style="background: var(--card-bg); border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: fadeInUp 0.4s ease;">
+        <div style="font-size: 50px; margin-bottom: 20px; animation: bounce 1s infinite;">⏳</div>
+        <h2 style="color: #667eea; margin-bottom: 10px;">جاري تسجيل الدخول</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">يرجى الانتظار...</p>
+        <div style="width: 200px; height: 6px; background: var(--border-color); border-radius: 10px; overflow: hidden; margin: 0 auto;">
+            <div id="loadingBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px; transition: width 0.3s ease;"></div>
+        </div>
+        <p id="loadingStatus" style="font-size: 12px; color: #888; margin-top: 10px;">جارٍ الاتصال بقاعدة البيانات...</p>
+    </div>
+</div>
     <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="login-container">
         <div class="login-card">
@@ -1911,7 +1990,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.1</p>
+                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.2</p>
                 </div>
             </div>
             <div class="form-group">
@@ -1946,7 +2025,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
                 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-                    📌 الإصدار 2.1
+                    📌 الإصدار 2.2
                 </div>
             </div>
             <div class="user-bar">
@@ -2185,7 +2264,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-            <div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1</div>
+            <div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.2</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2378,6 +2457,39 @@
         🚪 الإغلاق: <span id="logoutTimeValue">--:--:--</span>
     </span>
 </div>
+    
+    <!-- 👇👇👇 ضع كود نافذة الباركود هنا 👇👇👇 -->
+    <div id="barcodePrintModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; text-align: center; direction: rtl;">
+            <h3 style="color: #333; margin-bottom: 10px;">🎫 بطاقة تعريفية</h3>
+            <p style="color: #666; margin-bottom: 5px; font-size: 12px;">إدارة شؤون الشهداء - فرع المرقب</p>
+            <div style="background: #f8f9fa; border-radius: 15px; padding: 20px; margin: 15px 0;">
+                <div id="barcodePrintContent">
+                    <!-- سيتم ملؤها ديناميكياً -->
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="printBarcodeCard()" style="background: #667eea; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold;">🖨️ طباعة</button>
+                <button onclick="closeBarcodeModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- بطاقة الطباعة المخفية -->
+    <div id="barcodePrintCard" style="display: none;"></div>
+    <!-- 👆👆👆 نهاية كود الباركود 👆👆👆 -->
+<div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:3000; justify-content:center; align-items:center;">
+  <div style="background:var(--card-bg); border-radius:20px; padding:30px; width:90%; max-width:400px; direction:rtl;">
+    <h3 style="color:#8e44ad; margin-bottom:20px; text-align:center;">✏️ تعديل صلاحية المستخدم</h3>
+    <p id="editUserName" style="text-align:center; margin-bottom:15px; font-weight:bold;"></p>
+    <div id="editUserRoles" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;"></div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="confirmEditUser()" style="flex:1; background:#8e44ad; color:white; border:none; padding:12px; border-radius:8px; font-size:15px; cursor:pointer;">✅ تأكيد</button>
+      <button onclick="closeEditUserModal()" style="flex:1; background:#e53e3e; color:white; border:none; padding:12px; border-radius:8px; font-size:15px; cursor:pointer;">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+</body>
 <!-- ========== نافذة تقارير قوة فرع المرقب (مُعدّلة بزرين جديدين) ========== -->
 <div id="branchReportsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content">
@@ -3199,63 +3311,121 @@ function showTrash() {
     refreshAllData();
 }
 
-        // ==================== دوال تسجيل الدخول والخروج ====================
-        async function login() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('warningMessage').style.display = 'none';
-            await loadAllDataFromFirebase();
-            const user = users.find(u => u.username === username);
-            const isAdmin = user && user.role === 'admin';
-            if (user && !isAdmin && isAccountLocked(username, false)) {
-                document.getElementById('warningMessage').style.display = 'block';
-                document.getElementById('warningMessage').textContent = `⚠️ الحساب معطل مؤقتاً. الرجاء المحاولة بعد ${getRemainingLockTime(username)} دقيقة.`;
-                return;
-            }
-            if (user && user.password === password && user.status === 'active') {
-    // التحقق من الحظر
+// ==================== دوال تسجيل الدخول والخروج ====================
+async function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('warningMessage').style.display = 'none';
+    
+    // ✅ إظهار شاشة الانتظار
+    showLoadingOverlay('جارٍ الاتصال بقاعدة البيانات...', 20);
+    
+    await loadAllDataFromFirebase();
+    updateLoadingStatus('جارٍ التحقق من بيانات المستخدم...', 50);
+    
+    const user = users.find(u => u.username === username);
+    const isAdmin = user && user.role === 'admin';
+    
+    if (user && !isAdmin && isAccountLocked(username, false)) {
+        hideLoadingOverlay();
+        document.getElementById('warningMessage').style.display = 'block';
+        document.getElementById('warningMessage').textContent = `⚠️ الحساب معطل مؤقتاً. الرجاء المحاولة بعد ${getRemainingLockTime(username)} دقيقة.`;
+        return;
+    }
+    
+    updateLoadingStatus('جارٍ التحقق من الحظر...', 65);
+    
     await loadBlockList();
     const ip = await getIPAddress();
-  if (blockedIPs.includes(ip) && username !== 'فيصل') {
-    document.getElementById('errorMessage').style.display = 'block';
-    document.getElementById('errorMessage').textContent = '⛔ تم حظر جهازك من الدخول';
-    return;
-}
+    
+    if (blockedIPs.includes(ip) && username !== 'فيصل') {
+        hideLoadingOverlay();
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = '⛔ تم حظر جهازك من الدخول';
+        return;
+    }
+    
     if (blockedUsers.includes(username)) {
+        hideLoadingOverlay();
         document.getElementById('errorMessage').style.display = 'block';
         document.getElementById('errorMessage').textContent = '⛔ تم حظر حسابك';
         return;
     }
-                resetLoginAttempts(username);
-                currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null };
-                loginTime = Date.now();
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                localStorage.setItem('loginTime', loginTime);
-                await updateOnlineStatus();
-                startHeartbeat();
-                showMainMenu();
-            } else if (user && user.status !== 'active') {
+    
+    if (user && user.password === password && user.status === 'active') {
+        updateLoadingStatus('جارٍ تسجيل الدخول...', 80);
+        
+        resetLoginAttempts(username);
+        currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null };
+        loginTime = Date.now();
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem('loginTime', loginTime);
+        
+        updateLoadingStatus('جارٍ تحديث حالة الاتصال...', 90);
+        await updateOnlineStatus();
+        startHeartbeat();
+        
+        updateLoadingStatus('جارٍ تحميل القائمة الرئيسية...', 95);
+        
+        // ✅ إخفاء شاشة الانتظار ثم عرض القائمة
+        setTimeout(() => {
+            hideLoadingOverlay();
+            showMainMenu();
+        }, 600); // تأخير بسيط لإظهار التحميل
+        
+    } else if (user && user.status !== 'active') {
+        hideLoadingOverlay();
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 'هذا الحساب معطل';
+    } else {
+        if (user && !isAdmin) {
+            incrementLoginAttempts(username);
+            const remaining = 3 - (loginAttempts[username]?.count || 1);
+            hideLoadingOverlay();
+            if (remaining > 0) {
                 document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('errorMessage').textContent = 'هذا الحساب معطل';
-
-      } else {
-                if (user && !isAdmin) {
-                    incrementLoginAttempts(username);
-                    const remaining = 3 - (loginAttempts[username]?.count || 1);
-                    if (remaining > 0) {
-                        document.getElementById('errorMessage').style.display = 'block';
-                        document.getElementById('errorMessage').textContent = `كلمة المرور غير صحيحة. متبقي ${remaining} محاولات.`;
-                    } else {
-                        document.getElementById('warningMessage').style.display = 'block';
-                        document.getElementById('warningMessage').textContent = '⚠️ تم تجميد الحساب لمدة 30 دقيقة.';
-                    }
-                } else {
-                    document.getElementById('errorMessage').style.display = 'block';
-                    document.getElementById('errorMessage').textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
-                }
+                document.getElementById('errorMessage').textContent = `كلمة المرور غير صحيحة. متبقي ${remaining} محاولات.`;
+            } else {
+                document.getElementById('warningMessage').style.display = 'block';
+                document.getElementById('warningMessage').textContent = '⚠️ تم تجميد الحساب لمدة 30 دقيقة.';
             }
+        } else {
+            hideLoadingOverlay();
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorMessage').textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
         }
+    }
+}
+
+// ==================== دوال شاشة الانتظار ====================
+function showLoadingOverlay(message = 'يرجى الانتظار...', progress = 0) {
+    const overlay = document.getElementById('loadingOverlay');
+    const statusEl = document.getElementById('loadingStatus');
+    const barEl = document.getElementById('loadingBar');
+    
+    if (overlay) {
+        overlay.style.display = 'flex';
+        if (statusEl) statusEl.textContent = message;
+        if (barEl) barEl.style.width = progress + '%';
+    }
+}
+
+function updateLoadingStatus(message, progress) {
+    const statusEl = document.getElementById('loadingStatus');
+    const barEl = document.getElementById('loadingBar');
+    
+    if (statusEl) statusEl.textContent = message;
+    if (barEl) barEl.style.width = progress + '%';
+}
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
 // ==================== الساعة الرقمية ====================
 function updateDigitalClock() {
     const now = new Date();
@@ -3426,126 +3596,72 @@ async function unlockUserFromList(username) {
             showMessage('تم إضافة المستخدم بنجاح');
         }
 
-        async function editUser(userId) {
-            const user = users.find(u => u.id === userId);
-            if (!user || user.username === 'فيصل') { 
-                showMessage('لا يمكن تعديل هذا المستخدم', true); 
-                return; 
-            }
-            
-            const code = prompt(`🔧 تعديل صلاحية المستخدم "${user.username}"\n\n` +
-                `1️⃣ - ✏️ معدل (تعديل ومشاهدة)\n` +
-                `2️⃣ - ➕ مضيف (إضافة ومشاهدة)\n` +
-                `3️⃣ - 🗑️ محذف (حذف ومشاهدة)\n` +
-                `4️⃣ - ✏️➕ كاتب (إضافة وتعديل)\n` +
-                `5️⃣ - 👁️ مشاهد (قراءة فقط)\n\n` +
-                `📌 الصلاحية الحالية: ${getRoleName(user.role)}\n\n` +
-                `✏️ أدخل الرقم (1-5):`);
-            
-            const roles = { '1': 'modifier', '2': 'adder', '3': 'deleter', '4': 'editor', '5': 'viewer' };
-            
-            if (!roles[code]) {
-                if (code !== null) {
-                    showMessage('❌ رقم غير صالح، لم يتم التعديل', true);
-                }
-                return;
-            }
-            
-            const newRole = roles[code];
-            const oldRole = user.role;
-            
-            if (newRole === oldRole) {
-                showMessage('⚠️ الصلاحية المختارة هي نفسها الحالية، لم يتم التعديل', true);
-                return;
-            }
-        
-            // وظيفة مساعدة لتجهيز كائن الصلاحيات
-            const preparePermissions = (role) => {
-                user.permissions = { add: [], delete: [], edit: [] };
-                return new Promise((resolve) => {
-                    if (role === 'adder' || role === 'editor') {
-                        let permString = prompt(
-                            `➕ تحديد نماذج الإضافة للمستخدم "${user.username}":\n\n` +
-                            `1 - إضافة عسكري\n` +
-                            `2 - إضافة موظف\n` +
-                            `3 - إضافة شهداء وجرحى\n\n` +
-                            `أدخل الأرقام متجاورة (مثال: 13 للعسكريين والشهداء فقط):`
-                        );
-                        if (permString) {
-                            if (permString.includes('1')) user.permissions.add.push('military');
-                            if (permString.includes('2')) user.permissions.add.push('civilian');
-                            if (permString.includes('3')) user.permissions.add.push('martyr');
-                        }
-                    }
-                    if (role === 'deleter') {
-                        let permString = prompt(
-                            `🗑️ تحديد السجلات المسموح حذفها للمستخدم "${user.username}":\n\n` +
-                            `1 - حذف عسكري\n` +
-                            `2 - حذف موظف\n` +
-                            `3 - حذف شهداء وجرحى\n\n` +
-                            `أدخل الأرقام متجاورة (مثال: 12 للعسكريين والموظفين فقط):`
-                        );
-                        if (permString) {
-                            if (permString.includes('1')) user.permissions.delete.push('military');
-                            if (permString.includes('2')) user.permissions.delete.push('civilian');
-                            if (permString.includes('3')) user.permissions.delete.push('martyr');
-                        }
-                    }
-                    if (role === 'modifier' || role === 'editor') {
-                        let permString = prompt(
-                            `✏️ تحديد السجلات المسموح تعديلها للمستخدم "${user.username}":\n\n` +
-                            `1 - تعديل عسكري\n` +
-                            `2 - تعديل موظف\n` +
-                            `3 - تعديل شهداء وجرحى\n\n` +
-                            `أدخل الأرقام متجاورة (مثال: 1 للعسكريين فقط):`
-                        );
-                        if (permString) {
-                            if (permString.includes('1')) user.permissions.edit.push('military');
-                            if (permString.includes('2')) user.permissions.edit.push('civilian');
-                            if (permString.includes('3')) user.permissions.edit.push('martyr');
-                        }
-                    }
-                    resolve();
-                });
-            };
-        
-            // ... بعد async function editUser(userId) وكل الكود السابق فيها ...
-// استبدل الجزء التالي:
+        let editingUserId = null;
 
-            await preparePermissions(newRole);
-            user.role = newRole;
-        
-            showConfirmModal(
-                `⚠️ هل تريد تعطيل المستخدم "${user.username}"؟\n\n` +
-                `• اضغط "نعم" ➜ تعطيل الحساب مع تغيير الصلاحية\n` +
-                `• اضغط "لا" ➜ تغيير الصلاحية فقط وإبقاء الحساب نشطاً`,
-                async function(confirmed) {  // ✅ متغير واحد فقط
-                    if (confirmed) {
-                        // اختار نعم: تعطيل الحساب
-                        user.status = 'inactive';
-                        await saveUsersToFirebase();
-                        displayUsersList();
-                        await addAuditLog('تعديل مستخدم', 'user', user.id, user.username, 
-                            `تم تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)} وتم تعطيل الحساب بواسطة ${currentUser.name}`);
-                        showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)} وتم تعطيل الحساب`, false);
-                    } else if (confirmed === false) {
-                        // اختار لا: إبقاء الحساب نشطاً
-                        user.status = 'active';
-                        await saveUsersToFirebase();
-                        displayUsersList();
-                        await addAuditLog('تعديل مستخدم', 'user', user.id, user.username, 
-                            `تم تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)} بواسطة ${currentUser.name} (الحساب نشط)`);
-                        showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)} (الحساب نشط)`, false);
-                    }
-                },
-                function onCancel() {
-                    // المستخدم ألغى العملية (نقر خارج النافذة أو أغلقها)
-                    user.role = oldRole; // استعادة الصلاحية القديمة
-                    showMessage('❌ تم إلغاء تعديل صلاحية المستخدم', true);
-                }
-            );
-        }
+function editUser(userId) {
+    const user = users.find(u => u.id === userId);
+    if (!user || user.username === 'فيصل') {
+        showMessage('لا يمكن تعديل هذا المستخدم', true);
+        return;
+    }
+    
+    editingUserId = userId;
+    
+    document.getElementById('editUserName').textContent = 
+        `المستخدم: ${user.username} | الصلاحية الحالية: ${getRoleName(user.role)}`;
+    
+    const roles = [
+        { value: 'modifier', label: '✏️ معدل (تعديل ومشاهدة)' },
+        { value: 'adder',    label: '➕ مضيف (إضافة ومشاهدة)' },
+        { value: 'deleter',  label: '🗑️ محذف (حذف ومشاهدة)' },
+        { value: 'editor',   label: '✏️➕ كاتب (إضافة وتعديل)' },
+        { value: 'viewer',   label: '👁️ مشاهد (قراءة فقط)' },
+    ];
+    
+    const rolesDiv = document.getElementById('editUserRoles');
+    rolesDiv.innerHTML = roles.map(r => `
+        <label style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--user-bar-bg); border-radius:8px; cursor:pointer;">
+            <input type="radio" name="editUserRole" value="${r.value}" 
+                ${user.role === r.value ? 'checked' : ''}>
+            <span>${r.label}</span>
+        </label>
+    `).join('');
+    
+    const modal = document.getElementById('editUserModal');
+    modal.style.display = 'flex';
+    modal.onclick = e => { if (e.target === modal) closeEditUserModal(); };
+}
 
+function closeEditUserModal() {
+    document.getElementById('editUserModal').style.display = 'none';
+    editingUserId = null;
+}
+
+async function confirmEditUser() {
+    const selected = document.querySelector('input[name="editUserRole"]:checked');
+    if (!selected) { showMessage('اختر صلاحية', true); return; }
+    
+    const user = users.find(u => u.id === editingUserId);
+    if (!user) return;
+    
+    const oldRole = user.role;
+    const newRole = selected.value;
+    
+    if (newRole === oldRole) {
+        showMessage('⚠️ الصلاحية نفسها، لم يتم التعديل', true);
+        return;
+    }
+    
+    closeEditUserModal();
+    
+    user.role = newRole;
+    user.status = 'active';
+    await saveUsersToFirebase();
+    displayUsersList();
+    await addAuditLog('تعديل مستخدم', 'user', user.id, user.username,
+        `تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)}`);
+    showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)}`);
+}
 // ==================== نافذة التأكيد (مُصححة) ====================
 function showConfirmModal(message, onConfirm, onCancel = null) {
     const modal = document.getElementById('confirmModal');
@@ -3732,7 +3848,9 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
 } else if (canEdit || canDelete) {
     html += `<div class="result-actions">`;
     if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
-    if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
+  // ✅ زر طباعة الباركود
+html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeModal('${type}', '${result.id}')">🎫 باركود</button>`;
+  if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
     html += `</div>`;
 }
                 
@@ -3808,7 +3926,7 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
             const footer = `
                 <div style="text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 11px; color: #888;">
                     <p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p>
-                    <p>فرع المرقب - الإصدار 2.1</p>
+                    <p>فرع المرقب - الإصدار 2.2</p>
                 </div>
             `;
             
@@ -3841,12 +3959,12 @@ if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
                             page-break-before: always;
                         }
 
-
                 </style>
             </head>
             <body>
                 ${content}
                 ${footer}
+
             </body>
             </html>`;
             
@@ -4268,7 +4386,7 @@ function exportAuditLogToPDF() {
             '<td>' + (i + 1) + '</td>' +
             '<td>' + new Date(log.timestamp).toLocaleString('ar-SA') + '</td>' +
             '<td>' + (log.username || '-') + '</td>' +
-            '<td style="color: ' + actionColor + '; font-weight: bold;">' + (log.action || '-') + '</td>' +
+            '<td style="color:' + actionColor + ';font-weight:bold;">' + (log.action || '-') + '</td>' +
             '<td>' + (log.recordType || '-') + '</td>' +
             '<td>' + (log.recordId || '-') + '</td>' +
             '<td>' + (log.recordName || '-') + '</td>' +
@@ -4283,25 +4401,84 @@ function exportAuditLogToPDF() {
     '<title>سجل التغييرات</title>' +
     '<style>' +
     '* { margin: 0; padding: 0; box-sizing: border-box; }' +
-    'body { font-family: Tahoma, sans-serif; padding: 8px; direction: rtl; color: #333; font-size: 9px; line-height: 1.2; }' +
-    '.header { text-align: center; margin-bottom: 6px; border-bottom: 1px solid #667eea; padding-bottom: 4px; }' +
-    '.header h2 { color: #667eea; margin-bottom: 2px; font-size: 13px; }' +
-    '.header h3 { color: #555; margin: 2px 0; font-size: 11px; }' +
-    '.header p { color: #888; font-size: 8px; margin: 1px 0; }' +
-    '.stats { text-align: center; margin-bottom: 6px; background: #f0f2f5; padding: 4px; border-radius: 4px; font-size: 9px; }' +
-    'table { width: 100%; border-collapse: collapse; font-size: 7px; }' +
-    'thead { display: table-header-group; }' +
-    'tr { page-break-inside: avoid; }' +
-    'th { background: #667eea; color: white; padding: 3px 2px; text-align: center; border: 0.5px solid #5568d3; font-size: 7px; line-height: 1.1; }' +
-    'td { padding: 2px 2px; text-align: center; border: 0.5px solid #ddd; font-size: 7px; line-height: 1.1; }' +
+    'body {' +
+    '    font-family: Tahoma, sans-serif;' +
+    '    padding: 5mm;' +
+    '    direction: rtl;' +
+    '    color: #333;' +
+    '    font-size: 8px;' +
+    '}' +
+    '.header {' +
+    '    text-align: center;' +
+    '    margin-bottom: 5px;' +
+    '    border-bottom: 2px solid #667eea;' +
+    '    padding-bottom: 4px;' +
+    '}' +
+    '.header h2 { color: #667eea; font-size: 12px; margin-bottom: 2px; }' +
+    '.header h3 { color: #555; font-size: 10px; margin: 2px 0; }' +
+    '.header p { color: #888; font-size: 7px; margin: 1px 0; }' +
+    '.stats {' +
+    '    text-align: center;' +
+    '    margin-bottom: 5px;' +
+    '    background: #f0f2f5;' +
+    '    padding: 3px;' +
+    '    border-radius: 4px;' +
+    '    font-size: 8px;' +
+    '}' +
+    'table {' +
+    '    width: 100%;' +
+    '    border-collapse: collapse;' +
+    '    table-layout: fixed;' +
+    '}' +
+    'th {' +
+    '    background: #667eea;' +
+    '    color: white;' +
+    '    padding: 3px 2px;' +
+    '    text-align: center;' +
+    '    border: 0.5px solid #5568d3;' +
+    '    font-size: 7px;' +
+    '    word-wrap: break-word;' +
+    '}' +
+    'td {' +
+    '    padding: 2px;' +
+    '    text-align: center;' +
+    '    border: 0.5px solid #ddd;' +
+    '    font-size: 7px;' +
+    '    word-wrap: break-word;' +
+    '    overflow-wrap: break-word;' +
+    '}' +
+    'th:nth-child(1), td:nth-child(1) { width: 4%; }' +
+    'th:nth-child(2), td:nth-child(2) { width: 16%; }' +
+    'th:nth-child(3), td:nth-child(3) { width: 10%; }' +
+    'th:nth-child(4), td:nth-child(4) { width: 10%; }' +
+    'th:nth-child(5), td:nth-child(5) { width: 10%; }' +
+    'th:nth-child(6), td:nth-child(6) { width: 8%; }' +
+    'th:nth-child(7), td:nth-child(7) { width: 17%; }' +
+    'th:nth-child(8), td:nth-child(8) { width: 25%; }' +
     'tr:nth-child(even) { background: #f8f9fa; }' +
-    '.footer { text-align: center; margin-top: 10px; padding-top: 4px; border-top: 1px solid #ddd; font-size: 7px; color: #888; }' +
-    '@media print { ' +
-    '  body { padding: 3px; } ' +
-    '  @page { size: A4 landscape; margin: 5mm; } ' +
-    '  table { page-break-inside: auto; } ' +
-    '  tr { page-break-inside: avoid; page-break-after: auto; } ' +
-    '  thead { display: table-header-group; } ' +
+    'thead { display: table-header-group; }' +
+    'tbody { display: table-row-group; }' +
+    'tr { page-break-inside: auto; }' +
+    'td { page-break-inside: auto; }' +
+    '.footer {' +
+    '    text-align: center;' +
+    '    margin-top: 8px;' +
+    '    padding-top: 4px;' +
+    '    border-top: 1px solid #ddd;' +
+    '    font-size: 7px;' +
+    '    color: #888;' +
+    '}' +
+    '@media print {' +
+    '    body { padding: 2mm; }' +
+    '    @page {' +
+    '        size: A4 landscape;' +
+    '        margin: 5mm;' +
+    '    }' +
+    '    table { page-break-inside: auto; }' +
+    '    tr { page-break-inside: auto; page-break-after: auto; }' +
+    '    td { page-break-inside: auto; }' +
+    '    thead { display: table-header-group; }' +
+    '    tbody { display: table-row-group; }' +
     '}' +
     '</style>' +
     '</head>' +
@@ -4310,16 +4487,29 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-    '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1</p>' +
+    '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.2</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
-    '<thead><tr><th>#</th><th>التاريخ والوقت</th><th>المستخدم</th><th>نوع العملية</th><th>نوع السجل</th><th>رقم السجل</th><th>الاسم</th><th>التفاصيل</th></tr></thead>' +
+    '<thead>' +
+    '<tr>' +
+    '<th>#</th>' +
+    '<th>التاريخ والوقت</th>' +
+    '<th>المستخدم</th>' +
+    '<th>نوع العملية</th>' +
+    '<th>نوع السجل</th>' +
+    '<th>رقم السجل</th>' +
+    '<th>الاسم</th>' +
+    '<th>التفاصيل</th>' +
+    '</tr>' +
+    '</thead>' +
     '<tbody>' + tableRows + '</tbody>' +
     '</table>' +
-    '<div class="footer"><p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p><p>فرع المرقب - الإصدار 2.1</p></div>' +
-    '<script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };' +
-    '</' + 'script>' +
+    '<div class="footer">' +
+    '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
+    '<p>فرع المرقب - الإصدار 2.2</p>' +
+    '</div>' +
+    '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
     '</html>';
     
@@ -4327,8 +4517,9 @@ function exportAuditLogToPDF() {
     printWindow.document.write(html);
     printWindow.document.close();
     
-    showMessage('تم فتح سجل التغييرات للطباعة (PDF)', false);
+    showMessage('✅ تم فتح سجل التغييرات للطباعة', false);
 }
+
         function displayTrash() {
             const tbody = document.getElementById('trashTableBody');
             if (trashBin.length === 0) { tbody.innerHTML = '<tr><td colspan="8">سلة المحذوفات فارغة</td></tr>'; return; }
@@ -4408,16 +4599,15 @@ function showReportTable(headers, rows) {
         setTimeout(() => {
             try {
                 const barcodeText = `${firstId}-${lastId}`;
-                JsBarcode(`#${barcodeId}`, barcodeText, {
-                    format: 'CODE128',
-                    width: 1,
-                    height: 30,
-                    fontSize: 8,
-                    textMargin: 2,
-                    margin: 2,
-                    displayValue: true,
-                    text: `${firstId} / ${lastId}`
-                });
+JsBarcode(`#${barcodeId}`, barcodeText, {
+    format: 'CODE128',
+    width: 1,
+    height: 30,
+    fontSize: 8,
+    textMargin: 2,
+    margin: 2,
+    displayValue: false
+});
             } catch(e) {
                 console.log('خطأ في توليد الباركود:', e);
             }
@@ -4783,11 +4973,14 @@ function printReport() {
                 visibility: visible !important;
             }
         }
+
     </style>
 </head>
 <body>
     ${reportHtml}
     ${footerText}
+
+
 </body>
 </html>`);
     win.document.close();
@@ -6326,6 +6519,211 @@ async function showDeviceLogs() {
         return false;
     });
 })();
+// ==================== نظام طباعة الباركود للسجلات ====================
+
+// دالة فتح نافذة الباركود من نتائج البحث
+function openBarcodeModal(type, recordId) {
+    let record = null;
+    let recordType = '';
+    let title = '';
+    let color = '#667eea';
+    
+    if (type === 'military') {
+        record = militaries.find(m => m.id.toString() === recordId.toString());
+        recordType = 'عسكري';
+        title = '🎖️ عسكري';
+        color = '#2c3e50';
+    } else if (type === 'civilian') {
+        record = civilians.find(c => c.id.toString() === recordId.toString());
+        recordType = 'موظف';
+        title = '👨‍💼 موظف';
+        color = '#1e3c72';
+    } else if (type === 'martyr') {
+        record = martyrs.find(m => m.id.toString() === recordId.toString());
+        recordType = 'شهيد/جريح';
+        title = '🕊️ شهيد/جريح';
+        color = '#800000';
+    }
+    
+    if (!record) {
+        showMessage('لم يتم العثور على السجل', true);
+        return;
+    }
+    
+    const barcodeId = 'barcode_print_' + Date.now();
+    const recordNumber = record.id || '0';
+    const recordName = record.name || 'غير معروف';
+    const recordRank = record.rank || '';
+    const recordStatus = record.status || '';
+    
+    let html = `
+        <div style="text-align: center;">
+            <svg id="${barcodeId}" style="width: 200px; height: 60px;"></svg>
+            <p style="font-size: 14px; font-weight: bold; margin-top: 5px; color: ${color};">${recordNumber}</p>
+            <p style="font-size: 16px; font-weight: bold; color: #333;">${recordName}</p>
+            <p style="font-size: 12px; color: #666;">${recordRank} ${recordStatus ? ' - ' + recordStatus : ''}</p>
+        </div>
+    `;
+    
+    document.getElementById('barcodePrintContent').innerHTML = html;
+    document.getElementById('barcodePrintModal').style.display = 'flex';
+    
+    // توليد الباركود
+    setTimeout(() => {
+        try {
+            JsBarcode('#' + barcodeId, recordNumber, {
+    format: 'CODE128',
+    width: 2,
+    height: 50,
+    fontSize: 12,
+    textMargin: 5,
+    margin: 10,
+    displayValue: false
+});
+        } catch(e) {
+            console.log('خطأ في توليد الباركود:', e);
+        }
+    }, 300);
+    
+    // إغلاق النافذة عند النقر خارجها
+    document.getElementById('barcodePrintModal').onclick = function(e) {
+        if (e.target === this) closeBarcodeModal();
+    };
+}
+
+// دالة إغلاق نافذة الباركود
+function closeBarcodeModal() {
+    document.getElementById('barcodePrintModal').style.display = 'none';
+}
+
+// دالة طباعة بطاقة الباركود
+function printBarcodeCard() {
+    const content = document.getElementById('barcodePrintContent').innerHTML;
+    const now = new Date().toLocaleDateString('ar-SA');
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    const number = tempDiv.querySelector('p:nth-child(2)')?.textContent || '';
+    const name = tempDiv.querySelector('p:nth-child(3)')?.textContent || '';
+    const details = tempDiv.querySelector('p:nth-child(4)')?.textContent || '';
+    const svgElement = tempDiv.querySelector('svg');
+    
+    let barcodeHtml = '';
+    if (svgElement) {
+        barcodeHtml = svgElement.outerHTML;
+    }
+    
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <!DOCTYPE html>
+        <html dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>بطاقة تعريفية</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                @page { size: A4; margin: 5mm; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, sans-serif;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
+                    padding: 5mm;
+                }
+                .card-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 3mm;
+                    justify-content: center;
+                }
+                .barcode-card {
+                    width: 85mm;
+                    padding: 4mm;
+                    background: white;
+                    border: 2px solid #333;
+                    border-radius: 3mm;
+                    text-align: center;
+                    direction: rtl;
+                }
+                .card-title-main {
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: #667eea;
+                    margin-bottom: 4px;
+                    text-align: center;
+                }
+                .barcode-card .card-header {
+                    font-size: 9px;
+                    font-weight: bold;
+                    color: #333;
+                    margin-bottom: 1px;
+                }
+                .barcode-card .card-title {
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: #667eea;
+                    margin: 2px 0;
+                }
+                .barcode-card .card-info {
+                    font-size: 10px;
+                    color: #555;
+                    margin: 1px 0;
+                }
+                .barcode-card .card-barcode {
+                    margin: 3px auto;
+                    text-align: center;
+                }
+                .barcode-card .card-barcode svg {
+                    width: 160px;
+                    height: 38px;
+                }
+                .barcode-card .card-footer {
+                    font-size: 7px;
+                    color: #888;
+                    margin-top: 2px;
+                    border-top: 1px solid #ddd;
+                    padding-top: 2px;
+                }
+                @media print {
+                    body { margin: 0; padding: 2mm; }
+                    .barcode-card { break-inside: avoid; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="card-container">
+                <div class="barcode-card">
+                    <!-- العنوان الرئيسي في أعلى منتصف البطاقة -->
+                    <div class="card-title-main">💳 بطاقة تعريفية</div>
+                    <div>
+                        <div class="card-header">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</div>
+                        <div class="card-title">فرع المرقب</div>
+                    </div>
+                    <div class="card-barcode">
+                        ${barcodeHtml}
+                    </div>
+                    <div>
+                        <div class="card-info" style="font-size: 14px; font-weight: bold;">${number}</div>
+                        <div class="card-info" style="font-size: 12px;">${name}</div>
+                        <div class="card-info">${details}</div>
+                    </div>
+                    <div class="card-footer">
+                        📅 ${now} | 👨‍💼 المقدم/ فيصل البريدان
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+    `);
+    win.document.close();
+    
+    setTimeout(() => {
+        win.print();
+    }, 600);
+}
+
+// إضافة أزرار الباركود في نتائج البحث
+// (سنعدل دالة search() لإضافة زر الباركود)
     </script>
 </body>
 </html>
