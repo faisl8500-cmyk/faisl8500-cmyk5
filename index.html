@@ -1990,7 +1990,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.2</p>
+                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.3</p>
                 </div>
             </div>
             <div class="form-group">
@@ -2024,9 +2024,9 @@
                 <div style="margin-top: 8px; font-size: 11px; opacity: 0.9;">
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
-                <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-                    📌 الإصدار 2.2
-                </div>
+<div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
+    📌 الإصدار 2.3
+</div>
             </div>
             <div class="user-bar">
                 <div class="user-info">
@@ -2264,7 +2264,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-            <div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.2</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.3</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2325,12 +2325,12 @@
 <select id="newRole">
     <option value="">اختر الصلاحية</option>
     <option value="modifier">✏️ معدل (تعديل ومشاهدة)</option>
-    <option value="adder">➕ مضيف (إضافة ومشاهدة)</option>
-    <option value="deleter">🗑️ محذف (حذف ومشاهدة)</option>
-    <option value="editor">✏️➕ كاتب (إضافة وتعديل)</option>
+    <option value="adder">➕ مضيف (إضافة ومشاهدة - اختيار نوع الإضافة)</option>
+    <option value="deleter">🗑️ محذف (حذف ومشاهدة - اختيار نوع الحذف)</option>
+    <option value="editor">✏️➕ كاتب (إضافة وتعديل - اختيار نوع التعديل)</option>
     <option value="viewer">👁️ مشاهد (قراءة فقط)</option>
     <option value="inquirer">🔍 مستعلم (خدمة استعلام فقط)</option>
-    <option value="salary">💰 مرتبات (تعديل المرتب والحالة)</option>  <!-- ← الجديد -->
+    <option value="salary">💰 مرتبات (تعديل المرتب والحالة)</option>
 </select>
                     </div>
                 </div>
@@ -2478,12 +2478,23 @@
     <!-- بطاقة الطباعة المخفية -->
     <div id="barcodePrintCard" style="display: none;"></div>
     <!-- 👆👆👆 نهاية كود الباركود 👆👆👆 -->
-<div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:3000; justify-content:center; align-items:center;">
-  <div style="background:var(--card-bg); border-radius:20px; padding:30px; width:90%; max-width:400px; direction:rtl;">
-    <h3 style="color:#8e44ad; margin-bottom:20px; text-align:center;">✏️ تعديل صلاحية المستخدم</h3>
-    <p id="editUserName" style="text-align:center; margin-bottom:15px; font-weight:bold;"></p>
-    <div id="editUserRoles" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;"></div>
-    <div style="display:flex; gap:10px;">
+
+
+<div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:3000; justify-content:center; align-items:center; overflow-y:auto;">
+  <div style="background:var(--card-bg); border-radius:20px; padding:20px; width:90%; max-width:480px; direction:rtl; max-height:85vh; overflow-y:auto; margin:20px;">
+    <h3 style="color:#8e44ad; margin-bottom:15px; text-align:center;">✏️ تعديل صلاحية المستخدم</h3>
+    <p id="editUserName" style="text-align:center; margin-bottom:12px; font-weight:bold;"></p>
+    
+    <!-- الصلاحية الرئيسية -->
+    <div id="editUserRoles" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
+    
+    <!-- الصلاحيات الفرعية (تظهر حسب الاختيار) -->
+    <div id="subPermissionsDiv" style="display:none; margin-bottom:12px; padding:12px; background:var(--user-bar-bg); border-radius:10px;">
+      <p style="font-weight:bold; color:#667eea; margin-bottom:8px; text-align:center; font-size:14px;">⚙️ تحديد الصلاحيات الفرعية</p>
+      <div id="subPermissionsCheckboxes" style="display:flex; flex-direction:column; gap:6px;"></div>
+    </div>
+    
+    <div style="display:flex; gap:10px; position:sticky; bottom:0; background:var(--card-bg); padding-top:8px;">
       <button onclick="confirmEditUser()" style="flex:1; background:#8e44ad; color:white; border:none; padding:12px; border-radius:8px; font-size:15px; cursor:pointer;">✅ تأكيد</button>
       <button onclick="closeEditUserModal()" style="flex:1; background:#e53e3e; color:white; border:none; padding:12px; border-radius:8px; font-size:15px; cursor:pointer;">❌ إلغاء</button>
     </div>
@@ -2948,9 +2959,9 @@
                         { id: '1', username: 'فيصل', password: '192021', role: 'admin', status: 'active', createdAt: new Date().toISOString() },
                         { id: '2', username: 'الفرع', password: '1', role: 'viewer', status: 'active', createdAt: new Date().toISOString() },
                         { id: '3', username: 'كاتب', password: '123', role: 'editor', status: 'active', createdAt: new Date().toISOString() },
-                        { id: '4', username: 'معدل', password: '123', role: 'modifier', status: 'active', createdAt: new Date().toISOString() },
-                        { id: '5', username: 'مضيف', password: '123', role: 'adder', status: 'active', createdAt: new Date().toISOString() },
-                       { id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString() },
+                       { id: '4', username: 'معدل', password: '123', role: 'modifier', status: 'active', createdAt: new Date().toISOString(), permissions: { add: null, delete: null, edit: ['military', 'civilian', 'martyr', 'all'] } },
+{ id: '5', username: 'مضيف', password: '123', role: 'adder', status: 'active', createdAt: new Date().toISOString(), permissions: { add: ['military', 'civilian', 'martyr', 'all'], delete: null, edit: null } },
+{ id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString(), permissions: { add: null, delete: ['military', 'civilian', 'martyr', 'all'], edit: null } },
 { id: '7', username: 'مستعلم', password: '123', role: 'inquirer', status: 'active', createdAt: new Date().toISOString() }
 ,
 { id: '8', username: 'مرتبات', password: '123', role: 'salary', status: 'active', createdAt: new Date().toISOString() } 
@@ -3109,48 +3120,63 @@ function getRoleDesc(role) {
 }
 
         function hasPermission(permission, recordType = null) {
-            if (!currentUser) return false;
-            // المدير له كل الصلاحيات
-            if (currentUser.role === 'admin') return true;
+    if (!currentUser) return false;
+    // المدير له كل الصلاحيات
+    if (currentUser.role === 'admin') return true;
 
-            // الصلاحيات الأساسية (مشاهدة)
-            if (permission === 'view') {
-                const viewRoles = ['admin', 'modifier', 'adder', 'deleter', 'editor', 'viewer'];
-                return viewRoles.includes(currentUser.role);
-            }
+    // الصلاحيات الأساسية (مشاهدة)
+    if (permission === 'view') {
+        const viewRoles = ['admin', 'modifier', 'adder', 'deleter', 'editor', 'viewer'];
+        return viewRoles.includes(currentUser.role);
+    }
 
-            // التحقق من الصلاحيات التفصيلية
-            if (currentUser.permissions) {
-                // صلاحية الإضافة
-                if (permission === 'add') {
-                    if (currentUser.role === 'adder' || currentUser.role === 'editor') {
-                        if (recordType) {
-                            return currentUser.permissions.add && currentUser.permissions.add.includes(recordType);
-                        }
-                        return true;
-                    }
+    // التحقق من الصلاحيات التفصيلية
+    if (currentUser.permissions) {
+        // صلاحية الإضافة
+        if (permission === 'add') {
+            if (currentUser.role === 'adder' || currentUser.role === 'editor') {
+                if (recordType && currentUser.permissions.add) {
+                    return currentUser.permissions.add.includes(recordType) || 
+                           currentUser.permissions.add.includes('all');
                 }
-                // صلاحية الحذف
-                if (permission === 'delete') {
-                    if (currentUser.role === 'deleter') {
-                        if (recordType) {
-                            return currentUser.permissions.delete && currentUser.permissions.delete.includes(recordType);
-                        }
-                        return true;
-                    }
-                }
-                // صلاحية التعديل
-                if (permission === 'edit') {
-                    if (currentUser.role === 'modifier' || currentUser.role === 'editor') {
-                        if (recordType) {
-                            return currentUser.permissions.edit && currentUser.permissions.edit.includes(recordType);
-                        }
-                        return true;
-                    }
-                }
+                return currentUser.permissions.add && currentUser.permissions.add.length > 0;
             }
-            return false;
         }
+        // صلاحية الحذف
+        if (permission === 'delete') {
+            if (currentUser.role === 'deleter') {
+                if (recordType && currentUser.permissions.delete) {
+                    return currentUser.permissions.delete.includes(recordType) || 
+                           currentUser.permissions.delete.includes('all');
+                }
+                return currentUser.permissions.delete && currentUser.permissions.delete.length > 0;
+            }
+        }
+        // صلاحية التعديل
+        if (permission === 'edit') {
+            if (currentUser.role === 'modifier' || currentUser.role === 'editor') {
+                if (recordType && currentUser.permissions.edit) {
+                    return currentUser.permissions.edit.includes(recordType) || 
+                           currentUser.permissions.edit.includes('all');
+                }
+                return currentUser.permissions.edit && currentUser.permissions.edit.length > 0;
+            }
+        }
+    }
+    
+    // الصلاحيات الافتراضية للمستخدمين بدون permissions مخصصة
+    if (permission === 'add' && (currentUser.role === 'adder' || currentUser.role === 'editor')) {
+        return true;
+    }
+    if (permission === 'delete' && currentUser.role === 'deleter') {
+        return true;
+    }
+    if (permission === 'edit' && (currentUser.role === 'modifier' || currentUser.role === 'editor')) {
+        return true;
+    }
+    
+    return false;
+}
 
         // ==================== دوال العرض والتنقل ====================
         function showUserInfo() {
@@ -3583,21 +3609,110 @@ async function unlockUserFromList(username) {
     showMessage(`✅ تم تنشيط المستخدم "${username}" بنجاح`);
     await addAuditLog('تنشيط مستخدم', 'user', user ? user.id : username, username, `تم تنشيط المستخدم المجمد بواسطة ${currentUser.name}`);
 }
-        async function addUser() {
-            const username = document.getElementById('newUsername').value.trim();
-            const password = document.getElementById('newPassword').value;
-            const role = document.getElementById('newRole').value;
-            if (!username || !password || !role) { showMessage('جميع الحقول مطلوبة', true); return; }
-            if (users.some(u => u.username === username)) { showMessage('اسم المستخدم موجود', true); return; }
-            users.push({ id: Date.now().toString(), username, password, role, status: 'active', createdAt: new Date().toISOString() });
-            await saveUsersToFirebase();
-            displayUsersList();
-            ['newUsername', 'newPassword', 'newRole'].forEach(id => document.getElementById(id).value = '');
-            showMessage('تم إضافة المستخدم بنجاح');
-        }
+async function addUser() {
+    const username = document.getElementById('newUsername').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const role = document.getElementById('newRole').value;
+    if (!username || !password || !role) { showMessage('جميع الحقول مطلوبة', true); return; }
+    if (users.some(u => u.username === username)) { showMessage('اسم المستخدم موجود', true); return; }
+    
+    // الصلاحيات التي تحتاج تحديد فرعي
+    if (role === 'adder' || role === 'deleter' || role === 'modifier' || role === 'editor') {
+        // حفظ بيانات المستخدم مؤقتاً
+        pendingUserData = {
+            id: Date.now().toString(),
+            username,
+            password,
+            role,
+            status: 'active',
+            createdAt: new Date().toISOString(),
+            permissions: null
+        };
+        
+        // فتح نافذة الصلاحيات الفرعية مباشرة
+        openSubPermissionsForAdd(role);
+        return;
+    }
+    
+    // صلاحيات بدون تحديد فرعي (viewer, inquirer, salary)
+    users.push({
+        id: Date.now().toString(),
+        username,
+        password,
+        role,
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        permissions: null
+    });
+    await saveUsersToFirebase();
+    displayUsersList();
+    ['newUsername', 'newPassword', 'newRole'].forEach(id => document.getElementById(id).value = '');
+    showMessage('تم إضافة المستخدم بنجاح');
+}
+
 
         let editingUserId = null;
-
+// فتح نافذة الصلاحيات الفرعية للإضافة
+function openSubPermissionsForAdd(role) {
+    const subDiv = document.getElementById('subPermissionsDiv');
+    const checkboxesDiv = document.getElementById('subPermissionsCheckboxes');
+    
+    subDiv.style.display = 'block';
+    
+    let items = [];
+    let prefix = '';
+    
+    if (role === 'adder') {
+        prefix = 'sub_add';
+        items = [
+            { id: 'sub_add_military', label: '➕ إضافة عسكري', value: 'military' },
+            { id: 'sub_add_civilian', label: '👨‍💼 إضافة موظف', value: 'civilian' },
+            { id: 'sub_add_martyr', label: '🕊️ إضافة شهداء وجرحى', value: 'martyr' },
+            { id: 'sub_add_all', label: '✅ إضافة الكل', value: 'all', isAll: true }
+        ];
+    } else if (role === 'deleter') {
+        prefix = 'sub_delete';
+        items = [
+            { id: 'sub_delete_military', label: '🗑️ حذف عسكري', value: 'military' },
+            { id: 'sub_delete_civilian', label: '🗑️ حذف موظف', value: 'civilian' },
+            { id: 'sub_delete_martyr', label: '🗑️ حذف شهداء وجرحى', value: 'martyr' },
+            { id: 'sub_delete_all', label: '✅ حذف الكل', value: 'all', isAll: true }
+        ];
+    } else if (role === 'modifier' || role === 'editor') {
+        prefix = 'sub_edit';
+        items = [
+            { id: 'sub_edit_military', label: '✏️ تعديل عسكري', value: 'military' },
+            { id: 'sub_edit_civilian', label: '✏️ تعديل موظف', value: 'civilian' },
+            { id: 'sub_edit_martyr', label: '✏️ تعديل شهداء وجرحى', value: 'martyr' },
+            { id: 'sub_edit_all', label: '✅ تعديل الكل', value: 'all', isAll: true }
+        ];
+    }
+    
+    checkboxesDiv.innerHTML = items.map(item => `
+        <label style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--card-bg); border-radius:8px; cursor:pointer;">
+            <input type="checkbox" id="${item.id}" value="${item.value}" 
+                onchange="${item.isAll ? `handleSubAllCheckbox(this, '${prefix}')` : ''}"
+                style="width:18px; height:18px; cursor:pointer;">
+            <span style="font-size:13px;">${item.label}</span>
+        </label>
+    `).join('');
+    
+    // تحديد الكل افتراضياً
+    const allCb = document.getElementById(`${prefix}_all`);
+    if (allCb) {
+        allCb.checked = true;
+        handleSubAllCheckbox(allCb, prefix);
+    }
+    
+    // تعديل عنوان النافذة
+    document.getElementById('editUserName').textContent = 'إضافة مستخدم جديد: ' + pendingUserData.username;
+    document.getElementById('editUserRoles').innerHTML = `<p style="text-align:center; color:#667eea;">الصلاحية: ${getRoleName(role)}</p>`;
+    
+    // إظهار النافذة
+    const modal = document.getElementById('editUserModal');
+    modal.style.display = 'flex';
+    modal.onclick = e => { if (e.target === modal) { closeEditUserModal(); pendingUserData = null; } };
+}
 function editUser(userId) {
     const user = users.find(u => u.id === userId);
     if (!user || user.username === 'فيصل') {
@@ -3611,33 +3726,188 @@ function editUser(userId) {
         `المستخدم: ${user.username} | الصلاحية الحالية: ${getRoleName(user.role)}`;
     
     const roles = [
-        { value: 'modifier', label: '✏️ معدل (تعديل ومشاهدة)' },
-        { value: 'adder',    label: '➕ مضيف (إضافة ومشاهدة)' },
-        { value: 'deleter',  label: '🗑️ محذف (حذف ومشاهدة)' },
-        { value: 'editor',   label: '✏️➕ كاتب (إضافة وتعديل)' },
-        { value: 'viewer',   label: '👁️ مشاهد (قراءة فقط)' },
+        { value: 'modifier', label: '✏️ معدل (تعديل ومشاهدة)', hasSub: true },
+        { value: 'adder',    label: '➕ مضيف (إضافة ومشاهدة)', hasSub: true },
+        { value: 'deleter',  label: '🗑️ محذف (حذف ومشاهدة)', hasSub: true },
+        { value: 'editor',   label: '✏️➕ كاتب (إضافة وتعديل)', hasSub: true },
+        { value: 'viewer',   label: '👁️ مشاهد (قراءة فقط)', hasSub: false },
+        { value: 'inquirer', label: '🔍 مستعلم (خدمة استعلام فقط)', hasSub: false },
+        { value: 'salary',   label: '💰 مرتبات (تعديل المرتب والحالة)', hasSub: false },
     ];
     
+    const currentRoleValue = user.role || 'viewer';
+    
     const rolesDiv = document.getElementById('editUserRoles');
-    rolesDiv.innerHTML = roles.map(r => `
+    rolesDiv.innerHTML = roles.map(r => {
+        const checked = currentRoleValue === r.value ? 'checked' : '';
+        return `
         <label style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--user-bar-bg); border-radius:8px; cursor:pointer;">
-            <input type="radio" name="editUserRole" value="${r.value}" 
-                ${user.role === r.value ? 'checked' : ''}>
-            <span>${r.label}</span>
-        </label>
-    `).join('');
+            <input type="radio" name="editUserRole" value="${r.value}" ${checked} 
+                onchange="toggleSubPermissions('${r.value}', ${r.hasSub}, '${userId}')"
+                style="width:20px; height:20px; cursor:pointer;">
+            <span style="font-size:14px;">${r.label}</span>
+        </label>`;
+    }).join('');
+    
+    // إظهار/إخفاء الصلاحيات الفرعية حسب الصلاحية الحالية
+    const hasSub = ['adder', 'deleter', 'modifier', 'editor'].includes(currentRoleValue);
+    if (hasSub) {
+        toggleSubPermissions(currentRoleValue, true, userId);
+    } else {
+        document.getElementById('subPermissionsDiv').style.display = 'none';
+    }
     
     const modal = document.getElementById('editUserModal');
     modal.style.display = 'flex';
     modal.onclick = e => { if (e.target === modal) closeEditUserModal(); };
 }
+function toggleSubPermissions(role, hasSub, userId) {
+    const subDiv = document.getElementById('subPermissionsDiv');
+    const checkboxesDiv = document.getElementById('subPermissionsCheckboxes');
+    
+    if (!hasSub) {
+        subDiv.style.display = 'none';
+        return;
+    }
+    
+    subDiv.style.display = 'block';
+    
+    let items = [];
+    let prefix = '';
+    
+    if (role === 'adder') {
+        prefix = 'sub_add';
+        items = [
+            { id: 'sub_add_military', label: '➕ إضافة عسكري', value: 'military' },
+            { id: 'sub_add_civilian', label: '👨‍💼 إضافة موظف', value: 'civilian' },
+            { id: 'sub_add_martyr', label: '🕊️ إضافة شهداء وجرحى', value: 'martyr' },
+            { id: 'sub_add_all', label: '✅ إضافة الكل', value: 'all', isAll: true }
+        ];
+    } else if (role === 'deleter') {
+        prefix = 'sub_delete';
+        items = [
+            { id: 'sub_delete_military', label: '🗑️ حذف عسكري', value: 'military' },
+            { id: 'sub_delete_civilian', label: '🗑️ حذف موظف', value: 'civilian' },
+            { id: 'sub_delete_martyr', label: '🗑️ حذف شهداء وجرحى', value: 'martyr' },
+            { id: 'sub_delete_all', label: '✅ حذف الكل', value: 'all', isAll: true }
+        ];
+    } else if (role === 'modifier' || role === 'editor') {
+        prefix = 'sub_edit';
+        items = [
+            { id: 'sub_edit_military', label: '✏️ تعديل عسكري', value: 'military' },
+            { id: 'sub_edit_civilian', label: '✏️ تعديل موظف', value: 'civilian' },
+            { id: 'sub_edit_martyr', label: '✏️ تعديل شهداء وجرحى', value: 'martyr' },
+            { id: 'sub_edit_all', label: '✅ تعديل الكل', value: 'all', isAll: true }
+        ];
+    }
+    
+    checkboxesDiv.innerHTML = items.map(item => `
+        <label style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--card-bg); border-radius:8px; cursor:pointer;">
+            <input type="checkbox" id="${item.id}" value="${item.value}" 
+                onchange="${item.isAll ? `handleSubAllCheckbox(this, '${prefix}')` : ''}"
+                style="width:18px; height:18px; cursor:pointer;">
+            <span style="font-size:13px;">${item.label}</span>
+        </label>
+    `).join('');
+    
+    // تحميل الصلاحيات الموجودة
+    const user = users.find(u => u.id === userId);
+    if (user && user.permissions) {
+        let permissions = null;
+        if (role === 'adder') permissions = user.permissions.add;
+        else if (role === 'deleter') permissions = user.permissions.delete;
+        else permissions = user.permissions.edit;
+        
+        if (permissions && permissions.length > 0) {
+            permissions.forEach(perm => {
+                const cb = document.getElementById(`${prefix}_${perm}`);
+                if (cb) cb.checked = true;
+            });
+        } else {
+            // تحديد الكل افتراضياً
+            const allCb = document.getElementById(`${prefix}_all`);
+            if (allCb) {
+                allCb.checked = true;
+                handleSubAllCheckbox(allCb, prefix);
+            }
+        }
+    } else {
+        // تحديد الكل افتراضياً
+        const allCb = document.getElementById(`${prefix}_all`);
+        if (allCb) {
+            allCb.checked = true;
+            handleSubAllCheckbox(allCb, prefix);
+        }
+    }
+}
 
+function handleSubAllCheckbox(checkbox, prefix) {
+    const allChecked = checkbox.checked;
+    const items = document.querySelectorAll('#subPermissionsCheckboxes input[type="checkbox"]');
+    items.forEach(item => {
+        if (item.id !== checkbox.id) {
+            item.checked = allChecked;
+            item.disabled = allChecked;
+        }
+    });
+    if (!allChecked) {
+        items.forEach(item => {
+            if (item.id !== checkbox.id) item.disabled = false;
+        });
+    }
+}
 function closeEditUserModal() {
     document.getElementById('editUserModal').style.display = 'none';
     editingUserId = null;
+    pendingEditUserId = null;
 }
 
 async function confirmEditUser() {
+    // ===== حالة إضافة مستخدم جديد =====
+    if (pendingUserData) {
+        const subDiv = document.getElementById('subPermissionsDiv');
+        let permissions = null;
+        
+        if (subDiv.style.display === 'block') {
+            const role = pendingUserData.role;
+            let prefix = '';
+            if (role === 'adder') prefix = 'sub_add';
+            else if (role === 'deleter') prefix = 'sub_delete';
+            else prefix = 'sub_edit';
+            
+            const selectedPerms = [];
+            const checkboxes = document.querySelectorAll('#subPermissionsCheckboxes input[type="checkbox"]:checked');
+            checkboxes.forEach(cb => { if (cb.value) selectedPerms.push(cb.value); });
+            
+            if (selectedPerms.length === 0) {
+                showMessage('❌ يجب اختيار صلاحية فرعية واحدة على الأقل', true);
+                return;
+            }
+            
+            if (role === 'adder') {
+                permissions = { add: selectedPerms, delete: null, edit: null };
+            } else if (role === 'deleter') {
+                permissions = { add: null, delete: selectedPerms, edit: null };
+            } else if (role === 'modifier') {
+                permissions = { add: null, delete: null, edit: selectedPerms };
+            } else if (role === 'editor') {
+                permissions = { add: ['military', 'civilian', 'martyr', 'all'], delete: null, edit: selectedPerms };
+            }
+        }
+        
+        pendingUserData.permissions = permissions;
+        users.push(pendingUserData);
+        await saveUsersToFirebase();
+        displayUsersList();
+        ['newUsername', 'newPassword', 'newRole'].forEach(id => document.getElementById(id).value = '');
+        showMessage('✅ تم إضافة المستخدم بنجاح مع الصلاحيات المحددة');
+        
+        document.getElementById('editUserModal').style.display = 'none';
+        pendingUserData = null;
+        return;
+    }
+    
+    // ===== حالة تعديل مستخدم موجود =====
     const selected = document.querySelector('input[name="editUserRole"]:checked');
     if (!selected) { showMessage('اختر صلاحية', true); return; }
     
@@ -3647,14 +3917,44 @@ async function confirmEditUser() {
     const oldRole = user.role;
     const newRole = selected.value;
     
-    if (newRole === oldRole) {
+    let permissions = null;
+    const subDiv = document.getElementById('subPermissionsDiv');
+    if (subDiv.style.display === 'block') {
+        let prefix = '';
+        if (newRole === 'adder') prefix = 'sub_add';
+        else if (newRole === 'deleter') prefix = 'sub_delete';
+        else prefix = 'sub_edit';
+        
+        const selectedPerms = [];
+        const checkboxes = document.querySelectorAll('#subPermissionsCheckboxes input[type="checkbox"]:checked');
+        checkboxes.forEach(cb => { if (cb.value) selectedPerms.push(cb.value); });
+        
+        if (selectedPerms.length === 0) {
+            showMessage('❌ يجب اختيار صلاحية فرعية واحدة على الأقل', true);
+            return;
+        }
+        
+        if (newRole === 'adder') {
+            permissions = { add: selectedPerms, delete: null, edit: null };
+        } else if (newRole === 'deleter') {
+            permissions = { add: null, delete: selectedPerms, edit: null };
+        } else if (newRole === 'modifier') {
+            permissions = { add: null, delete: null, edit: selectedPerms };
+        } else if (newRole === 'editor') {
+            permissions = { add: ['military', 'civilian', 'martyr', 'all'], delete: null, edit: selectedPerms };
+        }
+    }
+    
+    if (newRole === oldRole && JSON.stringify(user.permissions) === JSON.stringify(permissions)) {
         showMessage('⚠️ الصلاحية نفسها، لم يتم التعديل', true);
         return;
     }
     
-    closeEditUserModal();
+    document.getElementById('editUserModal').style.display = 'none';
+    editingUserId = null;
     
     user.role = newRole;
+    user.permissions = permissions;
     user.status = 'active';
     await saveUsersToFirebase();
     displayUsersList();
@@ -3926,7 +4226,7 @@ html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeMo
             const footer = `
                 <div style="text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 11px; color: #888;">
                     <p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p>
-                    <p>فرع المرقب - الإصدار 2.2</p>
+                    <p>فرع المرقب - الإصدار 2.3</p>
                 </div>
             `;
             
@@ -4487,7 +4787,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-    '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.2</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.3</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -4507,7 +4807,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-    '<p>فرع المرقب - الإصدار 2.2</p>' +
+   '<p>فرع المرقب - الإصدار 2.3</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -4822,7 +5122,7 @@ function showOfficersReport(type) {
     showReportTable(headers, rows);
 }
         async function exportAllData() {
-            const data = { militaries, civilians, martyrs, users, auditLogs, trashBin, exportDate: new Date().toISOString(), version: '2.0' };
+            const data = { militaries, civilians, martyrs, users, auditLogs, trashBin, exportDate: new Date().toISOString(), version: '2.3' };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -5656,7 +5956,7 @@ function validateNationalId(input, errorDivId) {
         return true;
     }
     
-    // التحقق من الطول
+     // التحقق من الطول
     if (input.value.length > 0 && input.value.length !== 12) {
         input.style.borderColor = '#e53e3e';
         if (errorDiv) {
@@ -5764,20 +6064,10 @@ function validateMartyrNationalId(input, errorDivId) {
         }
         return true;
     }
-    
-
-    
-    // التحقق من الطول
-
-    
-    // صحيح
-    input.style.borderColor = '#48bb78';
-    if (errorDiv) {
-        errorDiv.style.display = 'none';
-        errorDiv.textContent = '';
-    }
-    return true;
+    // إذا لم تنطبق أي حالة، أرجع false
+    return false;
 }
+
 
 /**
  * دالة التحقق من صحة الرقم الوطني للشهداء والجرحى
@@ -6724,6 +7014,11 @@ function printBarcodeCard() {
 
 // إضافة أزرار الباركود في نتائج البحث
 // (سنعدل دالة search() لإضافة زر الباركود)
+
+// ==================== نظام الصلاحيات الفرعية ====================
+let pendingUserData = null; // بيانات المستخدم المؤقتة قبل الحفظ
+let pendingEditUserId = null; // معرف المستخدم المراد تعديله
+
     </script>
 </body>
 </html>
