@@ -2339,7 +2339,7 @@
             <h3 style="margin-bottom: 15px; color: #8e44ad;">📋 قائمة المستخدمين</h3>
             <div style="overflow-x: auto;">
                 <table class="users-table" id="usersTable">
-                    <thead><tr><th>#</th><th>اسم المستخدم</th><th>الصلاحية</th><th>الحالة</th><th>تاريخ الإضافة</th><th>الإجراءات</th></tr></thead>
+                  <thead><tr><th>#</th><th>اسم المستخدم</th><th>الصلاحية</th><th>الحالة</th><th>الحظر</th><th>تاريخ الإضافة</th><th>الإجراءات</th></tr></thead>
                     <tbody id="usersTableBody"></tbody>
                 </table>
             </div>
@@ -3579,7 +3579,7 @@ startTimers(); // ✅ تشغيل تايمر الرجوع والإغلاق
             });
             tbody.innerHTML = html;
         }
-function deleteUserPrompt(userId, username) {
+async function deleteUserPrompt(userId, username) {
     showConfirmModal(
         `⚠️ هل أنت متأكد من حذف المستخدم "${username}"؟\n\nلا يمكن التراجع عن هذا الإجراء!`,
         async function(confirmed) {
@@ -3593,7 +3593,119 @@ function deleteUserPrompt(userId, username) {
         }
     );
 }
+function displayUsersList() {
+    const tbody = document.getElementById('usersTableBody');
+    if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6">لا يوجد مستخدمين</td></tr>'; return; }
+    let html = '';
+    users.forEach((user, i) => {
+        const roleClass = `role-${user.role}`;
+        const isLocked = isAccountLocked(user.username, user.role === 'admin');
+        const isBlockedUser = blockedUsers.includes(user.username);
+        let statusClass = 'user-status-active', statusText = '✅ نشط';
+        
+        // تحديد حالة المستخدم
+        if (isBlockedUser) { 
+            statusClass = 'user-status-inactive'; 
+            statusText = '🚫 محظور'; 
+        } else if (isLocked) { 
+            statusClass = 'user-status-locked'; 
+            statusText = '🔒 مجمد'; 
+        } else if (user.status !== 'active') { 
+            statusClass = 'user-status-inactive'; 
+            statusText = '⛔ معطل'; 
+        }
+        
+        html += `<tr>
+            <td>${i+1}</td><td>${user.username}</td>
+            <td><span class="user-role-badge ${roleClass}">${getRoleName(user.role)}</span></td>
+            <td class="${statusClass}">${statusText}</td>
+            <td>${new Date(user.createdAt).toLocaleDateString('ar-SA')}</td>
+            <td>
+                <button class="btn btn-edit" onclick="editUser('${user.id}')" title="تعديل الصلاحية">✏️</button>
+                ${isLocked && user.role !== 'admin' && !isBlockedUser ? `<button class="btn btn-unlock" onclick="unlockUserFromList('${user.username}')" title="فك التجميد">🔓</button>` : ''}
+                ${user.username !== 'فيصل' ? `
+                    ${isBlockedUser ? 
+                        `<button class="btn btn-unlock" onclick="unblockUserFromList('${user.username}')" title="إلغاء الحظر" style="background: #48bb78;">🟢</button>` : 
+                        `<button class="btn btn-delete" onclick="blockUserFromList('${user.username}')" title="حظر المستخدم" style="background: #e53e3e;">🚫</button>`
+                    }
+                    <button class="btn btn-delete" onclick="deleteUserPrompt('${user.id}', '${user.username}')" title="حذف المستخدم">🗑️</button>
+                ` : ''}
+            </td></tr>`;
+    });
+    tbody.innerHTML = html;
+}
 
+// حظر مستخدم من قائمة المستخدمين
+async function blockUserFromList(username) {
+    if (currentUser.role !== 'admin') {
+        showMessage('❌ فقط المدير يمكنه حظر المستخدمين', true);
+        return;
+    }
+    
+    if (username === 'فيصل') {
+        showMessage('❌ لا يمكن حظر المدير', true);
+        return;
+    }
+    
+    showConfirmModal(
+        `⚠️ هل أنت متأكد من حظر المستخدم "${username}"؟\n\nسيتم منعه من تسجيل الدخول للنظام.`,
+        async function(confirmed) {
+            if (confirmed) {
+                // إضافة إلى قائمة المحظورين
+                if (!blockedUsers.includes(username)) {
+                    blockedUsers.push(username);
+                    await database.ref('/blockedUsers').set(blockedUsers);
+                }
+                
+                // تعطيل الحساب
+                const user = users.find(u => u.username === username);
+                if (user && user.status === 'active') {
+                    user.status = 'inactive';
+                    await saveUsersToFirebase();
+                }
+                
+                // إزالة من قائمة المتصلين
+                await database.ref(`/onlineUsers/${username}`).remove();
+                
+                // إعادة تحميل قائمة المستخدمين
+                displayUsersList();
+                showMessage(`✅ تم حظر المستخدم "${username}" بنجاح`);
+                await addAuditLog('حظر مستخدم', 'user', user ? user.id : username, username, `تم حظر المستخدم بواسطة ${currentUser.name}`);
+            }
+        }
+    );
+}
+
+// إلغاء حظر مستخدم من قائمة المستخدمين
+async function unblockUserFromList(username) {
+    if (currentUser.role !== 'admin') {
+        showMessage('❌ فقط المدير يمكنه إلغاء حظر المستخدمين', true);
+        return;
+    }
+    
+    showConfirmModal(
+        `✅ هل أنت متأكد من إلغاء حظر المستخدم "${username}"؟\n\nسيتمكن من تسجيل الدخول مرة أخرى.`,
+        async function(confirmed) {
+            if (confirmed) {
+                // إزالة من قائمة المحظورين
+                blockedUsers = blockedUsers.filter(u => u !== username);
+                await database.ref('/blockedUsers').set(blockedUsers);
+                
+                // تفعيل الحساب
+                const user = users.find(u => u.username === username);
+                if (user) {
+                    user.status = 'active';
+                    await saveUsersToFirebase();
+                }
+                
+                // إعادة تحميل قائمة المستخدمين
+                displayUsersList();
+                showMessage(`✅ تم إلغاء حظر المستخدم "${username}" بنجاح`);
+                await addAuditLog('إلغاء حظر مستخدم', 'user', user ? user.id : username, username, `تم إلغاء حظر المستخدم بواسطة ${currentUser.name}`);
+            }
+        }
+    );
+}
 async function unlockUserFromList(username) {
     if (currentUser.role !== 'admin') {
         showMessage('ليس لديك صلاحية لإلغاء تجميد المستخدمين', true);
