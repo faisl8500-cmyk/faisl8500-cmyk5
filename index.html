@@ -2586,6 +2586,10 @@
              <span class="modal-btn-icon">👨‍💼</span>
              <span class="modal-btn-text">شهداء الموظفين البالغين سن التقاعد</span>
             </button>
+            <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsOfficersRetirementReport();">
+    <span class="modal-btn-icon">🎖️</span>
+    <span class="modal-btn-text">شهداء الضباط البالغين سن التقاعد</span>
+</button>
             <!-- تقارير الجرحى -->
                 <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_injured');">
                     <span class="modal-btn-icon">🩸</span>
@@ -2615,6 +2619,14 @@
                     <span class="modal-btn-icon">🎖️</span>
                     <span class="modal-btn-text">ضباط جرحى غير متقاعدين</span>
                 </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showInjuredRetirementAgeReport();">
+    <span class="modal-btn-icon">🩸</span>
+    <span class="modal-btn-text">جرحى المراتب البالغين سن التقاعد</span>
+</button>
+<button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showInjuredOfficersRetirementReport();">
+    <span class="modal-btn-icon">🩸</span>
+    <span class="modal-btn-text">جرحى الضباط البالغين سن التقاعد</span>
+</button>
             </div>
         </div>
     </div>
@@ -6868,6 +6880,74 @@ async function showDeviceLogs() {
         await blockDeviceOrUser();
     }
 }
+// ==================== تقرير شهداء الضباط البالغين سن التقاعد ====================
+function showMartyrsOfficersRetirementReport() {
+    const today = new Date();
+
+    // سن التقاعد لكل رتبة
+    const retirementAge = {
+        'ملازم تان':        40,
+        'ملازم أول':        42,
+        'نقيب':             44,
+        'رائد':             48,
+        'مقدم':             50,
+        'عقيد':             55,
+        'عميد':             56,
+        'لواء':             57,
+        'ملازم تان شرف':    52,
+        'ملازم أول شرف':    52,
+        'نقيب شرف':         52,
+        'رائد شرف':         52,
+        'مقدم شرف':         52,
+        'عقيد شرف':         52,
+        'عميد شرف':         52
+    };
+
+    const officerRanks = Object.keys(retirementAge);
+
+    const filtered = martyrs.filter(m => {
+        // الصفة: شهيد فقط
+        const isShaheed = (m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
+        if (!isShaheed) return false;
+
+        // الرتبة: ضباط فقط
+        if (!officerRanks.includes(m.rank)) return false;
+
+        // الحالة: غير متقاعد أو موقوف فقط
+        const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
+        if (!validStatus) return false;
+
+        // العمر: بلغ سن تقاعد رتبته أو تجاوزه
+        if (!m.birthDate) return false;
+        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
+        if (!birthYear || isNaN(birthYear)) return false;
+        const age = today.getFullYear() - birthYear;
+        return age >= retirementAge[m.rank];
+    });
+
+    const sorted = [...filtered].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+
+    currentReportTitle = 'كشف بأسماء الشهداء الضباط البالغين سن الإحالة للتقاعد التابعين الي\nفرع شؤون الشهداء والجرحى المرقب';
+
+    const headers = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'سن التقاعد', 'تاريخ الميلاد', 'العمر الآن'];
+
+    const rows = sorted.map((m, i) => {
+        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
+        const age = today.getFullYear() - birthYear;
+        return [
+            i + 1,
+            m.id || '-',
+            m.rank || '-',
+            m.name || '-',
+            `<strong style="color:#e53e3e;">${m.status || '-'}</strong>`,
+            `<strong style="color:#8e44ad;">${retirementAge[m.rank]} سنة</strong>`,
+            birthYear || '-',
+            `<strong style="color:#e67e22;">${age} سنة</strong>`
+        ];
+    });
+
+    showReportTable(headers, rows);
+}
 // ==================== تقرير شهداء المراتب البالغين سن التقاعد ====================
 function showMartyrsRetirementAgeReport() {
     const ranksIncluded = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
@@ -6949,6 +7029,118 @@ function showMartyrsStaffRetirementAgeReport() {
             m.rank || '-',
             m.name || '-',
             `<strong style="color:#e53e3e;">${m.status || '-'}</strong>`,
+            birthYear || '-',
+            `<strong style="color:#e67e22;">${age} سنة</strong>`
+        ];
+    });
+
+    showReportTable(headers, rows);
+}
+// ==================== تقرير جرحى المراتب البالغين سن التقاعد ====================
+function showInjuredRetirementAgeReport() {
+    const ranksIncluded = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
+    const today = new Date();
+
+    const filtered = martyrs.filter(m => {
+        // الصفة: جريح حرب فقط
+        if (m.status !== 'جريح حرب') return false;
+
+        // الرتبة: من الرتب المحددة فقط
+        if (!ranksIncluded.includes(m.rank)) return false;
+
+        // الحالة: غير متقاعد أو موقوف فقط
+        const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
+        if (!validStatus) return false;
+
+        // العمر: 50 سنة فأكثر (حسب السنة فقط)
+        if (!m.birthDate) return false;
+        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
+        if (!birthYear || isNaN(birthYear)) return false;
+        const age = today.getFullYear() - birthYear;
+        return age >= 50;
+    });
+
+    const sorted = [...filtered].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+
+    currentReportTitle = 'كشف بأسماء الجرحى المراتب البالغين سن الإحالة للتقاعد التابعين الي\nفرع شؤون الشهداء والجرحى المرقب';
+
+    const headers = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'تاريخ الميلاد', 'العمر الآن'];
+
+    const rows = sorted.map((m, i) => {
+        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
+        const age = today.getFullYear() - birthYear;
+        return [
+            i + 1,
+            m.id || '-',
+            m.rank || '-',
+            m.name || '-',
+            `<strong style="color:#e53e3e;">${m.status || '-'}</strong>`,
+            birthYear || '-',
+            `<strong style="color:#e67e22;">${age} سنة</strong>`
+        ];
+    });
+
+    showReportTable(headers, rows);
+}
+// ==================== تقرير جرحى الضباط البالغين سن التقاعد ====================
+function showInjuredOfficersRetirementReport() {
+    const today = new Date();
+
+    const retirementAge = {
+        'ملازم تان':        40,
+        'ملازم أول':        42,
+        'نقيب':             44,
+        'رائد':             48,
+        'مقدم':             50,
+        'عقيد':             55,
+        'عميد':             56,
+        'لواء':             57,
+        'ملازم تان شرف':    52,
+        'ملازم أول شرف':    52,
+        'نقيب شرف':         52,
+        'رائد شرف':         52,
+        'مقدم شرف':         52,
+        'عقيد شرف':         52,
+        'عميد شرف':         52
+    };
+
+    const officerRanks = Object.keys(retirementAge);
+
+    const filtered = martyrs.filter(m => {
+        // الصفة: جريح حرب فقط
+        if (m.status !== 'جريح حرب') return false;
+
+        // الرتبة: ضباط فقط
+        if (!officerRanks.includes(m.rank)) return false;
+
+        // الحالة: غير متقاعد أو موقوف فقط
+        const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
+        if (!validStatus) return false;
+
+        // العمر: بلغ سن تقاعد رتبته أو تجاوزه
+        if (!m.birthDate) return false;
+        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
+        if (!birthYear || isNaN(birthYear)) return false;
+        const age = today.getFullYear() - birthYear;
+        return age >= retirementAge[m.rank];
+    });
+
+    const sorted = [...filtered].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+
+    currentReportTitle = 'كشف بأسماء الجرحى الضباط البالغين سن الإحالة للتقاعد التابعين الي\nفرع شؤون الشهداء والجرحى المرقب';
+
+    const headers = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'سن التقاعد', 'تاريخ الميلاد', 'العمر الآن'];
+
+    const rows = sorted.map((m, i) => {
+        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
+        const age = today.getFullYear() - birthYear;
+        return [
+            i + 1,
+            m.id || '-',
+            m.rank || '-',
+            m.name || '-',
+            `<strong style="color:#e53e3e;">${m.status || '-'}</strong>`,
+            `<strong style="color:#8e44ad;">${retirementAge[m.rank]} سنة</strong>`,
             birthYear || '-',
             `<strong style="color:#e67e22;">${age} سنة</strong>`
         ];
