@@ -1927,7 +1927,75 @@
         min-height: 100vh;
     }
 }
-    </style>
+/* ========== تأثير الوميض حول عنوان البرنامج ========== */
+.login-header .program-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    animation: glowPulse 2s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        border-color: rgba(102, 126, 234, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.7), 0 0 40px rgba(102, 126, 234, 0.4);
+        border-color: rgba(102, 126, 234, 0.8);
+    }
+}
+/* ========== مؤشر الاتصال في صفحة الدخول ========== */
+.login-status-indicator {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.login-status-online {
+    background: #48bb78;
+    color: white;
+}
+
+.login-status-offline {
+    background: #e53e3e;
+    color: white;
+}
+
+.login-status-online::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+    animation: pulse 1.5s infinite;
+    vertical-align: middle;
+}
+
+.login-status-offline::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #ffcccc;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+.private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#ffff00;padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.2);border:none;color:#ffff00;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.4);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
+</style>
     <link rel="manifest" href="manifest.json">
     <!-- مكتبة الباركود JsBarcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
@@ -1986,11 +2054,12 @@
             <div class="login-header">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 200px; margin-bottom: 15px; border-radius: 10px;">
                 <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-                <h1>🔐 تسجيل الدخول</h1>
+           <div id="loginStatusIndicator" class="login-status-indicator login-status-online">متصل بالإنترنت</div>
+               <h1>🔐 تسجيل الدخول</h1>
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.3</p>
+                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.4</p>
                 </div>
             </div>
             <div class="form-group">
@@ -2025,7 +2094,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.3
+    📌 الإصدار 2.4
 </div>
             </div>
             <div class="user-bar">
@@ -2251,7 +2320,7 @@
                 <div class="form-group"><label>اسم المصرف</label><input type="text" id="martyrBankName"></div>
                 <div class="form-group"><label>رقم الحساب</label><input type="text" id="martyrAccountNo"></div>
                 <div class="form-group"><label>رقم الهاتف</label><input type="text" id="martyrPhone"></div>
-                <div class="form-group"><label>الحالة</label><select id="martyrEmploymentStatus"><option value="">اختر</option><option value="متقاعد">متقاعد</option><option value="غير متقاعد">غير متقاعد</option><option value="موقوف">موقوف</option></select></div>
+                <div class="form-group"><label>الحالة</label><select id="martyrEmploymentStatus"><option value="">اختر</option><option value="متقاعد">متقاعد</option><option value="غير متقاعد">غير متقاعد</option><option value="موقوف">موقوف</option><option value="متوفي">💀 متوفي</option></select></div>
                 <div class="form-group"><label>نوع المرتب</label><select id="martyrSalaryType"><option value="">اختر</option><option value="راتب شهري">راتب شهري</option><option value="منحة شهرية">منحة شهرية</option><option value="لا يتقاضي">لا يتقاضي</option></select></div>
             </div>
             <button class="btn" id="submitMartyrBtn" onclick="addMartyr()">➕ إضافة</button>
@@ -2264,7 +2333,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.3</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.4</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2420,7 +2489,9 @@
     </div>
 
     <div id="successMessage" class="success-message"></div>
-  <!-- نافذة إعدادات التايمر -->
+ <!-- حاوية الإشعارات -->
+<div id="notificationsContainer" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; direction: rtl;"></div>
+ <!-- نافذة إعدادات التايمر -->
 <div id="timerSettingsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content" style="max-width: 450px;">
         <div class="reports-modal-header" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
@@ -2590,6 +2661,14 @@
     <span class="modal-btn-icon">🎖️</span>
     <span class="modal-btn-text">شهداء الضباط البالغين سن التقاعد</span>
 </button>
+<button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showSalaryReport('martyrs_salary');">
+    <span class="modal-btn-icon">💰</span>
+    <span class="modal-btn-text">شهداء يتقاضون راتب</span>
+</button>
+<button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showSalaryReport('martyrs_grant');">
+    <span class="modal-btn-icon">📋</span>
+    <span class="modal-btn-text">شهداء يتقاضون منحة</span>
+</button>
             <!-- تقارير الجرحى -->
                 <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_injured');">
                     <span class="modal-btn-icon">🩸</span>
@@ -2627,28 +2706,44 @@
     <span class="modal-btn-icon">🩸</span>
     <span class="modal-btn-text">جرحى الضباط البالغين سن التقاعد</span>
 </button>
+<button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showSalaryReport('injured_salary');">
+    <span class="modal-btn-icon">💰</span>
+    <span class="modal-btn-text">جرحى يتقاضون راتب</span>
+</button>
+<button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showSalaryReport('injured_grant');">
+    <span class="modal-btn-icon">📋</span>
+    <span class="modal-btn-text">جرحى يتقاضون منحة</span>
+</button>
             </div>
         </div>
     </div>
 </div>
- <!-- زر فتح الدردشة -->
+<!-- زر فتح الدردشة -->
 <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChat()" title="محادثة المستخدمين">💬<span class="unread-badge" id="chatUnreadBadge" style="display:none;">0</span></button>
 
 <!-- نافذة الدردشة -->
 <div class="chat-container" id="chatContainer">
     <div class="chat-header">
-    <h4>💬 محادثة المستخدمين</h4>
-    <div>
-        <button class="chat-close" onclick="clearChat()" style="background:#e53e3e;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;margin-right:5px;">🗑️ مسح</button>
-        <button class="chat-close" onclick="toggleChat()">✕</button>
+        <h4 id="chatHeaderTitle">💬 محادثة المستخدمين</h4>
+        <div>
+            <select id="chatTypeSelect" onchange="switchChatType()" style="padding: 4px 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 11px; margin-right: 5px; background: white; color: #333;">
+                <option value="general">📢 عام</option>
+            </select>
+            <button class="chat-close" onclick="clearChat()" style="background:#e53e3e;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;margin-right:5px;">🗑️ مسح</button>
+            <button class="chat-close" onclick="toggleChat()">✕</button>
+        </div>
     </div>
-</div>
     <div class="chat-messages" id="chatMessages">
         <div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:13px;">لا توجد رسائل بعد</div>
     </div>
-    <div class="chat-input-area">
+    <div class="chat-input-area" id="chatInputArea">
         <input type="text" id="chatInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key==='Enter')sendMessage()">
         <button onclick="sendMessage()">إرسال</button>
+    </div>
+    <!-- قائمة المستخدمين للمحادثات الخاصة -->
+    <div id="privateChatUsersList" style="display:none; max-height: 200px; overflow-y: auto; padding: 10px; background: var(--user-bar-bg); border-top: 1px solid var(--border-color);">
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">👥 اختر مستخدم للمحادثة:</p>
+        <div id="onlineUsersForChat" style="display:flex;flex-direction:column;gap:5px;"></div>
     </div>
 </div>
     <script>
@@ -2716,7 +2811,213 @@
         let isOnline = navigator.onLine;
         let connectionCheckInterval = null;
         let isRefreshing = false;
+// ==================== متغيرات المستمعين الجديدة ====================
+let militariesListener = null;
+let civiliansListener = null;
+let martyrsListener = null;
+let usersListener = null;
+let auditListener = null;
+let trashListener = null;
+let isUpdatingFromLocal = false;
+let isInitialLoadDone = false;
 
+// دالة لبدء الاستماع للتغييرات في الوقت الفعلي
+function startRealTimeListeners() {
+    if (!currentUser) return;
+    if (isInitialLoadDone) return;
+    
+    console.log('🔄 بدء تشغيل المستمعات الفورية...');
+    
+    if (militariesListener === null) {
+        militariesListener = database.ref('/militaries').on('value', (snapshot) => {
+            if (isUpdatingFromLocal) return;
+            const data = snapshot.val() || {};
+            const newMilitaries = Object.values(data);
+            if (JSON.stringify(militaries) !== JSON.stringify(newMilitaries)) {
+                militaries = newMilitaries;
+                console.log('✅ تم تحديث بيانات العسكريين تلقائياً');
+                refreshCurrentView();
+                displayMemoryStats();
+                showUpdateFlash();
+            }
+        });
+    }
+    
+    if (civiliansListener === null) {
+        civiliansListener = database.ref('/civilians').on('value', (snapshot) => {
+            if (isUpdatingFromLocal) return;
+            const data = snapshot.val() || {};
+            const newCivilians = Object.values(data);
+            if (JSON.stringify(civilians) !== JSON.stringify(newCivilians)) {
+                civilians = newCivilians;
+                console.log('✅ تم تحديث بيانات الموظفين تلقائياً');
+                refreshCurrentView();
+                displayMemoryStats();
+                showUpdateFlash();
+            }
+        });
+    }
+    
+    if (martyrsListener === null) {
+        martyrsListener = database.ref('/martyrs').on('value', (snapshot) => {
+            if (isUpdatingFromLocal) return;
+            const data = snapshot.val() || {};
+            const newMartyrs = Object.values(data);
+            if (JSON.stringify(martyrs) !== JSON.stringify(newMartyrs)) {
+                martyrs = newMartyrs;
+                console.log('✅ تم تحديث بيانات الشهداء تلقائياً');
+                refreshCurrentView();
+                displayMemoryStats();
+                showUpdateFlash();
+            }
+        });
+    }
+    
+    if (currentUser.role === 'admin') {
+        if (usersListener === null) {
+            usersListener = database.ref('/users').on('value', (snapshot) => {
+                if (isUpdatingFromLocal) return;
+                const data = snapshot.val() || {};
+                const newUsers = Object.values(data);
+                if (JSON.stringify(users) !== JSON.stringify(newUsers)) {
+                    users = newUsers;
+                    console.log('✅ تم تحديث بيانات المستخدمين تلقائياً');
+                    if (document.getElementById('usersPage').style.display === 'block') {
+                        displayUsersList();
+                    }
+                }
+            });
+        }
+        
+        if (auditListener === null) {
+            auditListener = database.ref('/auditLogs').on('value', (snapshot) => {
+                if (isUpdatingFromLocal) return;
+                const data = snapshot.val() || {};
+                const newLogs = Object.values(data);
+                newLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                if (JSON.stringify(auditLogs) !== JSON.stringify(newLogs)) {
+                    auditLogs = newLogs;
+                    console.log('✅ تم تحديث سجل التغييرات تلقائياً');
+                    if (document.getElementById('auditPage').style.display === 'block') {
+                        displayAuditLog();
+                    }
+                }
+            });
+        }
+        
+        if (trashListener === null) {
+            trashListener = database.ref('/trashBin').on('value', (snapshot) => {
+                if (isUpdatingFromLocal) return;
+                const data = snapshot.val() || {};
+                const newTrash = Object.values(data);
+                if (JSON.stringify(trashBin) !== JSON.stringify(newTrash)) {
+                    trashBin = newTrash;
+                    console.log('✅ تم تحديث سلة المحذوفات تلقائياً');
+                    if (document.getElementById('trashPage').style.display === 'block') {
+                        displayTrash();
+                    }
+                }
+            });
+        }
+    }
+    
+    isInitialLoadDone = true;
+    updateSyncStatus('✅ متزامن (مباشر)');
+}
+
+// دالة لإيقاف المستمعين
+function stopRealTimeListeners() {
+    console.log('🛑 إيقاف المستمعات...');
+    
+    if (militariesListener) {
+        database.ref('/militaries').off('value', militariesListener);
+        militariesListener = null;
+    }
+    if (civiliansListener) {
+        database.ref('/civilians').off('value', civiliansListener);
+        civiliansListener = null;
+    }
+    if (martyrsListener) {
+        database.ref('/martyrs').off('value', martyrsListener);
+        martyrsListener = null;
+    }
+    if (usersListener) {
+        database.ref('/users').off('value', usersListener);
+        usersListener = null;
+    }
+    if (auditListener) {
+        database.ref('/auditLogs').off('value', auditListener);
+        auditListener = null;
+    }
+    if (trashListener) {
+        database.ref('/trashBin').off('value', trashListener);
+        trashListener = null;
+    }
+    
+    isInitialLoadDone = false;
+}
+
+// دالة لتحميل البيانات الأولية
+async function loadInitialData() {
+    updateSyncStatus('🔄 جاري التحميل الأولي...');
+    
+    try {
+        const [milSnap, civSnap, marSnap] = await Promise.all([
+            database.ref('/militaries').once('value'),
+            database.ref('/civilians').once('value'),
+            database.ref('/martyrs').once('value')
+        ]);
+        
+        militaries = Object.values(milSnap.val() || {});
+        civilians = Object.values(civSnap.val() || {});
+        martyrs = Object.values(marSnap.val() || {});
+        
+        console.log(`📊 تحميل البيانات: ${militaries.length} عسكري, ${civilians.length} موظف, ${martyrs.length} شهيد/جريح`);
+        
+        if (currentUser && currentUser.role === 'admin') {
+            const [usersSnap, auditSnap, trashSnap] = await Promise.all([
+                database.ref('/users').once('value'),
+                database.ref('/auditLogs').once('value'),
+                database.ref('/trashBin').once('value')
+            ]);
+            users = Object.values(usersSnap.val() || {});
+            auditLogs = Object.values(auditSnap.val() || {});
+            auditLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            trashBin = Object.values(trashSnap.val() || {});
+            
+            console.log(`📊 بيانات المدير: ${users.length} مستخدم, ${auditLogs.length} سجل, ${trashBin.length} محذوف`);
+        }
+        
+        updateSyncStatus('✅ متزامن');
+        displayMemoryStats();
+    } catch (error) {
+        console.error('❌ خطأ في التحميل الأولي:', error);
+        updateSyncStatus('⚠️ خطأ في الاتصال', true);
+        showMessage('حدث خطأ في تحميل البيانات. تأكد من اتصالك بالإنترنت.', true);
+    }
+}
+
+// دالة لإظهار وميض عند التحديث
+function showUpdateFlash() {
+    const statusEl = document.getElementById('syncStatus');
+    if (statusEl) {
+        statusEl.style.transition = 'background 0.3s';
+        const originalBg = statusEl.style.background;
+        statusEl.style.background = '#48bb78';
+        setTimeout(() => {
+            statusEl.style.background = originalBg;
+        }, 500);
+    }
+    showMessage('📡 تم تحديث البيانات من مستخدم آخر', false);
+}
+
+// دالة لإيقاف الساعة الرقمية
+function stopDigitalClock() {
+    if (clockInterval) {
+        clearInterval(clockInterval);
+        clockInterval = null;
+    }
+}
         // ==================== نظام تسجيل الدخول وتجميد الحساب ====================
         let loginAttempts = JSON.parse(localStorage.getItem('loginAttempts') || '{}');
 
@@ -2822,20 +3123,6 @@
             }
             window.removeEventListener('online', () => {});
             window.removeEventListener('offline', () => {});
-        }
-
-        function startAutoRefresh() {
-            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-            autoRefreshInterval = setInterval(() => {
-                if (!isRefreshing && currentUser) refreshAllData();
-            }, 30000);
-        }
-
-        function stopAutoRefresh() {
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-                autoRefreshInterval = null;
-            }
         }
 
         // ==================== دوال المستخدمين المتصلين ====================
@@ -2960,47 +3247,7 @@
             });
         }
 
-        // ==================== دوال Firebase ====================
-        async function loadAllDataFromFirebase() {
-            updateSyncStatus('🔄 جاري التحميل...');
-            try {
-                const snapshot = await database.ref('/').once('value');
-                const data = snapshot.val() || {};
-                if (data.militaries) militaries = Object.values(data.militaries);
-                else militaries = [];
-                if (data.civilians) civilians = Object.values(data.civilians);
-                else civilians = [];
-                if (data.martyrs) martyrs = Object.values(data.martyrs);
-                else martyrs = [];
-                if (data.users) users = Object.values(data.users);
-                else {
-                    users = [
-                        { id: '1', username: 'فيصل', password: '192021', role: 'admin', status: 'active', createdAt: new Date().toISOString() },
-                        { id: '2', username: 'الفرع', password: '1', role: 'viewer', status: 'active', createdAt: new Date().toISOString() },
-                        { id: '3', username: 'كاتب', password: '123', role: 'editor', status: 'active', createdAt: new Date().toISOString() },
-                       { id: '4', username: 'معدل', password: '123', role: 'modifier', status: 'active', createdAt: new Date().toISOString(), permissions: { add: null, delete: null, edit: ['military', 'civilian', 'martyr', 'all'] } },
-{ id: '5', username: 'مضيف', password: '123', role: 'adder', status: 'active', createdAt: new Date().toISOString(), permissions: { add: ['military', 'civilian', 'martyr', 'all'], delete: null, edit: null } },
-{ id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString(), permissions: { add: null, delete: ['military', 'civilian', 'martyr', 'all'], edit: null } },
-{ id: '7', username: 'مستعلم', password: '123', role: 'inquirer', status: 'active', createdAt: new Date().toISOString() }
-,
-{ id: '8', username: 'مرتبات', password: '123', role: 'salary', status: 'active', createdAt: new Date().toISOString() } 
-                    ];
-                    await saveUsersToFirebase();
-                }
-                if (data.auditLogs) {
-                    auditLogs = Object.values(data.auditLogs);
-                    auditLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                } else auditLogs = [];
-                if (data.trashBin) trashBin = Object.values(data.trashBin);
-                else trashBin = [];
-                updateSyncStatus('✅ متزامن');
-                return true;
-            } catch (error) {
-                console.error('خطأ في التحميل:', error);
-                updateSyncStatus('⚠️ خطأ في المزامنة', true);
-                return false;
-            }
-        }
+
 
         async function saveToFirebase(path, data) {
             try {
@@ -3218,45 +3465,100 @@ function getRoleDesc(role) {
         }
 
         async function refreshAllData() {
-            if (!navigator.onLine) { showMessage('❌ لا يوجد اتصال بالإنترنت', true); return; }
-            if (isRefreshing) return;
-            isRefreshing = true;
-            const btn = document.getElementById('refreshDataBtn');
-            const orig = btn.innerHTML;
-            btn.innerHTML = '🔄 جاري التحديث... <span class="refresh-spinner"></span>';
-            btn.disabled = true;
-            try {
-                const snapshot = await database.ref('/').once('value');
-                const data = snapshot.val() || {};
-                let changed = false;
-                if (data.militaries) { const n = Object.values(data.militaries); if (JSON.stringify(militaries) !== JSON.stringify(n)) { militaries = n; changed = true; } }
-                if (data.civilians) { const n = Object.values(data.civilians); if (JSON.stringify(civilians) !== JSON.stringify(n)) { civilians = n; changed = true; } }
-                if (data.martyrs) { const n = Object.values(data.martyrs); if (JSON.stringify(martyrs) !== JSON.stringify(n)) { martyrs = n; changed = true; } }
-                if (data.auditLogs) { const n = Object.values(data.auditLogs); n.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); if (JSON.stringify(auditLogs) !== JSON.stringify(n)) { auditLogs = n; changed = true; } }
-                if (data.trashBin) { const n = Object.values(data.trashBin); if (JSON.stringify(trashBin) !== JSON.stringify(n)) { trashBin = n; changed = true; } }
-                updateSyncStatus('✅ متزامن');
-                if (changed) { refreshCurrentView(); }
-            } catch (error) {
-                updateSyncStatus('⚠️ فشل التحديث', true);
-                showMessage('❌ فشل تحديث البيانات: ' + error.message, true);
-            } finally {
-                setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; isRefreshing = false; }, 1000);
-            }
+    if (!navigator.onLine) {
+        showMessage('❌ لا يوجد اتصال بالإنترنت', true);
+        return;
+    }
+    if (isRefreshing) return;
+    
+    isRefreshing = true;
+    const btn = document.getElementById('refreshDataBtn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '🔄 جاري التحديث... <span class="refresh-spinner"></span>';
+    btn.disabled = true;
+    
+    try {
+        isUpdatingFromLocal = true;
+        
+        const [milSnap, civSnap, marSnap] = await Promise.all([
+            database.ref('/militaries').once('value'),
+            database.ref('/civilians').once('value'),
+            database.ref('/martyrs').once('value')
+        ]);
+        
+        militaries = Object.values(milSnap.val() || {});
+        civilians = Object.values(civSnap.val() || {});
+        martyrs = Object.values(marSnap.val() || {});
+        
+        if (currentUser && currentUser.role === 'admin') {
+            const [usersSnap, auditSnap, trashSnap] = await Promise.all([
+                database.ref('/users').once('value'),
+                database.ref('/auditLogs').once('value'),
+                database.ref('/trashBin').once('value')
+            ]);
+            users = Object.values(usersSnap.val() || {});
+            auditLogs = Object.values(auditSnap.val() || {});
+            auditLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            trashBin = Object.values(trashSnap.val() || {});
         }
+        
+        refreshCurrentView();
+        displayMemoryStats();
+        updateSyncStatus('✅ تم التحديث');
+        showMessage('✅ تم تحديث البيانات بنجاح');
+        
+        setTimeout(() => {
+            updateSyncStatus('✅ متزامن (مباشر)');
+        }, 2000);
+        
+    } catch (error) {
+        console.error('خطأ في التحديث:', error);
+        updateSyncStatus('⚠️ فشل التحديث', true);
+        showMessage('❌ فشل تحديث البيانات', true);
+    } finally {
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.disabled = false;
+            isRefreshing = false;
+            isUpdatingFromLocal = false;
+        }, 1000);
+    }
+}
 
         function refreshCurrentView() {
-            if (document.getElementById('searchPage').style.display === 'block') search();
-            else if (document.getElementById('reportsPage').style.display === 'block') {
-                if (currentReportTitle.includes('عسكريين') && currentReportTitle.includes('ملخص')) showMilitarySummary();
-                else if (currentReportTitle.includes('عسكريين')) showMilitaryFull();
-                else if (currentReportTitle.includes('موظفين') && currentReportTitle.includes('ملخص')) showCivilianSummary();
-                else if (currentReportTitle.includes('موظفين')) showCivilianFull();
-            }
-            else if (document.getElementById('auditPage').style.display === 'block') displayAuditLog();
-            else if (document.getElementById('trashPage').style.display === 'block') displayTrash();
-            else if (document.getElementById('usersPage').style.display === 'block') displayUsersList();
-            else if (document.getElementById('onlineUsersPage').style.display === 'block') loadOnlineUsers();
+    // تحديث صفحة البحث إذا كانت مفتوحة
+    if (document.getElementById('searchPage').style.display === 'block') {
+        search();  // إعادة تنفيذ البحث للحصول على أحدث النتائج
+    }
+    // تحديث صفحة التقارير إذا كانت مفتوحة
+    else if (document.getElementById('reportsPage').style.display === 'block') {
+        if (currentReportTitle.includes('عسكريين') && currentReportTitle.includes('ملخص')) {
+            showMilitarySummary();
+        } else if (currentReportTitle.includes('عسكريين')) {
+            showMilitaryFull();
+        } else if (currentReportTitle.includes('موظفين') && currentReportTitle.includes('ملخص')) {
+            showCivilianSummary();
+        } else if (currentReportTitle.includes('موظفين')) {
+            showCivilianFull();
+        } else if (currentReportTitle.includes('شهداء')) {
+            // إعادة تحميل تقرير الشهداء الحالي إذا أمكن
+            // يمكنك إضافة منطق لتذكر آخر تقرير تم عرضه
         }
+    }
+    // تحديث صفحات أخرى إذا كانت مفتوحة
+    else if (document.getElementById('auditPage').style.display === 'block') {
+        displayAuditLog();
+    }
+    else if (document.getElementById('trashPage').style.display === 'block') {
+        displayTrash();
+    }
+    else if (document.getElementById('usersPage').style.display === 'block') {
+        displayUsersList();
+    }
+    else if (document.getElementById('onlineUsersPage').style.display === 'block') {
+        loadOnlineUsers();
+    }
+}
 
         function showOnlineUsers() {
             if (!currentUser || currentUser.role !== 'admin') { showMessage('هذه الصفحة متاحة للمدير فقط', true); return; }
@@ -3367,7 +3669,31 @@ async function login() {
     // ✅ إظهار شاشة الانتظار
     showLoadingOverlay('جارٍ الاتصال بقاعدة البيانات...', 20);
     
-    await loadAllDataFromFirebase();
+    // ✅ تحميل المستخدمين فقط للتحقق من الدخول
+    updateLoadingStatus('جارٍ تحميل بيانات المستخدمين...', 30);
+    try {
+        const usersSnapshot = await database.ref('/users').once('value');
+        const usersData = usersSnapshot.val() || {};
+        users = Object.values(usersData);
+        
+        // إذا لم يكن هناك مستخدمين، قم بإنشاء المستخدمين الافتراضيين
+        if (users.length === 0) {
+            users = [
+                { id: '1', username: 'فيصل', password: '192021', role: 'admin', status: 'active', createdAt: new Date().toISOString() },
+                { id: '2', username: 'الفرع', password: '1', role: 'viewer', status: 'active', createdAt: new Date().toISOString() },
+                { id: '3', username: 'كاتب', password: '123', role: 'editor', status: 'active', createdAt: new Date().toISOString() },
+                { id: '4', username: 'معدل', password: '123', role: 'modifier', status: 'active', createdAt: new Date().toISOString(), permissions: { add: null, delete: null, edit: ['military', 'civilian', 'martyr', 'all'] } },
+                { id: '5', username: 'مضيف', password: '123', role: 'adder', status: 'active', createdAt: new Date().toISOString(), permissions: { add: ['military', 'civilian', 'martyr', 'all'], delete: null, edit: null } },
+                { id: '6', username: 'محذف', password: '123', role: 'deleter', status: 'active', createdAt: new Date().toISOString(), permissions: { add: null, delete: ['military', 'civilian', 'martyr', 'all'], edit: null } },
+                { id: '7', username: 'مستعلم', password: '123', role: 'inquirer', status: 'active', createdAt: new Date().toISOString() },
+                { id: '8', username: 'مرتبات', password: '123', role: 'salary', status: 'active', createdAt: new Date().toISOString() }
+            ];
+            await saveUsersToFirebase();
+        }
+    } catch (error) {
+        console.error('خطأ في تحميل المستخدمين:', error);
+    }
+    
     updateLoadingStatus('جارٍ التحقق من بيانات المستخدم...', 50);
     
     const user = users.find(u => u.username === username);
@@ -3408,6 +3734,32 @@ async function login() {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         localStorage.setItem('loginTime', loginTime);
         
+        // ✅ تحميل باقي البيانات بعد التحقق من المستخدم
+        updateLoadingStatus('جارٍ تحميل البيانات...', 85);
+        try {
+            const [milSnap, civSnap, marSnap] = await Promise.all([
+                database.ref('/militaries').once('value'),
+                database.ref('/civilians').once('value'),
+                database.ref('/martyrs').once('value')
+            ]);
+            
+            militaries = Object.values(milSnap.val() || {});
+            civilians = Object.values(civSnap.val() || {});
+            martyrs = Object.values(marSnap.val() || {});
+            
+            if (currentUser.role === 'admin') {
+                const [auditSnap, trashSnap] = await Promise.all([
+                    database.ref('/auditLogs').once('value'),
+                    database.ref('/trashBin').once('value')
+                ]);
+                auditLogs = Object.values(auditSnap.val() || {});
+                auditLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                trashBin = Object.values(trashSnap.val() || {});
+            }
+        } catch (error) {
+            console.error('خطأ في تحميل البيانات:', error);
+        }
+        
         updateLoadingStatus('جارٍ تحديث حالة الاتصال...', 90);
         await updateOnlineStatus();
         startHeartbeat();
@@ -3418,7 +3770,7 @@ async function login() {
         setTimeout(() => {
             hideLoadingOverlay();
             showMainMenu();
-        }, 600); // تأخير بسيط لإظهار التحميل
+        }, 600);
         
     } else if (user && user.status !== 'active') {
         hideLoadingOverlay();
@@ -3507,29 +3859,32 @@ function stopDigitalClock() {
     }
 }
 async function showMainMenu() {
-    await loadAllDataFromFirebase();
+    await loadInitialData();
     
-    // إذا كان المستخدم مستعلم، وجهه مباشرة لصفحة الاستعلام
     if (currentUser.role === 'inquirer') {
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('inquiryPage').style.display = 'block';
-        startDigitalClock(); // تشغيل الساعة الرقمية للمستعلم
-     startTimers(); // تشغيل تايمر الرجوع والإغلاق
-   return;
+        startDigitalClock();
+        startTimers();
+        startRealTimeListeners();
+        return;
     }
     
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('mainMenu').style.display = 'block';
     
-    startDigitalClock(); // ✅ تشغيل الساعة هنا (وليس إيقافها)
-startTimers(); // ✅ تشغيل تايمر الرجوع والإغلاق
+    startDigitalClock();
+    startTimers();
     document.getElementById('userName').textContent = currentUser.name;
     document.getElementById('userRole').textContent = `${getRoleName(currentUser.role)} (${getRoleDesc(currentUser.role)})`;
     document.getElementById('usersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
     document.getElementById('onlineUsersBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
-    startAutoRefresh();
+    
+    startRealTimeListeners();
+    
     startConnectionMonitoring();
     if (currentUser.role === 'admin') startOnlineUsersMonitor();
+    
     const canAddMilitary = hasPermission('add', 'military');
     const canAddCivilian = hasPermission('add', 'civilian');
     const canAddMartyrs = hasPermission('add', 'martyr');
@@ -3539,40 +3894,64 @@ startTimers(); // ✅ تشغيل تايمر الرجوع والإغلاق
     document.getElementById('addCivilianBtn').classList.toggle('disabled', !canAddCivilian);
     document.getElementById('addMartyrsBtn').disabled = !canAddMartyrs;
     document.getElementById('addMartyrsBtn').classList.toggle('disabled', !canAddMartyrs);
-    // تحديث إحصائيات الذاكرة
-    // إظهار زر الدردشة وتحميل الرسائل
+    
     document.getElementById('chatToggleBtn').style.display = 'block';
     loadChatMessages();
     startChatListener();
-    // إظهار/إخفاء أزرار المدير فقط (فيصل)
+    updateChatUsersList();
+    
+    setTimeout(function() {
+        loadUnreadPrivateMessages();
+    }, 1500);
+    
     const isAdminUser = currentUser.role === 'admin';
     document.getElementById('auditBtn').style.display = isAdminUser ? 'inline-block' : 'none';
     document.getElementById('trashBtn').style.display = isAdminUser ? 'inline-block' : 'none';
     document.getElementById('exportBtn').style.display = isAdminUser ? 'inline-block' : 'none';
     document.getElementById('importArea').style.display = isAdminUser ? 'block' : 'none';
     document.getElementById('deviceLogBtn').style.display = isAdminUser ? 'inline-block' : 'none';
+    
     setTimeout(() => {
         displayMemoryStats();
     }, 300);
 }
 
         async function logout() {
-
-         document.getElementById('inquiryPage').style.display = 'none';
-            stopAutoRefresh();
-            stopConnectionMonitoring();
-            stopChatListener();
-            if (currentUser) await database.ref(`/onlineUsers/${currentUser.name}`).remove();
-            if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('loginTime');
-            currentUser = null;
-            loginTime = null;
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
+    document.getElementById('inquiryPage').style.display = 'none';
+    
+    stopRealTimeListeners();
+    
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+        autoRefreshInterval = null;
+    }
+    
+    stopConnectionMonitoring();
+    stopChatListener();
+    stopDigitalClock();
+    
+    if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+        heartbeatInterval = null;
+    }
+    
+    if (currentUser) {
+        await database.ref(`/onlineUsers/${currentUser.name}`).remove();
+    }
+    
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('loginTime');
+    currentUser = null;
+    loginTime = null;
+    isInitialLoadDone = false;
+    
+    document.getElementById('loginPage').style.display = 'block';
+    document.getElementById('mainMenu').style.display = 'none';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    
+    hideAllPages();
+}
 
         // ==================== دوال إدارة المستخدمين ====================
         function displayUsersList() {
@@ -4142,8 +4521,18 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
 
         function search() {
             const type = document.querySelector('input[name="searchType"]:checked').value;
-            const method = document.querySelector('input[name="searchMethod"]:checked').value;
-            const resultsDiv = document.getElementById('searchResults');
+    const method = document.querySelector('input[name="searchMethod"]:checked').value;
+    const resultsDiv = document.getElementById('searchResults');
+    
+    // حفظ بيانات البحث الحالية
+    window.currentSearchType = type;
+    window.currentSearchMethod = method;
+    if (method === 'number') {
+        window.currentSearchValue = document.getElementById('searchNumber').value;
+    } else {
+        window.currentSearchValue = document.getElementById('searchName').value;
+    }
+    
             let results = [];
             
             if (method === 'number') {
@@ -4298,7 +4687,21 @@ html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeMo
             resultsDiv.innerHTML = html; 
             resultsDiv.style.display = 'block';
         }
-
+// دالة لإعادة البحث التلقائي عند تحديث البيانات
+function autoRefreshSearch() {
+    if (document.getElementById('searchPage').style.display === 'block' && window.currentSearchValue) {
+        // إعادة تعبئة حقول البحث بالقيم المحفوظة
+        if (window.currentSearchMethod === 'number') {
+            document.getElementById('searchNumber').value = window.currentSearchValue;
+        } else {
+            document.getElementById('searchName').value = window.currentSearchValue;
+        }
+        
+        // إعادة تنفيذ البحث للحصول على أحدث النتائج
+        search();
+        console.log('🔄 تم تحديث نتائج البحث تلقائياً');
+    }
+}
         // ==================== دالة تحويل نتائج البحث إلى PDF ====================
         function exportSearchToPDF() {
             const resultsDiv = document.getElementById('searchResults');
@@ -4357,7 +4760,7 @@ html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeMo
             const footer = `
                 <div style="text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 11px; color: #888;">
                     <p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p>
-                    <p>فرع المرقب - الإصدار 2.3</p>
+                    <p>فرع المرقب - الإصدار 2.4</p>
                 </div>
             `;
             
@@ -4918,7 +5321,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.3</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.4</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -4938,7 +5341,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.3</p>' +
+   '<p>فرع المرقب - الإصدار 2.4</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -5732,22 +6135,284 @@ if (nationalId !== '') {
     backToMenu();
 }
 
-// ==================== نظام الدردشة ====================
+// ==================== نظام الدردشة العامة والخاصة ====================
 let chatMessages = [];
+let privateChats = {};
 let unreadCount = 0;
 let chatOpen = false;
 let chatListenerActive = false;
+let currentChatType = 'general';
+let currentPrivateChatUser = null;
+
+function getPrivateChatKey(user1, user2) {
+    const sorted = [user1, user2].sort();
+    return sorted.join('_');
+}
 
 function toggleChat() {
     const container = document.getElementById('chatContainer');
+    const usersList = document.getElementById('privateChatUsersList');
+    
     chatOpen = !chatOpen;
     container.style.display = chatOpen ? 'flex' : 'none';
+    
     if (chatOpen) {
         unreadCount = 0;
         updateUnreadBadge();
+        
+        if (currentChatType === 'private') {
+            if (usersList) usersList.style.display = 'block';
+            loadOnlineUsersForChat();
+        }
+        
         document.getElementById('chatInput').focus();
         scrollChatToBottom();
     }
+}
+
+function switchChatType() {
+    const select = document.getElementById('chatTypeSelect');
+    const usersList = document.getElementById('privateChatUsersList');
+    const chatHeaderTitle = document.getElementById('chatHeaderTitle');
+    
+    const value = select.value;
+    
+    if (value === 'general') {
+        currentChatType = 'general';
+        currentPrivateChatUser = null;
+        if (usersList) usersList.style.display = 'none';
+        if (chatHeaderTitle) chatHeaderTitle.innerHTML = '💬 محادثة المستخدمين';
+        document.getElementById('chatInput').placeholder = 'اكتب رسالتك...';
+        displayChatMessages();
+    } else if (value.startsWith('private_')) {
+        const username = value.replace('private_', '');
+        currentChatType = 'private';
+        document.getElementById('chatInput').placeholder = 'رسالة خاصة...';
+        if (usersList) usersList.style.display = 'block';
+        loadOnlineUsersForChat();
+        selectPrivateChatUser(username);
+    }
+}
+
+function selectPrivateChatUser(username) {
+    if (username === currentUser.name) {
+        showMessage('لا يمكنك مراسلة نفسك', true);
+        return;
+    }
+    
+    currentPrivateChatUser = username;
+    const chatHeaderTitle = document.getElementById('chatHeaderTitle');
+    if (chatHeaderTitle) {
+        chatHeaderTitle.innerHTML = `💬 محادثة خاصة مع <span class="private-chat-badge">${username}</span>`;
+    }
+    document.getElementById('chatInput').placeholder = `رسالة خاصة إلى ${username}...`;
+    
+    highlightSelectedUser(username);
+    loadPrivateChatMessages(username);
+       // تعليم المحادثة كمقروءة
+    const chatKey = getPrivateChatKey(currentUser.name, username);
+    const messages = privateChats[chatKey] || [];
+    if (messages.length > 0) {
+        const lastMsg = messages[messages.length - 1];
+        markChatAsRead(chatKey, lastMsg.id);
+    }
+}
+
+
+function highlightSelectedUser(username) {
+    const items = document.querySelectorAll('.user-chat-item');
+    items.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-username') === username) {
+            item.classList.add('active');
+        }
+    });
+}
+
+async function loadOnlineUsersForChat() {
+    const usersList = document.getElementById('onlineUsersForChat');
+    if (!usersList) return;
+    
+    try {
+        const snapshot = await database.ref('/users').once('value');
+        const allUsers = snapshot.val() || {};
+        
+        const onlineSnapshot = await database.ref('/onlineUsers').once('value');
+        const onlineData = onlineSnapshot.val() || {};
+        
+        // جلب الرسائل غير المقروءة
+        const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+        const chatsSnapshot = await database.ref('/privateChats').once('value');
+        const allChats = chatsSnapshot.val() || {};
+        
+        let html = '';
+        for (const [id, user] of Object.entries(allUsers)) {
+            if (user.username === currentUser.name) continue;
+            
+            const isOnline = onlineData[user.username] ? true : false;
+            const dotClass = isOnline ? 'online-dot' : 'offline-dot';
+            
+            // حساب عدد الرسائل غير المقروءة من هذا المستخدم
+            let unreadCount = 0;
+            for (const [chatKey, messages] of Object.entries(allChats)) {
+                if (chatKey.includes(currentUser.name) && chatKey.includes(user.username)) {
+                    const msgList = Object.values(messages);
+                    msgList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                    const lastSeenId = lastSeen[chatKey] || 0;
+                    for (const msg of msgList) {
+                        if (msg.username !== currentUser.name && msg.id > lastSeenId) {
+                            unreadCount++;
+                        }
+                    }
+                    break;
+                }
+            }
+            
+            html += `
+                <div class="user-chat-item ${currentPrivateChatUser === user.username ? 'active' : ''}" 
+                     data-username="${user.username}"
+                     onclick="selectPrivateChatUser('${user.username}')">
+                    <span class="${dotClass}"></span>
+                    <span style="flex:1;">${user.username}</span>
+                    <span style="font-size:10px;opacity:0.7;margin-right:5px;">${getRoleName(user.role)}</span>
+                    ${unreadCount > 0 ? `<span style="background:#e53e3e;color:white;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:bold;">${unreadCount > 99 ? '99+' : unreadCount}</span>` : ''}
+                </div>
+            `;
+        }
+        
+        usersList.innerHTML = html || '<p style="text-align:center;color:#888;">لا يوجد مستخدمين آخرين</p>';
+    } catch (e) {
+        console.error('خطأ في تحميل المستخدمين:', e);
+    }
+}
+async function loadPrivateChatMessages(username) {
+    if (!currentUser || !username) return;
+    
+    const chatKey = getPrivateChatKey(currentUser.name, username);
+    
+    try {
+        const snapshot = await database.ref(`/privateChats/${chatKey}`).once('value');
+        const data = snapshot.val();
+        const messages = data ? Object.values(data) : [];
+        messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        
+        privateChats[chatKey] = messages;
+        
+        displayChatMessages();
+        scrollChatToBottom();
+        
+        startPrivateChatListener(username);
+    } catch (e) {
+        console.error('خطأ في تحميل المحادثة الخاصة:', e);
+    }
+}
+
+function startPrivateChatListener(username) {
+    if (!currentUser || !username) return;
+    
+    const chatKey = getPrivateChatKey(currentUser.name, username);
+    
+    database.ref(`/privateChats/${chatKey}`).off('value');
+    
+    // متغير لتتبع آخر رسالة معروضة
+    let lastMessageId = null;
+    
+    database.ref(`/privateChats/${chatKey}`).on('value', (snapshot) => {
+        const data = snapshot.val();
+        const messages = data ? Object.values(data) : [];
+        messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        
+        privateChats[chatKey] = messages;
+        
+        // ==== التحقق من وجود رسالة جديدة من الطرف الآخر ====
+        if (messages.length > 0) {
+            const latestMsg = messages[messages.length - 1];
+            
+            // إذا كانت رسالة جديدة من المستخدم الآخر ولم نعرض إشعاراً لها بعد
+            if (latestMsg.username !== currentUser.name && 
+                latestMsg.id !== lastMessageId) {
+                
+                lastMessageId = latestMsg.id;
+                
+                // إظهار الإشعار فقط إذا:
+                // 1. الدردشة مغلقة، أو
+                // 2. المحادثة الحالية ليست مع هذا المستخدم
+                if (!chatOpen || 
+                    currentChatType !== 'private' || 
+                    currentPrivateChatUser !== username) {
+                    
+                    // إظهار إشعار منبثق
+                    showPrivateMessageNotification(username, latestMsg.text);
+                    
+                    // زيادة عداد غير المقروء
+                    unreadCount++;
+                    updateUnreadBadge();
+                    
+                    // تشغيل صوت التنبيه
+                    playNotificationSound();
+                }
+            }
+        }
+        
+        // تحديث العرض إذا كنا في نفس المحادثة
+        if (currentChatType === 'private' && currentPrivateChatUser === username && chatOpen) {
+    displayChatMessages();
+    scrollChatToBottom();
+    // تعليم المحادثة كمقروءة
+    if (messages.length > 0) {
+        const lastMsg = messages[messages.length - 1];
+        markChatAsRead(chatKey, lastMsg.id);
+    }
+}
+    });
+}
+
+function displayChatMessages() {
+    const messagesDiv = document.getElementById('chatMessages');
+    if (!messagesDiv) return;
+    
+    if (currentChatType === 'general') {
+        if (chatMessages.length === 0) {
+            messagesDiv.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:13px;">لا توجد رسائل بعد</div>';
+            return;
+        }
+        
+        let html = '';
+        chatMessages.forEach(msg => {
+            const isOwn = currentUser && msg.username === currentUser.name;
+            const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+            html += `
+            <div class="chat-message ${isOwn ? 'own' : 'other'}">
+                <div class="msg-user">${msg.username} ${isOwn ? '(أنت)' : ''}</div>
+                <div>${msg.text}</div>
+                <div class="msg-time">${time}</div>
+            </div>`;
+        });
+        messagesDiv.innerHTML = html;
+    } else if (currentChatType === 'private' && currentPrivateChatUser) {
+        const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
+        const messages = privateChats[chatKey] || [];
+        
+        if (messages.length === 0) {
+            messagesDiv.innerHTML = `<div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:13px;">لا توجد رسائل مع ${currentPrivateChatUser} بعد</div>`;
+            return;
+        }
+        
+        let html = `<div class="private-msg-indicator">🔒 محادثة خاصة مع ${currentPrivateChatUser}</div>`;
+        messages.forEach(msg => {
+            const isOwn = currentUser && msg.username === currentUser.name;
+            const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+            html += `
+            <div class="chat-message ${isOwn ? 'own' : 'other'}">
+                <div class="msg-user">${msg.username} ${isOwn ? '(أنت)' : ''}</div>
+                <div>${msg.text}</div>
+                <div class="msg-time">${time}</div>
+            </div>`;
+        });
+        messagesDiv.innerHTML = html;
+    }
+    
+    if (chatOpen) scrollChatToBottom();
 }
 
 function updateUnreadBadge() {
@@ -5767,110 +6432,47 @@ function scrollChatToBottom() {
     }, 100);
 }
 
-
-function displayChatMessages() {
-    const messagesDiv = document.getElementById('chatMessages');
-    if (chatMessages.length === 0) {
-        messagesDiv.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:13px;">لا توجد رسائل بعد</div>';
-        return;
-    }
-    let html = '';
-    chatMessages.forEach(msg => {
-        const isOwn = currentUser && msg.username === currentUser.name;
-        const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
-        html += `
-        <div class="chat-message ${isOwn ? 'own' : 'other'}">
-            <div class="msg-user">${msg.username} ${isOwn ? '(أنت)' : ''}</div>
-            <div>${msg.text}</div>
-            <div class="msg-time">${time}</div>
-        </div>`;
-    });
-    messagesDiv.innerHTML = html;
-    if (chatOpen) scrollChatToBottom();
-}
-async function clearChat() {
-    if (!currentUser || currentUser.role !== 'admin') {
-        showMessage('❌ فقط المدير يمكنه مسح المحادثة', true);
-        return;
-    }
-    
-    const option = prompt(
-        '🗑️ خيارات مسح المحادثة:\n\n' +
-        '1️⃣ - مسح آخر عدد من الرسائل\n' +
-        '2️⃣ - مسح رسائل مستخدم معين\n' +
-        '3️⃣ - مسح كل المحادثة\n\n' +
-        '✏️ أدخل رقم الخيار:'
-    );
-    
-    if (option === '1') {
-        const count = prompt('✏️ كم رسالة تريد مسحها من النهاية؟');
-        if (count && !isNaN(count) && parseInt(count) > 0) {
-            const num = parseInt(count);
-            if (num >= chatMessages.length) {
-                showConfirmModal('⚠️ العدد المطلوب أكبر من أو يساوي عدد الرسائل. سيتم مسح كل المحادثة. هل أنت متأكد؟', async function(confirmed) {
-                    if (confirmed) {
-                        chatMessages = [];
-                        await saveChatMessagesToFirebase();
-                        displayChatMessages();
-                        showMessage('✅ تم مسح كل المحادثة');
-                    }
-                });
-            } else {
-                showConfirmModal(`⚠️ هل أنت متأكد من مسح آخر ${num} رسالة؟`, async function(confirmed) {
-                    if (confirmed) {
-                        chatMessages = chatMessages.slice(0, chatMessages.length - num);
-                        await saveChatMessagesToFirebase();
-                        displayChatMessages();
-                        showMessage(`✅ تم مسح آخر ${num} رسالة`);
-                    }
-                });
-            }
-        }
-    }
-    else if (option === '2') {
-        const username = prompt('✏️ أدخل اسم المستخدم المراد مسح رسائله:');
-        if (username) {
-            const count = chatMessages.filter(m => m.username === username).length;
-            if (count === 0) {
-                showMessage('❌ لا توجد رسائل لهذا المستخدم', true);
-                return;
-            }
-            showConfirmModal(`⚠️ هل أنت متأكد من مسح ${count} رسالة للمستخدم "${username}"؟`, async function(confirmed) {
-                if (confirmed) {
-                    chatMessages = chatMessages.filter(m => m.username !== username);
-                    await saveChatMessagesToFirebase();
-                    displayChatMessages();
-                    showMessage(`✅ تم مسح رسائل "${username}"`);
-                }
-            });
-        }
-    }
-    else if (option === '3') {
-        showConfirmModal('⚠️ هل أنت متأكد من مسح جميع رسائل المحادثة؟\n\nلا يمكن التراجع عن هذا الإجراء!', async function(confirmed) {
-            if (confirmed) {
-                chatMessages = [];
-                await saveChatMessagesToFirebase();
-                displayChatMessages();
-                showMessage('✅ تم مسح المحادثة بنجاح');
-            }
-        });
-    }
-}
 async function sendMessage() {
     const input = document.getElementById('chatInput');
     const text = input.value.trim();
     if (!text || !currentUser) return;
+    
     input.value = '';
-    const message = {
-        id: Date.now(),
-        username: currentUser.name,
-        text: text,
-        timestamp: new Date().toISOString()
-    };
-    chatMessages.push(message);
-    if (chatMessages.length > 100) chatMessages.shift();
-    await saveChatMessagesToFirebase();
-    displayChatMessages();
+    
+    if (currentChatType === 'general') {
+        const message = {
+            id: Date.now(),
+            username: currentUser.name,
+            text: text,
+            timestamp: new Date().toISOString()
+        };
+        chatMessages.push(message);
+        if (chatMessages.length > 100) chatMessages.shift();
+        await saveChatMessagesToFirebase();
+        displayChatMessages();
+    } else if (currentChatType === 'private' && currentPrivateChatUser) {
+        const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
+        const message = {
+            id: Date.now(),
+            username: currentUser.name,
+            text: text,
+            timestamp: new Date().toISOString()
+        };
+        
+        if (!privateChats[chatKey]) privateChats[chatKey] = [];
+        privateChats[chatKey].push(message);
+        
+        const obj = {};
+        privateChats[chatKey].forEach(m => { obj[m.id] = m; });
+        await database.ref(`/privateChats/${chatKey}`).set(obj);
+        displayChatMessages();
+    }
+}
+
+async function saveChatMessagesToFirebase() {
+    const obj = {};
+    chatMessages.forEach(m => { obj[m.id] = m; });
+    await saveToFirebase('/chatMessages', obj);
 }
 
 async function loadChatMessages() {
@@ -5889,19 +6491,15 @@ async function loadChatMessages() {
     }
 }
 
-async function saveChatMessagesToFirebase() {
-    const obj = {};
-    chatMessages.forEach(m => { obj[m.id] = m; });
-    await saveToFirebase('/chatMessages', obj);
-}
-
 function startChatListener() {
     if (chatListenerActive) return;
     chatListenerActive = true;
+    
     database.ref('/chatMessages').on('value', (snapshot) => {
         const data = snapshot.val();
         const newMessages = data ? Object.values(data) : [];
         newMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        
         if (newMessages.length > 100) {
             const trimmed = newMessages.slice(-100);
             const obj = {};
@@ -5911,35 +6509,19 @@ function startChatListener() {
         } else {
             chatMessages = newMessages;
         }
-       if (!chatOpen && chatMessages.length > 0) {
-    const lastMsg = chatMessages[chatMessages.length - 1];
-    if (currentUser && lastMsg.username !== currentUser.name) {
-        unreadCount++;
-        updateUnreadBadge();
-        // تشغيل نغمة تنبيه قصيرة
-// 🔊 تشغيل نغمة النظام (تعمل دائماً)
-try {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-    oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime + 0.1);
-    
-    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    
-    oscillator.start(audioCtx.currentTime);
-    oscillator.stop(audioCtx.currentTime + 0.3);
-} catch(e) {}
-
-    }
-}
-        displayChatMessages();
+        
+        if (!chatOpen && chatMessages.length > 0 && currentChatType === 'general') {
+            const lastMsg = chatMessages[chatMessages.length - 1];
+            if (currentUser && lastMsg.username !== currentUser.name) {
+                unreadCount++;
+                updateUnreadBadge();
+                playNotificationSound();
+            }
+        }
+        
+        if (currentChatType === 'general') {
+            displayChatMessages();
+        }
     });
 }
 
@@ -5951,6 +6533,144 @@ function stopChatListener() {
     document.getElementById('chatToggleBtn').style.display = 'none';
     document.getElementById('chatContainer').style.display = 'none';
     chatOpen = false;
+}
+
+function playNotificationSound() {
+    // إذا كانت رسالة خاصة، استخدم نغمة مختلفة
+    if (currentChatType === 'private') {
+        playPrivateNotificationSound();
+        return;
+    }
+    
+    // النغمة العادية للرسائل العامة
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.3);
+    } catch(e) {}
+}
+
+async function clearChat() {
+    if (!currentUser) {
+        showMessage('❌ يجب تسجيل الدخول أولاً', true);
+        return;
+    }
+    
+    if (currentChatType === 'private') {
+        if (!currentPrivateChatUser) {
+            showMessage('❌ اختر مستخدم أولاً', true);
+            return;
+        }
+        
+        showConfirmModal(`⚠️ هل أنت متأكد من مسح المحادثة الخاصة مع "${currentPrivateChatUser}"؟`, async function(confirmed) {
+            if (confirmed) {
+                const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
+                privateChats[chatKey] = [];
+                await database.ref(`/privateChats/${chatKey}`).remove();
+                displayChatMessages();
+                showMessage('✅ تم مسح المحادثة الخاصة');
+            }
+        });
+        return;
+    }
+    
+    if (currentUser.role !== 'admin') {
+        showMessage('❌ فقط المدير يمكنه مسح المحادثة العامة', true);
+        return;
+    }
+    
+    const option = prompt(
+        '🗑️ خيارات مسح المحادثة:\n\n' +
+        '1️⃣ - مسح آخر عدد من الرسائل\n' +
+        '2️⃣ - مسح رسائل مستخدم معين\n' +
+        '3️⃣ - مسح كل المحادثة العامة\n\n' +
+        '✏️ أدخل رقم الخيار:'
+    );
+    
+    if (option === '1') {
+        const count = prompt('✏️ كم رسالة تريد مسحها من النهاية؟');
+        if (count && !isNaN(count) && parseInt(count) > 0) {
+            const num = parseInt(count);
+            if (num >= chatMessages.length) {
+                showConfirmModal('⚠️ سيتم مسح كل المحادثة العامة. متأكد؟', async function(confirmed) {
+                    if (confirmed) {
+                        chatMessages = [];
+                        await saveChatMessagesToFirebase();
+                        displayChatMessages();
+                        showMessage('✅ تم مسح المحادثة العامة');
+                    }
+                });
+            } else {
+                showConfirmModal(`⚠️ مسح آخر ${num} رسالة من المحادثة العامة؟`, async function(confirmed) {
+                    if (confirmed) {
+                        chatMessages = chatMessages.slice(0, chatMessages.length - num);
+                        await saveChatMessagesToFirebase();
+                        displayChatMessages();
+                        showMessage(`✅ تم مسح آخر ${num} رسالة`);
+                    }
+                });
+            }
+        }
+    }
+    else if (option === '2') {
+        const username = prompt('✏️ أدخل اسم المستخدم المراد مسح رسائله:');
+        if (username) {
+            const count = chatMessages.filter(m => m.username === username).length;
+            if (count === 0) {
+                showMessage('❌ لا توجد رسائل لهذا المستخدم', true);
+                return;
+            }
+            showConfirmModal(`⚠️ مسح ${count} رسالة للمستخدم "${username}"؟`, async function(confirmed) {
+                if (confirmed) {
+                    chatMessages = chatMessages.filter(m => m.username !== username);
+                    await saveChatMessagesToFirebase();
+                    displayChatMessages();
+                    showMessage(`✅ تم مسح رسائل "${username}"`);
+                }
+            });
+        }
+    }
+    else if (option === '3') {
+        showConfirmModal('⚠️ مسح جميع رسائل المحادثة العامة؟', async function(confirmed) {
+            if (confirmed) {
+                chatMessages = [];
+                await saveChatMessagesToFirebase();
+                displayChatMessages();
+                showMessage('✅ تم مسح المحادثة العامة');
+            }
+        });
+    }
+}
+
+// تحديث قائمة المستخدمين في الدردشة
+async function updateChatUsersList() {
+    const select = document.getElementById('chatTypeSelect');
+    if (!select) return;
+    
+    try {
+        const snapshot = await database.ref('/users').once('value');
+        const allUsers = snapshot.val() || {};
+        
+        let optionsHtml = '<option value="general">📢 عام</option>';
+        
+        for (const [id, user] of Object.entries(allUsers)) {
+            if (user.username === currentUser?.name) continue;
+            optionsHtml += `<option value="private_${user.username}">💬 ${user.username}</option>`;
+        }
+        
+        select.innerHTML = optionsHtml;
+    } catch (e) {
+        console.error('خطأ في تحديث قائمة المستخدمين:', e);
+    }
 }
 // ==================== دوال حساب حجم الذاكرة ====================
 
@@ -7377,6 +8097,7 @@ function printBarcodeCard() {
                     body { margin: 0; padding: 2mm; }
                     .barcode-card { break-inside: avoid; }
                 }
+
             </style>
         </head>
         <body>
@@ -7401,6 +8122,7 @@ function printBarcodeCard() {
                     </div>
                 </div>
             </div>
+
         </body>
         </html>
     `);
@@ -7418,6 +8140,322 @@ function printBarcodeCard() {
 let pendingUserData = null; // بيانات المستخدم المؤقتة قبل الحفظ
 let pendingEditUserId = null; // معرف المستخدم المراد تعديله
 
-    </script>
+// ==================== نظام إشعارات الرسائل الخاصة ====================
+
+/**
+ * إظهار إشعار منبثق عند وصول رسالة خاصة جديدة
+ * @param {string} fromUsername - اسم المرسل
+ * @param {string} messageText - نص الرسالة (مختصر)
+ */
+function showPrivateMessageNotification(fromUsername, messageText) {
+    // إزالة أي إشعارات سابقة
+    const container = document.getElementById('notificationsContainer');
+    if (!container) return;
+    
+    // اختصار نص الرسالة إذا كان طويلاً
+    let shortText = messageText;
+    if (messageText.length > 50) {
+        shortText = messageText.substring(0, 50) + '...';
+    }
+    
+    // إنشاء عنصر الإشعار
+    const notification = document.createElement('div');
+    notification.className = 'private-notification';
+    notification.innerHTML = `
+        <span class="notify-icon">💬</span>
+        <span class="notify-text">
+            <strong>${fromUsername}</strong> أرسل لك رسالة خاصة:<br>
+            <span style="font-size:12px;opacity:0.9;">${shortText}</span>
+        </span>
+        <button class="notify-close" onclick="this.parentElement.remove()">✕</button>
+    `;
+    
+    // النقر على الإشعار يفتح المحادثة مع المرسل
+    notification.onclick = function(e) {
+        if (e.target.className === 'notify-close') return;
+        
+        // فتح الدردشة إذا كانت مغلقة
+        if (!chatOpen) {
+            toggleChat();
+        }
+        
+        // التبديل إلى المحادثة الخاصة مع المرسل
+        currentChatType = 'private';
+        document.getElementById('privateChatUsersList').style.display = 'block';
+        selectPrivateChatUser(fromUsername);
+        
+        // تحديث القائمة المنسدلة
+        const select = document.getElementById('chatTypeSelect');
+        if (select) {
+            select.value = 'private_' + fromUsername;
+        }
+        
+        // إزالة الإشعار
+        notification.remove();
+    };
+    
+    // إضافة الإشعار إلى الحاوية
+    container.appendChild(notification);
+    
+    // إزالة تلقائية بعد 5 ثواني
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'fadeOutNotify 0.5s ease forwards';
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 500);
+        }
+    }, 5000);
+    
+    // تحديث عنوان الصفحة لإظهار إشعار
+    updatePageTitle(fromUsername);
+}
+
+/**
+ * تحديث عنوان الصفحة لإظهار إشعار غير مقروء
+ */
+function updatePageTitle(fromUsername) {
+    const originalTitle = document.title;
+    
+    // إضافة إشعار للعنوان
+    document.title = `💬 رسالة من ${fromUsername} - ${originalTitle}`;
+    
+    // وميض العنوان
+    let flashCount = 0;
+    const flashInterval = setInterval(() => {
+        if (flashCount >= 6) {
+            clearInterval(flashInterval);
+            document.title = originalTitle;
+            return;
+        }
+        
+        if (document.title.startsWith('💬')) {
+            document.title = originalTitle;
+        } else {
+            document.title = `💬 رسالة من ${fromUsername} - ${originalTitle}`;
+        }
+        flashCount++;
+    }, 1000);
+}
+
+/**
+ * تشغيل نغمة تنبيه أقوى للرسائل الخاصة
+ */
+function playPrivateNotificationSound() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // نغمتين متتاليتين للتمييز
+        const playTone = (frequency, startTime, duration) => {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, startTime);
+            gainNode.gain.setValueAtTime(0.3, startTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+            oscillator.start(startTime);
+            oscillator.stop(startTime + duration);
+        };
+        
+        playTone(880, audioCtx.currentTime, 0.15);
+        playTone(1100, audioCtx.currentTime + 0.15, 0.2);
+    } catch(e) {}
+}
+// ==================== تحميل الرسائل الخاصة غير المقروءة عند تسجيل الدخول ====================
+async function loadUnreadPrivateMessages() {
+    if (!currentUser) return;
+    
+    try {
+        // جلب جميع المحادثات الخاصة
+        const snapshot = await database.ref('/privateChats').once('value');
+        const allChats = snapshot.val() || {};
+        
+        // آخر رسالة معروضة (مخزنة محلياً)
+        const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+        
+        let hasNewMessages = false;
+        
+        // فحص كل محادثة خاصة
+        for (const [chatKey, messages] of Object.entries(allChats)) {
+            const msgList = Object.values(messages);
+            if (msgList.length === 0) continue;
+            
+            // استخراج اسم المستخدم الآخر من المفتاح
+            const users = chatKey.split('_');
+            const otherUser = users.find(u => u !== currentUser.name);
+            if (!otherUser) continue;
+            
+            // ترتيب الرسائل زمنياً
+            msgList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            // آخر رسالة في هذه المحادثة
+            const lastMsg = msgList[msgList.length - 1];
+            
+            // هل هذه رسالة جديدة (من المستخدم الآخر ولم نرها بعد)؟
+            const lastSeenId = lastSeen[chatKey] || 0;
+            
+            if (lastMsg.username !== currentUser.name && lastMsg.id > lastSeenId) {
+                // رسالة جديدة - إظهار إشعار
+                showPrivateMessageNotification(otherUser, lastMsg.text);
+                hasNewMessages = true;
+                
+                // تحديث آخر رسالة معروضة
+                lastSeen[chatKey] = lastMsg.id;
+            }
+        }
+        
+        // حفظ آخر الرسائل المعروضة
+        if (hasNewMessages) {
+            localStorage.setItem('lastSeenMessages', JSON.stringify(lastSeen));
+        }
+        
+    } catch (e) {
+        console.error('خطأ في تحميل الرسائل غير المقروءة:', e);
+    }
+}
+
+// تحديث آخر رسالة معروضة عند قراءة المحادثة
+function markChatAsRead(chatKey, messageId) {
+    const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+    lastSeen[chatKey] = messageId;
+    localStorage.setItem('lastSeenMessages', JSON.stringify(lastSeen));
+}
+// ==================== عداد الرسائل غير المقروءة لكل مستخدم ====================
+async function loadUnreadCounts() {
+    if (!currentUser) return;
+    
+    try {
+        const snapshot = await database.ref('/privateChats').once('value');
+        const allChats = snapshot.val() || {};
+        const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+        
+        const unreadCounts = {};
+        
+        for (const [chatKey, messages] of Object.entries(allChats)) {
+            const msgList = Object.values(messages);
+            if (msgList.length === 0) continue;
+            
+            const users = chatKey.split('_');
+            const otherUser = users.find(u => u !== currentUser.name);
+            if (!otherUser) continue;
+            
+            msgList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            let count = 0;
+            const lastSeenId = lastSeen[chatKey] || 0;
+            
+            for (const msg of msgList) {
+                if (msg.username !== currentUser.name && msg.id > lastSeenId) {
+                    count++;
+                }
+            }
+            
+            if (count > 0) {
+                unreadCounts[otherUser] = count;
+            }
+        }
+        
+        return unreadCounts;
+    } catch (e) {
+        console.error('خطأ في تحميل عدد الرسائل:', e);
+        return {};
+    }
+}
+
+function updateUsersListWithBadges(unreadCounts) {
+    const items = document.querySelectorAll('.user-chat-item');
+    items.forEach(item => {
+        const username = item.getAttribute('data-username');
+        if (!username) return;
+        
+        // إزالة الشارة القديمة
+        const oldBadge = item.querySelector('.unread-count-badge');
+        if (oldBadge) oldBadge.remove();
+        
+        const count = unreadCounts[username] || 0;
+        if (count > 0) {
+            const badge = document.createElement('span');
+            badge.className = 'unread-count-badge';
+            badge.textContent = count > 99 ? '99+' : count;
+            badge.style.cssText = 'background:#e53e3e;color:white;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:bold;min-width:20px;text-align:center;';
+            item.appendChild(badge);
+        }
+    });
+}
+// ==================== مؤشر الاتصال في صفحة الدخول ====================
+function updateLoginConnectionStatus() {
+    var indicator = document.getElementById('loginStatusIndicator');
+    if (!indicator) return;
+    
+    if (navigator.onLine) {
+        indicator.className = 'login-status-indicator login-status-online';
+        indicator.textContent = 'متصل بالإنترنت';
+    } else {
+        indicator.className = 'login-status-indicator login-status-offline';
+        indicator.textContent = 'لا يوجد اتصال بالإنترنت';
+    }
+}
+
+// تحديث الحالة عند تحميل الصفحة
+updateLoginConnectionStatus();
+
+// الاستماع لتغييرات الاتصال
+window.addEventListener('online', updateLoginConnectionStatus);
+window.addEventListener('offline', updateLoginConnectionStatus);
+ // ==================== تقارير المرتبات والمنح ====================
+function showSalaryReport(type) {
+    let filteredData = [];
+    let title = '';
+    
+    const allMartyrs = martyrs.filter(m => 
+        m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب'
+    );
+    const allInjured = martyrs.filter(m => m.status === 'جريح حرب');
+    
+    switch (type) {
+        case 'martyrs_salary':
+            title = 'كشف بأسماء الشهداء الذين يتقاضون راتب\nالتابعين لفرع شؤون الشهداء المرقب';
+            filteredData = allMartyrs.filter(m => m.salaryType === 'راتب شهري');
+            break;
+        case 'martyrs_grant':
+            title = 'كشف بأسماء الشهداء الذين يتقاضون منحة\nالتابعين لفرع شؤون الشهداء المرقب';
+            filteredData = allMartyrs.filter(m => m.salaryType === 'منحة شهرية');
+            break;
+        case 'injured_salary':
+            title = 'كشف بأسماء الجرحى الذين يتقاضون راتب\nالتابعين لفرع شؤون الشهداء المرقب';
+            filteredData = allInjured.filter(m => m.salaryType === 'راتب شهري');
+            break;
+        case 'injured_grant':
+            title = 'كشف بأسماء الجرحى الذين يتقاضون منحة\nالتابعين لفرع شؤون الشهداء المرقب';
+            filteredData = allInjured.filter(m => m.salaryType === 'منحة شهرية');
+            break;
+        default:
+            return;
+    }
+    
+    // ترتيب حسب الرقم العسكري
+    filteredData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    
+    currentReportTitle = title;
+    
+    const headers = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'نوع المرتب', 'الحالة الوظيفية'];
+    
+    const rows = filteredData.map((m, i) => [
+        i + 1,
+        m.id || '-',
+        m.rank || '-',
+        m.name || '-',
+        `<strong style="color:#e53e3e;">${m.status || '-'}</strong>`,
+        m.salaryType || '-',
+        m.employmentStatus || '-'
+    ]);
+    
+    showReportTable(headers, rows);
+}
+   </script>
 </body>
 </html>
