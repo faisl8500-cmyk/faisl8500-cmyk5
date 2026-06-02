@@ -1448,6 +1448,23 @@
     padding: 6px;
     border-radius: 6px;
 }
+/* ========== تنسيق زر الواتساب ========== */
+.btn-whatsapp {
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-whatsapp:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+}
 /* ========== غرفة الدردشة ========== */
 .chat-toggle-btn {
     position: fixed;
@@ -2001,7 +2018,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
-    <!-- نافذة معلومات المستخدم -->
     <div id="userInfoModal" class="user-info-modal">
         <div class="user-info-content">
             <h3>👤 معلومات المستخدم المتصل</h3>
@@ -2025,7 +2041,6 @@
         </div>
     </div>
 
-    <!-- نافذة تأكيد الحذف -->
     <div id="confirmModal" class="confirm-modal">
         <div class="confirm-content">
             <h3>⚠️ تأكيد الحذف</h3>
@@ -2036,7 +2051,6 @@
             </div>
         </div>
     </div>
-<!-- شاشة الانتظار أثناء تسجيل الدخول -->
 <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
     <div style="background: var(--card-bg); border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: fadeInUp 0.4s ease;">
         <div style="font-size: 50px; margin-bottom: 20px; animation: bounce 1s infinite;">⏳</div>
@@ -2048,7 +2062,6 @@
         <p id="loadingStatus" style="font-size: 12px; color: #888; margin-top: 10px;">جارٍ الاتصال بقاعدة البيانات...</p>
     </div>
 </div>
-    <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <div class="login-header">
@@ -2059,16 +2072,16 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.4</p>
+                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.5</p>
                 </div>
             </div>
             <div class="form-group">
                 <label>👤 اسم المستخدم</label>
-                <input type="text" id="username" placeholder="أدخل اسم المستخدم">
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
             <div class="form-group">
                 <label>🔑 كلمة المرور</label>
-                <input type="password" id="password" placeholder="أدخل كلمة المرور">
+                <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="new-password">
             </div>
             <button class="btn-login" onclick="login()">تسجيل الدخول</button>
             <div class="error-message" id="errorMessage"></div>
@@ -2085,7 +2098,6 @@
         </div>
     </div>
 
-    <!-- الواجهة الرئيسية للأزرار -->
     <div id="mainMenu" class="main-menu">
         <div class="menu-card">
             <div class="program-header">
@@ -2094,7 +2106,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.4
+    📌 الإصدار 2.5
 </div>
             </div>
             <div class="user-bar">
@@ -2104,13 +2116,11 @@
                     <span class="user-role" id="userRole"></span>
                     <span class="online-indicator" id="onlineIndicator">🟢 متصل</span>
                     <span class="sync-status" id="syncStatus">☁️ متزامن</span>
-                    <!-- >>> زر الوضع المظلم مضاف هنا <<< -->
                     <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>           
 <button class="dark-mode-toggle" onclick="openTimerSettings()" title="إعدادات التايمر" style="font-size: 14px;">⏰</button>         
 <span id="logoutTimeDisplay" style="background: #fed7d7; color: #c53030; padding: 5px 12px; border-radius: 20px; font-size: 11px; direction: rtl; font-weight: bold;">
     🚪 الإغلاق: <span id="logoutTimeValue">--:--:--</span>
 </span>
-                    <!-- >>>الساعة الرقمية<<< -->
           <span class="digital-clock" id="digitalClock">
     <span class="clock-icon">🕐</span>
     <span id="clockTime">00:00:00</span>
@@ -2122,10 +2132,7 @@
                     <button class="btn-logout" onclick="logout()">🚪 تسجيل خروج</button>
                 </div>
             </div>
-            <!-- حاوية إحصائيات الذاكرة -->
-<div id="memoryStatsContainer" class="stats-container" style="margin-bottom: 20px;">
-    <!-- سيتم ملؤها تلقائياً -->
-</div>
+<div id="memoryStatsContainer" class="stats-container" style="margin-bottom: 20px;"></div>
             <div class="menu-buttons">
                 <button class="menu-btn add-military" id="addMilitaryBtn" onclick="showAddMilitary()">➕ إضافة عسكري</button>
                 <button class="menu-btn add-civilian" id="addCivilianBtn" onclick="showAddCivilian()">👨‍💼 إضافة موظف</button>
@@ -2147,7 +2154,6 @@
         </div>
     </div>
 
-    <!-- صفحة المستخدمين المتصلين (للمدير فقط) -->
     <div id="onlineUsersPage" class="online-users-container">
         <div class="online-users-card">
             <div class="form-header">
@@ -2165,25 +2171,15 @@
             <div style="overflow-x: auto;">
                 <table class="online-users-table" id="onlineUsersTable">
                     <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>اسم المستخدم</th>
-                            <th>الصلاحية</th>
-                            <th>الحالة</th>
-                            <th>آخر نشاط</th>
-                            <th>مدة الاتصال</th>
-                        </tr>
+                        <tr><th>#</th><th>اسم المستخدم</th><th>الصلاحية</th><th>الحالة</th><th>آخر نشاط</th><th>مدة الاتصال</th></tr>
                     </thead>
-                    <tbody id="onlineUsersTableBody">
-                        <!-- سيتم ملؤها ديناميكياً -->
-                    </tbody>
+                    <tbody id="onlineUsersTableBody"></tbody>
                 </table>
             </div>
             <div class="refresh-time" id="refreshTime">🔄 يتم التحديث تلقائياً...</div>
         </div>
     </div>
 
-    <!-- نموذج إضافة عسكري -->
     <div id="addMilitaryForm" class="form-container">
         <div class="form-card">
             <div class="form-header">
@@ -2222,7 +2218,6 @@
         </div>
     </div>
 
-    <!-- نموذج إضافة موظف -->
     <div id="addCivilianForm" class="form-container">
         <div class="form-card">
             <div class="form-header">
@@ -2234,7 +2229,6 @@
             </div>
             <div class="form-grid">
                 <div class="form-group"><label>📋 الرقم الوظيفي <span class="required">*</span></label><input type="number" id="civId"><div class="error-message" id="civIdError"></div></div>
-               <!-- الكود الجديد -->
             <div class="form-group"><label>⭐ الرتبة <span class="required">*</span></label><select id="civRank"><option value="">اختر الرتبة</option><option value="موظف">موظف</option></select></div>
             <div class="form-group"><label>👤 الاسم الكامل <span class="required">*</span></label><input type="text" id="civName"><div class="error-message" id="civNameError"></div></div>
             </div>
@@ -2262,7 +2256,6 @@
         </div>
     </div>
 
-    <!-- نموذج إضافة شهداء وجرحى -->
     <div id="addMartyrsForm" class="form-container">
         <div class="form-card">
             <div class="form-header">
@@ -2327,13 +2320,12 @@
             <button class="btn btn-edit" id="updateMartyrBtn" onclick="updateMartyr()" style="display:none;">💾 حفظ التعديل</button>
         </div>
     </div>
-<!-- صفحة خدمة الاستعلام (للمستعلم فقط) -->
 <div id="inquiryPage" class="search-container" style="display:none;">
     <div class="search-card">
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.4</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.5</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2349,7 +2341,6 @@
         <div id="inquiryResults" class="search-results" style="margin-top:20px;"></div>
     </div>
 </div>
-    <!-- صفحة البحث -->
     <div id="searchPage" class="search-container">
         <div class="search-card">
             <div class="form-header">
@@ -2375,7 +2366,6 @@
         </div>
     </div>
 
-    <!-- صفحة إدارة المستخدمين -->
     <div id="usersPage" class="users-container">
         <div class="users-card">
             <div class="form-header">
@@ -2415,7 +2405,6 @@
         </div>
     </div>
 
-    <!-- صفحة سجل التغييرات -->
     <div id="auditPage" class="audit-container">
         <div class="audit-card">
             <div class="form-header">
@@ -2435,7 +2424,6 @@
         </div>
     </div>
 
-    <!-- صفحة سلة المحذوفات -->
     <div id="trashPage" class="trash-container">
         <div class="trash-card">
             <div class="form-header">
@@ -2454,7 +2442,6 @@
         </div>
     </div>
 
-    <!-- صفحة التقارير -->
     <div id="reportsPage" class="reports-container">
         <div class="reports-card">
             <div class="program-header" style="margin-bottom: 20px; padding: 12px;"><div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div></div>
@@ -2466,13 +2453,11 @@
                 </div>
             </div>
 <div class="reports-buttons" style="justify-content: center; gap: 30px;">
-    <!-- الزر الأول: تقارير قوة فرع المرقب -->
     <button class="report-btn main-report-btn branch-btn" onclick="openBranchReportsModal()">
         <span style="font-size: 28px; display: block; margin-bottom: 8px;">🗂️ </span>
         تقارير قوة فرع المرقب
     </button>
     
-    <!-- الزر الثاني: تقارير الشهداء والجرحى -->
     <button class="report-btn main-report-btn martyrs-btn" onclick="openMartyrsReportsModal()">
         <span style="font-size: 28px; display: block; margin-bottom: 8px;">🕊️</span>
         تقارير الشهداء والجرحى
@@ -2484,14 +2469,14 @@
             <div class="report-actions" id="reportActions" style="display: none;">
                 <button class="btn print-btn" onclick="printReport()">🖨️ تحويل إلى PDF / طباعة</button>
                 <button class="btn excel-btn" onclick="exportToExcel()">📊 تصدير إلى Excel</button>
-            </div>
+        <button class="btn-whatsapp" onclick="sendReportToWhatsApp()">📱 إرسال إلى واتساب</button>
+           </div>
+          </div>
         </div>
     </div>
 
     <div id="successMessage" class="success-message"></div>
- <!-- حاوية الإشعارات -->
 <div id="notificationsContainer" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; direction: rtl;"></div>
- <!-- نافذة إعدادات التايمر -->
 <div id="timerSettingsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content" style="max-width: 450px;">
         <div class="reports-modal-header" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
@@ -2519,7 +2504,6 @@
         </div>
     </div>
 </div>
-  <!-- >>> تايمر وقت الرجوع ووقت الإغلاق (ثابت في جميع الصفحات) <<< -->
 <div id="timersContainer" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; gap: 10px; direction: rtl;">
     <span id="returnTimeDisplay" style="background: #fef3c7; color: #d97706; padding: 8px 16px; border-radius: 25px; font-size: 13px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
         ⏳ الرجوع: <span id="returnTimeValue">--:--:--</span>
@@ -2529,14 +2513,12 @@
     </span>
 </div>
     
-    <!-- 👇👇👇 ضع كود نافذة الباركود هنا 👇👇👇 -->
     <div id="barcodePrintModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
         <div style="background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; text-align: center; direction: rtl;">
             <h3 style="color: #333; margin-bottom: 10px;">🎫 بطاقة تعريفية</h3>
             <p style="color: #666; margin-bottom: 5px; font-size: 12px;">إدارة شؤون الشهداء - فرع المرقب</p>
             <div style="background: #f8f9fa; border-radius: 15px; padding: 20px; margin: 15px 0;">
                 <div id="barcodePrintContent">
-                    <!-- سيتم ملؤها ديناميكياً -->
                 </div>
             </div>
             <div style="display: flex; gap: 10px; justify-content: center;">
@@ -2546,9 +2528,7 @@
         </div>
     </div>
 
-    <!-- بطاقة الطباعة المخفية -->
     <div id="barcodePrintCard" style="display: none;"></div>
-    <!-- 👆👆👆 نهاية كود الباركود 👆👆👆 -->
 
 
 <div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:3000; justify-content:center; align-items:center; overflow-y:auto;">
@@ -2556,10 +2536,8 @@
     <h3 style="color:#8e44ad; margin-bottom:15px; text-align:center;">✏️ تعديل صلاحية المستخدم</h3>
     <p id="editUserName" style="text-align:center; margin-bottom:12px; font-weight:bold;"></p>
     
-    <!-- الصلاحية الرئيسية -->
     <div id="editUserRoles" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
     
-    <!-- الصلاحيات الفرعية (تظهر حسب الاختيار) -->
     <div id="subPermissionsDiv" style="display:none; margin-bottom:12px; padding:12px; background:var(--user-bar-bg); border-radius:10px;">
       <p style="font-weight:bold; color:#667eea; margin-bottom:8px; text-align:center; font-size:14px;">⚙️ تحديد الصلاحيات الفرعية</p>
       <div id="subPermissionsCheckboxes" style="display:flex; flex-direction:column; gap:6px;"></div>
@@ -2572,7 +2550,6 @@
   </div>
 </div>
 </body>
-<!-- ========== نافذة تقارير قوة فرع المرقب (مُعدّلة بزرين جديدين) ========== -->
 <div id="branchReportsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content">
         <div class="reports-modal-header">
@@ -2581,12 +2558,10 @@
         </div>
         <div class="reports-modal-body">
             <div class="reports-modal-buttons">
-                <!-- >>> الزر الجديد الأول: كشف ضباط الفرع <<< -->
                 <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showOfficersReport_Branch();">
                     <span class="modal-btn-icon">🎖️</span>
                     <span class="modal-btn-text">كشف ضباط الفرع</span>
                 </button>
-                <!-- >>> الزر الجديد الثاني: كشف العسكريين المراتب <<< -->
                 <button class="modal-report-btn military-style" onclick="closeBranchReportsModal(); showSoldiersReport_Branch();">
                     <span class="modal-btn-icon">🪖</span>
                     <span class="modal-btn-text">كشف العسكريين المراتب</span>
@@ -2611,7 +2586,6 @@
         </div>
     </div>
 </div>
-<!-- ========== نافذة تقارير الشهداء والجرحى ========== -->
 <div id="martyrsReportsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content">
         <div class="reports-modal-header" style="background: linear-gradient(135deg, #4a0000, #990000);">
@@ -2620,7 +2594,6 @@
         </div>
         <div class="reports-modal-body">
             <div class="reports-modal-buttons">
-                <!-- تقارير الشهداء -->
                 <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_martyrs');">
                     <span class="modal-btn-icon">🕊️</span>
                     <span class="modal-btn-text">كشف جميع الشهداء</span>
@@ -2669,7 +2642,6 @@
     <span class="modal-btn-icon">📋</span>
     <span class="modal-btn-text">شهداء يتقاضون منحة</span>
 </button>
-            <!-- تقارير الجرحى -->
                 <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_injured');">
                     <span class="modal-btn-icon">🩸</span>
                     <span class="modal-btn-text">كشف جميع الجرحى</span>
@@ -2718,10 +2690,8 @@
         </div>
     </div>
 </div>
-<!-- زر فتح الدردشة -->
 <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChat()" title="محادثة المستخدمين">💬<span class="unread-badge" id="chatUnreadBadge" style="display:none;">0</span></button>
 
-<!-- نافذة الدردشة -->
 <div class="chat-container" id="chatContainer">
     <div class="chat-header">
         <h4 id="chatHeaderTitle">💬 محادثة المستخدمين</h4>
@@ -2740,14 +2710,12 @@
         <input type="text" id="chatInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key==='Enter')sendMessage()">
         <button onclick="sendMessage()">إرسال</button>
     </div>
-    <!-- قائمة المستخدمين للمحادثات الخاصة -->
     <div id="privateChatUsersList" style="display:none; max-height: 200px; overflow-y: auto; padding: 10px; background: var(--user-bar-bg); border-top: 1px solid var(--border-color);">
         <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">👥 اختر مستخدم للمحادثة:</p>
         <div id="onlineUsersForChat" style="display:flex;flex-direction:column;gap:5px;"></div>
     </div>
 </div>
     <script>
-        // ==================== إعدادات Firebase ====================
         const firebaseConfig = {
             apiKey: "AIzaSyB9GwJ_tEw6PFuLihQVjPGuSZSgv7TET2w",
             authDomain: "far-almorqb.firebaseapp.com",
@@ -2758,11 +2726,9 @@
             appId: "1:143227249094:web:07d377b75a87a0ddd3d2c7"
         };
 
-        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // ==================== نظام الوضع المظلم ====================
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
@@ -2789,11 +2755,11 @@
             updateDarkModeButton(isDarkMode);
         }
 
-        // تحميل تفضيلات الوضع المظلم عند بدء التشغيل
         loadDarkModePreference();
 
-        // ==================== البيانات الأساسية ====================
         let militaries = [], civilians = [], martyrs = [];
+        let pendingUserData = null;
+        let pendingEditUserId = null;
         let users = [];
         let auditLogs = [];
         let trashBin = [];
@@ -2811,7 +2777,6 @@
         let isOnline = navigator.onLine;
         let connectionCheckInterval = null;
         let isRefreshing = false;
-// ==================== متغيرات المستمعين الجديدة ====================
 let militariesListener = null;
 let civiliansListener = null;
 let martyrsListener = null;
@@ -2821,7 +2786,6 @@ let trashListener = null;
 let isUpdatingFromLocal = false;
 let isInitialLoadDone = false;
 
-// دالة لبدء الاستماع للتغييرات في الوقت الفعلي
 function startRealTimeListeners() {
     if (!currentUser) return;
     if (isInitialLoadDone) return;
@@ -2925,7 +2889,6 @@ function startRealTimeListeners() {
     updateSyncStatus('✅ متزامن (مباشر)');
 }
 
-// دالة لإيقاف المستمعين
 function stopRealTimeListeners() {
     console.log('🛑 إيقاف المستمعات...');
     
@@ -2957,7 +2920,6 @@ function stopRealTimeListeners() {
     isInitialLoadDone = false;
 }
 
-// دالة لتحميل البيانات الأولية
 async function loadInitialData() {
     updateSyncStatus('🔄 جاري التحميل الأولي...');
     
@@ -2997,7 +2959,6 @@ async function loadInitialData() {
     }
 }
 
-// دالة لإظهار وميض عند التحديث
 function showUpdateFlash() {
     const statusEl = document.getElementById('syncStatus');
     if (statusEl) {
@@ -3011,14 +2972,12 @@ function showUpdateFlash() {
     showMessage('📡 تم تحديث البيانات من مستخدم آخر', false);
 }
 
-// دالة لإيقاف الساعة الرقمية
 function stopDigitalClock() {
     if (clockInterval) {
         clearInterval(clockInterval);
         clockInterval = null;
     }
 }
-        // ==================== نظام تسجيل الدخول وتجميد الحساب ====================
         let loginAttempts = JSON.parse(localStorage.getItem('loginAttempts') || '{}');
 
         function saveLoginAttempts() {
@@ -3072,7 +3031,6 @@ function stopDigitalClock() {
             return remaining > 0 ? Math.ceil(remaining / 60000) : 0;
         }
 
-        // ==================== حالة المزامنة والاتصال ====================
         function updateSyncStatus(status, isError = false) {
             const statusEl = document.getElementById('syncStatus');
             if (statusEl) {
@@ -3125,7 +3083,6 @@ function stopDigitalClock() {
             window.removeEventListener('offline', () => {});
         }
 
-        // ==================== دوال المستخدمين المتصلين ====================
         async function updateOnlineStatus() {
             if (!currentUser) return;
             const onlineData = {
@@ -3297,7 +3254,6 @@ function stopDigitalClock() {
             await saveToFirebase('/trashBin', obj);
         }
 
-        // ==================== دوال سجل التغييرات وسلة المحذوفات ====================
         async function addAuditLog(action, type, recordId, recordName, details = '') {
             const log = {
                 id: Date.now(),
@@ -3356,7 +3312,6 @@ function stopDigitalClock() {
             return true;
         }
 
-        // ==================== دوال المستخدمين والصلاحيات (المعدلة) ====================
         function getRoleName(role) {
     const roles = { 
         admin: 'مدير', 
@@ -3366,7 +3321,7 @@ function stopDigitalClock() {
         editor: 'كاتب', 
         viewer: 'مشاهد', 
         inquirer: 'مستعلم',
-        salary: 'مرتبات'  // ← الجديد
+        salary: 'مرتبات'
     };
     return roles[role] || role;
 }
@@ -3380,25 +3335,21 @@ function getRoleDesc(role) {
         editor: 'إضافة وتعديل', 
         viewer: 'قراءة فقط', 
         inquirer: 'خدمة استعلام فقط',
-        salary: 'تعديل المرتبات والحالة'  // ← الجديد
+        salary: 'تعديل المرتبات والحالة'
     };
     return desc[role] || '';
 }
 
         function hasPermission(permission, recordType = null) {
     if (!currentUser) return false;
-    // المدير له كل الصلاحيات
     if (currentUser.role === 'admin') return true;
 
-    // الصلاحيات الأساسية (مشاهدة)
     if (permission === 'view') {
         const viewRoles = ['admin', 'modifier', 'adder', 'deleter', 'editor', 'viewer'];
         return viewRoles.includes(currentUser.role);
     }
 
-    // التحقق من الصلاحيات التفصيلية
     if (currentUser.permissions) {
-        // صلاحية الإضافة
         if (permission === 'add') {
             if (currentUser.role === 'adder' || currentUser.role === 'editor') {
                 if (recordType && currentUser.permissions.add) {
@@ -3408,7 +3359,6 @@ function getRoleDesc(role) {
                 return currentUser.permissions.add && currentUser.permissions.add.length > 0;
             }
         }
-        // صلاحية الحذف
         if (permission === 'delete') {
             if (currentUser.role === 'deleter') {
                 if (recordType && currentUser.permissions.delete) {
@@ -3418,7 +3368,6 @@ function getRoleDesc(role) {
                 return currentUser.permissions.delete && currentUser.permissions.delete.length > 0;
             }
         }
-        // صلاحية التعديل
         if (permission === 'edit') {
             if (currentUser.role === 'modifier' || currentUser.role === 'editor') {
                 if (recordType && currentUser.permissions.edit) {
@@ -3430,7 +3379,6 @@ function getRoleDesc(role) {
         }
     }
     
-    // الصلاحيات الافتراضية للمستخدمين بدون permissions مخصصة
     if (permission === 'add' && (currentUser.role === 'adder' || currentUser.role === 'editor')) {
         return true;
     }
@@ -3444,7 +3392,6 @@ function getRoleDesc(role) {
     return false;
 }
 
-        // ==================== دوال العرض والتنقل ====================
         function showUserInfo() {
             if (!currentUser) { showMessage('لا يوجد مستخدم متصل حالياً', true); return; }
             document.getElementById('modalUserName').textContent = currentUser.name;
@@ -3526,11 +3473,9 @@ function getRoleDesc(role) {
 }
 
         function refreshCurrentView() {
-    // تحديث صفحة البحث إذا كانت مفتوحة
     if (document.getElementById('searchPage').style.display === 'block') {
-        search();  // إعادة تنفيذ البحث للحصول على أحدث النتائج
+        search();
     }
-    // تحديث صفحة التقارير إذا كانت مفتوحة
     else if (document.getElementById('reportsPage').style.display === 'block') {
         if (currentReportTitle.includes('عسكريين') && currentReportTitle.includes('ملخص')) {
             showMilitarySummary();
@@ -3541,11 +3486,8 @@ function getRoleDesc(role) {
         } else if (currentReportTitle.includes('موظفين')) {
             showCivilianFull();
         } else if (currentReportTitle.includes('شهداء')) {
-            // إعادة تحميل تقرير الشهداء الحالي إذا أمكن
-            // يمكنك إضافة منطق لتذكر آخر تقرير تم عرضه
         }
     }
-    // تحديث صفحات أخرى إذا كانت مفتوحة
     else if (document.getElementById('auditPage').style.display === 'block') {
         displayAuditLog();
     }
@@ -3654,11 +3596,10 @@ function showTrash() {
         function backToMenu() {
     hideAllPages();
     document.getElementById('mainMenu').style.display = 'block';
-    startTimers();    // هذا سيستدعي updateTimersVisibility تلقائياً
+    startTimers();
     refreshAllData();
 }
 
-// ==================== دوال تسجيل الدخول والخروج ====================
 async function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
@@ -3666,17 +3607,14 @@ async function login() {
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('warningMessage').style.display = 'none';
     
-    // ✅ إظهار شاشة الانتظار
     showLoadingOverlay('جارٍ الاتصال بقاعدة البيانات...', 20);
     
-    // ✅ تحميل المستخدمين فقط للتحقق من الدخول
     updateLoadingStatus('جارٍ تحميل بيانات المستخدمين...', 30);
     try {
         const usersSnapshot = await database.ref('/users').once('value');
         const usersData = usersSnapshot.val() || {};
         users = Object.values(usersData);
         
-        // إذا لم يكن هناك مستخدمين، قم بإنشاء المستخدمين الافتراضيين
         if (users.length === 0) {
             users = [
                 { id: '1', username: 'فيصل', password: '192021', role: 'admin', status: 'active', createdAt: new Date().toISOString() },
@@ -3734,7 +3672,6 @@ async function login() {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         localStorage.setItem('loginTime', loginTime);
         
-        // ✅ تحميل باقي البيانات بعد التحقق من المستخدم
         updateLoadingStatus('جارٍ تحميل البيانات...', 85);
         try {
             const [milSnap, civSnap, marSnap] = await Promise.all([
@@ -3766,7 +3703,6 @@ async function login() {
         
         updateLoadingStatus('جارٍ تحميل القائمة الرئيسية...', 95);
         
-        // ✅ إخفاء شاشة الانتظار ثم عرض القائمة
         setTimeout(() => {
             hideLoadingOverlay();
             showMainMenu();
@@ -3796,7 +3732,6 @@ async function login() {
     }
 }
 
-// ==================== دوال شاشة الانتظار ====================
 function showLoadingOverlay(message = 'يرجى الانتظار...', progress = 0) {
     const overlay = document.getElementById('loadingOverlay');
     const statusEl = document.getElementById('loadingStatus');
@@ -3823,11 +3758,9 @@ function hideLoadingOverlay() {
         overlay.style.display = 'none';
     }
 }
-// ==================== الساعة الرقمية ====================
 function updateDigitalClock() {
     const now = new Date();
     
-    // تحديث الوقت
     const timeEl = document.getElementById('clockTime');
     if (timeEl) {
         const hours = String(now.getHours()).padStart(2, '0');
@@ -3836,7 +3769,6 @@ function updateDigitalClock() {
         timeEl.textContent = `${hours}:${minutes}:${seconds}`;
     }
     
-    // تحديث التاريخ
     const dateEl = document.getElementById('clockDate');
     if (dateEl) {
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
@@ -3949,11 +3881,15 @@ async function showMainMenu() {
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
+    // تأخير إضافي لمنع المتصفح من إعادة ملء الحقول تلقائياً
+    setTimeout(() => {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    }, 100);
     
     hideAllPages();
 }
 
-        // ==================== دوال إدارة المستخدمين ====================
         function displayUsersList() {
             const tbody = document.getElementById('usersTableBody');
             if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6">لا يوجد مستخدمين</td></tr>'; return; }
@@ -4001,7 +3937,6 @@ function displayUsersList() {
         const isBlockedUser = blockedUsers.includes(user.username);
         let statusClass = 'user-status-active', statusText = '✅ نشط';
         
-        // تحديد حالة المستخدم
         if (isBlockedUser) { 
             statusClass = 'user-status-inactive'; 
             statusText = '🚫 محظور'; 
@@ -4028,12 +3963,11 @@ function displayUsersList() {
                     }
                     <button class="btn btn-delete" onclick="deleteUserPrompt('${user.id}', '${user.username}')" title="حذف المستخدم">🗑️</button>
                 ` : ''}
-            </td></tr>`;
+            </tr>`;
     });
     tbody.innerHTML = html;
 }
 
-// حظر مستخدم من قائمة المستخدمين
 async function blockUserFromList(username) {
     if (currentUser.role !== 'admin') {
         showMessage('❌ فقط المدير يمكنه حظر المستخدمين', true);
@@ -4049,23 +3983,19 @@ async function blockUserFromList(username) {
         `⚠️ هل أنت متأكد من حظر المستخدم "${username}"؟\n\nسيتم منعه من تسجيل الدخول للنظام.`,
         async function(confirmed) {
             if (confirmed) {
-                // إضافة إلى قائمة المحظورين
                 if (!blockedUsers.includes(username)) {
                     blockedUsers.push(username);
                     await database.ref('/blockedUsers').set(blockedUsers);
                 }
                 
-                // تعطيل الحساب
                 const user = users.find(u => u.username === username);
                 if (user && user.status === 'active') {
                     user.status = 'inactive';
                     await saveUsersToFirebase();
                 }
                 
-                // إزالة من قائمة المتصلين
                 await database.ref(`/onlineUsers/${username}`).remove();
                 
-                // إعادة تحميل قائمة المستخدمين
                 displayUsersList();
                 showMessage(`✅ تم حظر المستخدم "${username}" بنجاح`);
                 await addAuditLog('حظر مستخدم', 'user', user ? user.id : username, username, `تم حظر المستخدم بواسطة ${currentUser.name}`);
@@ -4074,7 +4004,6 @@ async function blockUserFromList(username) {
     );
 }
 
-// إلغاء حظر مستخدم من قائمة المستخدمين
 async function unblockUserFromList(username) {
     if (currentUser.role !== 'admin') {
         showMessage('❌ فقط المدير يمكنه إلغاء حظر المستخدمين', true);
@@ -4085,18 +4014,15 @@ async function unblockUserFromList(username) {
         `✅ هل أنت متأكد من إلغاء حظر المستخدم "${username}"؟\n\nسيتمكن من تسجيل الدخول مرة أخرى.`,
         async function(confirmed) {
             if (confirmed) {
-                // إزالة من قائمة المحظورين
                 blockedUsers = blockedUsers.filter(u => u !== username);
                 await database.ref('/blockedUsers').set(blockedUsers);
                 
-                // تفعيل الحساب
                 const user = users.find(u => u.username === username);
                 if (user) {
                     user.status = 'active';
                     await saveUsersToFirebase();
                 }
                 
-                // إعادة تحميل قائمة المستخدمين
                 displayUsersList();
                 showMessage(`✅ تم إلغاء حظر المستخدم "${username}" بنجاح`);
                 await addAuditLog('إلغاء حظر مستخدم', 'user', user ? user.id : username, username, `تم إلغاء حظر المستخدم بواسطة ${currentUser.name}`);
@@ -4124,11 +4050,9 @@ async function addUser() {
     const password = document.getElementById('newPassword').value;
     const role = document.getElementById('newRole').value;
     if (!username || !password || !role) { showMessage('جميع الحقول مطلوبة', true); return; }
-    if (users.some(u => u.username === username)) { showMessage('اسم المستخدم موجود', true); return; }
+    if (users.some(u => u.username === username)) { showMessage('❌ اسم المستخدم "' + username + '" موجود مسبقاً، اختر اسماً آخر', true); return; }
     
-    // الصلاحيات التي تحتاج تحديد فرعي
     if (role === 'adder' || role === 'deleter' || role === 'modifier' || role === 'editor') {
-        // حفظ بيانات المستخدم مؤقتاً
         pendingUserData = {
             id: Date.now().toString(),
             username,
@@ -4139,12 +4063,10 @@ async function addUser() {
             permissions: null
         };
         
-        // فتح نافذة الصلاحيات الفرعية مباشرة
         openSubPermissionsForAdd(role);
         return;
     }
     
-    // صلاحيات بدون تحديد فرعي (viewer, inquirer, salary)
     users.push({
         id: Date.now().toString(),
         username,
@@ -4162,7 +4084,6 @@ async function addUser() {
 
 
         let editingUserId = null;
-// فتح نافذة الصلاحيات الفرعية للإضافة
 function openSubPermissionsForAdd(role) {
     const subDiv = document.getElementById('subPermissionsDiv');
     const checkboxesDiv = document.getElementById('subPermissionsCheckboxes');
@@ -4207,18 +4128,15 @@ function openSubPermissionsForAdd(role) {
         </label>
     `).join('');
     
-    // تحديد الكل افتراضياً
     const allCb = document.getElementById(`${prefix}_all`);
     if (allCb) {
         allCb.checked = true;
         handleSubAllCheckbox(allCb, prefix);
     }
     
-    // تعديل عنوان النافذة
     document.getElementById('editUserName').textContent = 'إضافة مستخدم جديد: ' + pendingUserData.username;
     document.getElementById('editUserRoles').innerHTML = `<p style="text-align:center; color:#667eea;">الصلاحية: ${getRoleName(role)}</p>`;
     
-    // إظهار النافذة
     const modal = document.getElementById('editUserModal');
     modal.style.display = 'flex';
     modal.onclick = e => { if (e.target === modal) { closeEditUserModal(); pendingUserData = null; } };
@@ -4259,7 +4177,6 @@ function editUser(userId) {
         </label>`;
     }).join('');
     
-    // إظهار/إخفاء الصلاحيات الفرعية حسب الصلاحية الحالية
     const hasSub = ['adder', 'deleter', 'modifier', 'editor'].includes(currentRoleValue);
     if (hasSub) {
         toggleSubPermissions(currentRoleValue, true, userId);
@@ -4320,7 +4237,6 @@ function toggleSubPermissions(role, hasSub, userId) {
         </label>
     `).join('');
     
-    // تحميل الصلاحيات الموجودة
     const user = users.find(u => u.id === userId);
     if (user && user.permissions) {
         let permissions = null;
@@ -4334,7 +4250,6 @@ function toggleSubPermissions(role, hasSub, userId) {
                 if (cb) cb.checked = true;
             });
         } else {
-            // تحديد الكل افتراضياً
             const allCb = document.getElementById(`${prefix}_all`);
             if (allCb) {
                 allCb.checked = true;
@@ -4342,7 +4257,6 @@ function toggleSubPermissions(role, hasSub, userId) {
             }
         }
     } else {
-        // تحديد الكل افتراضياً
         const allCb = document.getElementById(`${prefix}_all`);
         if (allCb) {
             allCb.checked = true;
@@ -4373,7 +4287,6 @@ function closeEditUserModal() {
 }
 
 async function confirmEditUser() {
-    // ===== حالة إضافة مستخدم جديد =====
     if (pendingUserData) {
         const subDiv = document.getElementById('subPermissionsDiv');
         let permissions = null;
@@ -4406,6 +4319,10 @@ async function confirmEditUser() {
         }
         
         pendingUserData.permissions = permissions;
+        if (users.some(u => u.username === pendingUserData.username)) {
+            showMessage('❌ اسم المستخدم موجود مسبقاً، اختر اسماً آخر', true);
+            return;
+        }
         users.push(pendingUserData);
         await saveUsersToFirebase();
         displayUsersList();
@@ -4417,7 +4334,6 @@ async function confirmEditUser() {
         return;
     }
     
-    // ===== حالة تعديل مستخدم موجود =====
     const selected = document.querySelector('input[name="editUserRole"]:checked');
     if (!selected) { showMessage('اختر صلاحية', true); return; }
     
@@ -4472,7 +4388,6 @@ async function confirmEditUser() {
         `تغيير الصلاحية من ${getRoleName(oldRole)} إلى ${getRoleName(newRole)}`);
     showMessage(`✅ تم تغيير صلاحية "${user.username}" إلى ${getRoleName(newRole)}`);
 }
-// ==================== نافذة التأكيد (مُصححة) ====================
 function showConfirmModal(message, onConfirm, onCancel = null) {
     const modal = document.getElementById('confirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
@@ -4482,7 +4397,6 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
     confirmMessage.textContent = message;
     modal.style.display = 'flex';
     
-    // إزالة المستمعات القديمة لمنع التكرار
     const newYesBtn = confirmYesBtn.cloneNode(true);
     const newNoBtn = confirmNoBtn.cloneNode(true);
     confirmYesBtn.parentNode.replaceChild(newYesBtn, confirmYesBtn);
@@ -4494,15 +4408,14 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
     
     newYesBtn.onclick = () => {
         closeModal();
-        if (onConfirm) onConfirm(true);  // ✅ استدعاء مرة واحدة فقط
+        if (onConfirm) onConfirm(true);
     };
     
     newNoBtn.onclick = () => {
         closeModal();
-        if (onConfirm) onConfirm(false); // ✅ استدعاء false لرفض التغيير
+        if (onConfirm) onConfirm(false);
     };
     
-    // النقر خارج النافذة يعتبر إلغاء
     modal.onclick = (event) => {
         if (event.target === modal) {
             closeModal();
@@ -4511,7 +4424,6 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
     };
 }
 
-        // ==================== دوال البحث ====================
         document.querySelectorAll('input[name="searchMethod"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 document.getElementById('searchNumberDiv').style.display = this.value === 'number' ? 'block' : 'none';
@@ -4519,12 +4431,11 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
             });
         });
 
-        function search() {
-            const type = document.querySelector('input[name="searchType"]:checked').value;
+function search() {
+    const type = document.querySelector('input[name="searchType"]:checked').value;
     const method = document.querySelector('input[name="searchMethod"]:checked').value;
     const resultsDiv = document.getElementById('searchResults');
     
-    // حفظ بيانات البحث الحالية
     window.currentSearchType = type;
     window.currentSearchMethod = method;
     if (method === 'number') {
@@ -4533,69 +4444,69 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
         window.currentSearchValue = document.getElementById('searchName').value;
     }
     
-            let results = [];
-            
-            if (method === 'number') {
-                const num = document.getElementById('searchNumber').value.trim();
-                if (!num) { showMessage('أدخل رقم البحث', true); return; }
-                if (type === 'military') { const r = militaries.find(m => m.id.toString() === num); if (r) results = [r]; }
-                else if (type === 'civilian') { const r = civilians.find(c => c.id.toString() === num); if (r) results = [r]; }
-                else { const r = martyrs.find(m => m.id.toString() === num); if (r) results = [r]; }
-            } else {
-                const name = document.getElementById('searchName').value.trim().toLowerCase();
-                if (!name) { showMessage('أدخل اسم البحث', true); return; }
-                if (type === 'military') results = militaries.filter(m => m.name.toLowerCase().includes(name));
-                else if (type === 'civilian') results = civilians.filter(c => c.name.toLowerCase().includes(name));
-                else results = martyrs.filter(m => m.name.toLowerCase().includes(name));
-            }
-            
-            if (results.length === 0) { 
-                resultsDiv.innerHTML = '<div style="text-align:center;padding:40px;color:#e53e3e;">❌ لا توجد نتائج</div>'; 
-                resultsDiv.style.display = 'block'; 
-                return; 
-            }
-            
-            let html = ''; 
-            const canEditMilitary = hasPermission('edit', 'military');
-            const canEditCivilian = hasPermission('edit', 'civilian');
-            const canEditMartyr = hasPermission('edit', 'martyr');
-            const canDeleteMilitary = hasPermission('delete', 'military');
-            const canDeleteCivilian = hasPermission('delete', 'civilian');
-            const canDeleteMartyr = hasPermission('delete', 'martyr');
-            
-            results.forEach((result, idx) => {
-                let title = '';
-                let canEdit = false;
-                let canDelete = false;
-                let currentRecordType = '';
-                
-                if (type === 'military') {
-                    title = '🎖️ بيانات العسكري';
-                    canEdit = canEditMilitary;
-                    canDelete = canDeleteMilitary;
-                    currentRecordType = 'military';
-                } else if (type === 'civilian') {
-                    title = '👨‍💼 بيانات الموظف';
-                    canEdit = canEditCivilian;
-                    canDelete = canDeleteCivilian;
-                    currentRecordType = 'civilian';
-                } else if (type === 'martyr') {
-                    canEdit = canEditMartyr;
-                    canDelete = canDeleteMartyr;
-                    currentRecordType = 'martyr';
-if (result.status === 'شهيد.') title = '🕊️ بيانات شهيد';
-else if (result.status === 'شهيد عمليات') title = '🕊️ بيانات شهيد عمليات';
-else if (result.status === 'شهيد واجب') title = '🕊️ بيانات شهيد واجب';
-                    else if (result.status === 'جريح حرب') title = '🩸 بيانات جريح حرب';
-                    else if (result.status === 'اسير') title = '⛓️ بيانات أسير';
-                    else if (result.status === 'مفقود') title = '❓ بيانات مفقود';
-                    else title = '📋 بيانات الشهيد/الجريح';
-                }
-                
-                html += `<div class="result-card"><h3>${title}</h3><div class="result-grid">`;
-                
-                if (type === 'military') {
-                    html += `<div class="result-item"><span class="result-label">الرقم العسكري:</span><span class="result-value">${result.id || '-'}</span></div>
+    let results = [];
+    
+    if (method === 'number') {
+        const num = document.getElementById('searchNumber').value.trim();
+        if (!num) { showMessage('أدخل رقم البحث', true); return; }
+        if (type === 'military') { const r = militaries.find(m => m.id.toString() === num); if (r) results = [r]; }
+        else if (type === 'civilian') { const r = civilians.find(c => c.id.toString() === num); if (r) results = [r]; }
+        else { const r = martyrs.find(m => m.id.toString() === num); if (r) results = [r]; }
+    } else {
+        const name = document.getElementById('searchName').value.trim().toLowerCase();
+        if (!name) { showMessage('أدخل اسم البحث', true); return; }
+        if (type === 'military') results = militaries.filter(m => m.name.toLowerCase().includes(name));
+        else if (type === 'civilian') results = civilians.filter(c => c.name.toLowerCase().includes(name));
+        else results = martyrs.filter(m => m.name.toLowerCase().includes(name));
+    }
+    
+    if (results.length === 0) { 
+        resultsDiv.innerHTML = '<div style="text-align:center;padding:40px;color:#e53e3e;">❌ لا توجد نتائج</div>'; 
+        resultsDiv.style.display = 'block'; 
+        return; 
+    }
+    
+    let html = ''; 
+    const canEditMilitary = hasPermission('edit', 'military');
+    const canEditCivilian = hasPermission('edit', 'civilian');
+    const canEditMartyr = hasPermission('edit', 'martyr');
+    const canDeleteMilitary = hasPermission('delete', 'military');
+    const canDeleteCivilian = hasPermission('delete', 'civilian');
+    const canDeleteMartyr = hasPermission('delete', 'martyr');
+    
+    results.forEach((result, idx) => {
+        let title = '';
+        let canEdit = false;
+        let canDelete = false;
+        let currentRecordType = '';
+        
+        if (type === 'military') {
+            title = '🎖️ بيانات العسكري';
+            canEdit = canEditMilitary;
+            canDelete = canDeleteMilitary;
+            currentRecordType = 'military';
+        } else if (type === 'civilian') {
+            title = '👨‍💼 بيانات الموظف';
+            canEdit = canEditCivilian;
+            canDelete = canDeleteCivilian;
+            currentRecordType = 'civilian';
+        } else if (type === 'martyr') {
+            canEdit = canEditMartyr;
+            canDelete = canDeleteMartyr;
+            currentRecordType = 'martyr';
+            if (result.status === 'شهيد.') title = '🕊️ بيانات شهيد';
+            else if (result.status === 'شهيد عمليات') title = '🕊️ بيانات شهيد عمليات';
+            else if (result.status === 'شهيد واجب') title = '🕊️ بيانات شهيد واجب';
+            else if (result.status === 'جريح حرب') title = '🩸 بيانات جريح حرب';
+            else if (result.status === 'اسير') title = '⛓️ بيانات أسير';
+            else if (result.status === 'مفقود') title = '❓ بيانات مفقود';
+            else title = '📋 بيانات الشهيد/الجريح';
+        }
+        
+        html += `<div class="result-card" data-id="${result.id || ''}" data-type="${currentRecordType}"><h3>${title}</h3><div class="result-grid">`;
+        
+        if (type === 'military') {
+            html += `<div class="result-item"><span class="result-label">الرقم العسكري:</span><span class="result-value">${result.id || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">${result.rank || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الاسم:</span><span class="result-value">${result.name || '-'}</span></div>
                     <div class="result-item"><span class="result-label">اسم الأم:</span><span class="result-value">${result.motherName || '-'}</span></div>
@@ -4611,9 +4522,9 @@ else if (result.status === 'شهيد واجب') title = '🕊️ بيانات ش
                     <div class="result-item"><span class="result-label">مكان الميلاد:</span><span class="result-value">${result.birthPlace || '-'}</span></div>
                     <div class="result-item"><span class="result-label">عنوان السكن:</span><span class="result-value">${result.address || '-'}</span></div>
                     <div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">${result.phone || '-'}</span></div>`;
-                } 
-                else if (type === 'civilian') {
-                    html += `<div class="result-item"><span class="result-label">الرقم الوظيفي:</span><span class="result-value">${result.id || '-'}</span></div>
+        } 
+        else if (type === 'civilian') {
+            html += `<div class="result-item"><span class="result-label">الرقم الوظيفي:</span><span class="result-value">${result.id || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">${result.rank || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الاسم:</span><span class="result-value">${result.name || '-'}</span></div>
                     <div class="result-item"><span class="result-label">اسم الأم:</span><span class="result-value">${result.motherName || '-'}</span></div>
@@ -4629,9 +4540,9 @@ else if (result.status === 'شهيد واجب') title = '🕊️ بيانات ش
                     <div class="result-item"><span class="result-label">مكان الميلاد:</span><span class="result-value">${result.birthPlace || '-'}</span></div>
                     <div class="result-item"><span class="result-label">عنوان السكن:</span><span class="result-value">${result.address || '-'}</span></div>
                     <div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">${result.phone || '-'}</span></div>`;
-                }
-                else if (type === 'martyr') {
-                    html += `<div class="result-item"><span class="result-label">الرقم العسكري:</span><span class="result-value">${result.id || '-'}</span></div>
+        }
+        else if (type === 'martyr') {
+            html += `<div class="result-item"><span class="result-label">الرقم العسكري:</span><span class="result-value">${result.id || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">${result.rank || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الاسم الكامل:</span><span class="result-value">${result.name || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الصفة:</span><span class="result-value"><strong style="color:#e53e3e;">${result.status || '-'}</strong></span></div>
@@ -4656,53 +4567,168 @@ else if (result.status === 'شهيد واجب') title = '🕊️ بيانات ش
                     <div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">${result.phone || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الحالة الوظيفية:</span><span class="result-value">${result.employmentStatus || '-'}</span></div>
                     <div class="result-item"><span class="result-label">نوع المرتب:</span><span class="result-value">${result.salaryType || '-'}</span></div>`;
-                }
-                
-                html += `</div>`;
-                
-              // أزرار التعديل والحذف
-if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
-    html += `<div class="result-actions">
-        <button class="btn btn-edit" onclick="showSalaryEditForm('${result.id}')">💰 تعديل المرتب والحالة</button>
-    </div>`;
-} else if (canEdit || canDelete) {
-    html += `<div class="result-actions">`;
-    if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
-  // ✅ زر طباعة الباركود
-html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeModal('${type}', '${result.id}')">🎫 باركود</button>`;
-  if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
-    html += `</div>`;
-}
-                
-                html += `</div>`;
-            });
-            
-            // إضافة زر تحويل إلى PDF
-            if (results.length > 0) {
-                html += `<div style="text-align: center; margin-top: 20px;">
-                    <button class="btn" style="background: #e53e3e; padding: 10px 30px; font-size: 16px;" onclick="exportSearchToPDF()">📄 تحويل النتائج إلى PDF</button>
-                </div>`;
-            }
-            
-            resultsDiv.innerHTML = html; 
-            resultsDiv.style.display = 'block';
         }
-// دالة لإعادة البحث التلقائي عند تحديث البيانات
+        
+        html += `</div>`;
+        
+        if (type === 'martyr' && currentUser && currentUser.role === 'salary') {
+            html += `<div class="result-actions">
+                <button class="btn btn-edit" onclick="showSalaryEditForm('${result.id}')">💰 تعديل المرتب والحالة</button>
+                <button class="btn" style="background: #25D366;" onclick="sendRecordToWhatsApp('${type}', '${result.id}')">📱 واتساب</button>
+            </div>`;
+        } else if (canEdit || canDelete) {
+            html += `<div class="result-actions">`;
+            if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
+            html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeModal('${type}', '${result.id}')">🎫 باركود</button>`;
+            if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
+            html += `<button class="btn" style="background: #25D366;" onclick="sendRecordToWhatsApp('${type}', '${result.id}')">📱 واتساب</button>`;
+            html += `</div>`;
+        }
+        
+        html += `</div>`;
+    });
+    
+    if (results.length > 0) {
+        html += `<div style="text-align: center; margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn" style="background: #e53e3e; padding: 10px 30px; font-size: 16px;" onclick="exportSearchToPDF()">📄 تحويل النتائج إلى PDF</button>
+            <button class="btn" style="background: #25D366; padding: 10px 30px; font-size: 16px;" onclick="sendSearchToWhatsApp()">📱 إرسال النتائج إلى واتساب</button>
+        </div>`;
+    }
+    
+    resultsDiv.innerHTML = html; 
+    resultsDiv.style.display = 'block';
+}
+    
+    
+function sendRecordToWhatsApp(type, recordId) {
+    let record = null;
+    let recordType = '';
+    
+    if (type === 'military') {
+        record = militaries.find(m => m.id.toString() === recordId.toString());
+        recordType = 'عسكري';
+    } else if (type === 'civilian') {
+        record = civilians.find(c => c.id.toString() === recordId.toString());
+        recordType = 'موظف';
+    } else if (type === 'martyr') {
+        record = martyrs.find(m => m.id.toString() === recordId.toString());
+        recordType = record.status === 'جريح حرب' ? 'جريح حرب' : 'شهيد';
+    }
+    
+    if (!record) {
+        showMessage('❌ لم يتم العثور على السجل', true);
+        return;
+    }
+    
+    const currentDate = new Date().toLocaleString('ar-SA');
+    const userName = currentUser ? currentUser.name : 'مستخدم';
+    
+    let message = `📄 *بيانات ${recordType}*\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `🆔 الرقم: ${record.id || '-'}\n`;
+    message += `⭐ الرتبة: ${record.rank || '-'}\n`;
+    message += `👤 الاسم: ${record.name || '-'}\n`;
+    
+    if (type === 'martyr' && record.status) {
+        message += `🕊️ الصفة: ${record.status}\n`;
+        if (record.eventDate) message += `📅 تاريخ الحدث: ${record.eventDate}\n`;
+        if (record.location) message += `📍 المكان: ${record.location}\n`;
+        if (record.employmentStatus) message += `📋 الحالة: ${record.employmentStatus}\n`;
+        if (record.salaryType) message += `💰 نوع المرتب: ${record.salaryType}\n`;
+    } else {
+        if (record.motherName) message += `👩 اسم الأم: ${record.motherName}\n`;
+        if (record.maritalStatus) message += `💍 الحالة الاجتماعية: ${record.maritalStatus}\n`;
+        if (record.phone) message += `📞 الهاتف: ${record.phone}\n`;
+        if (record.address) message += `🏠 العنوان: ${record.address}\n`;
+    }
+    
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `📅 تاريخ الإرسال: ${currentDate}\n`;
+    message += `👤 مرسل بواسطة: ${userName}\n`;
+    message += `📊 نظام إدارة شؤون الشهداء - فرع المرقب\n`;
+    message += `👨‍💼 المقدم / فيصل البريدان`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    if (encodedMessage.length > 4000) {
+        showMessage('⚠️ الرسالة طويلة جداً للإرسال عبر واتساب، استخدم تصدير PDF بدلاً', true);
+        return;
+    }
+    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+    showMessage('✅ تم فتح واتساب لإرسال البيانات', false);
+}
+function sendSearchToWhatsApp() {
+    const resultsDiv = document.getElementById('searchResults');
+    if (!resultsDiv.innerHTML || resultsDiv.innerHTML.includes('لا توجد نتائج')) {
+        showMessage('❌ لا توجد نتائج لإرسالها', true);
+        return;
+    }
+    
+    const searchType = document.querySelector('input[name="searchType"]:checked').value;
+    const searchMethod = document.querySelector('input[name="searchMethod"]:checked').value;
+    const searchValue = searchMethod === 'number' ? document.getElementById('searchNumber').value : document.getElementById('searchName').value;
+    const currentDate = new Date().toLocaleString('ar-SA');
+    const userName = currentUser ? currentUser.name : 'مستخدم';
+    
+    const searchTypeText = searchType === 'military' ? 'عسكري' : (searchType === 'martyr' ? 'شهيد/جريح' : 'موظف');
+    const searchMethodText = searchMethod === 'number' ? 'رقم' : 'اسم';
+    
+    let resultsText = '';
+    const resultCards = resultsDiv.querySelectorAll('.result-card');
+    
+    resultCards.forEach((card, index) => {
+        const title = card.querySelector('h3')?.innerText || `النتيجة ${index + 1}`;
+        const items = card.querySelectorAll('.result-item');
+        
+        resultsText += `\n📌 ${title}\n`;
+        resultsText += `━━━━━━━━━━━━━━━━━━━━\n`;
+        
+        items.forEach(item => {
+            const label = item.querySelector('.result-label')?.innerText || '';
+            const value = item.querySelector('.result-value')?.innerText || '-';
+            resultsText += `${label}: ${value}\n`;
+        });
+        resultsText += `━━━━━━━━━━━━━━━━━━━━\n`;
+    });
+    
+    let message = `🔍 *نتائج البحث*\n`;
+    message += `📋 نوع البحث: ${searchTypeText}\n`;
+    message += `🔎 طريقة البحث: بال${searchMethodText}\n`;
+    message += `🔢 قيمة البحث: ${searchValue}\n`;
+    message += `📅 التاريخ: ${currentDate}\n`;
+    message += `👤 المستخدم: ${userName}\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+    message += `${resultsText}\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `📊 نظام إدارة شؤون الشهداء - فرع المرقب\n`;
+    message += `👨‍💼 المقدم / فيصل البريدان\n`;
+    message += `🕐 تم الإرسال بواسطة النظام الآلي`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    if (encodedMessage.length > 4000) {
+        showMessage('⚠️ نتائج البحث طويلة جداً للإرسال عبر واتساب، استخدم تصدير PDF بدلاً', true);
+        return;
+    }
+    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+    showMessage('✅ تم فتح واتساب لإرسال نتائج البحث', false);
+}
+
+
 function autoRefreshSearch() {
     if (document.getElementById('searchPage').style.display === 'block' && window.currentSearchValue) {
-        // إعادة تعبئة حقول البحث بالقيم المحفوظة
         if (window.currentSearchMethod === 'number') {
             document.getElementById('searchNumber').value = window.currentSearchValue;
         } else {
             document.getElementById('searchName').value = window.currentSearchValue;
         }
         
-        // إعادة تنفيذ البحث للحصول على أحدث النتائج
         search();
         console.log('🔄 تم تحديث نتائج البحث تلقائياً');
     }
 }
-        // ==================== دالة تحويل نتائج البحث إلى PDF ====================
         function exportSearchToPDF() {
             const resultsDiv = document.getElementById('searchResults');
             const searchType = document.querySelector('input[name="searchType"]:checked').value;
@@ -4722,8 +4748,6 @@ function autoRefreshSearch() {
                 <div style="text-align: center; margin-bottom: 30px;">
                     <h2 style="color: #667eea;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>
                     <h3>فرع المرقب</h3>
-                    <p>📌 المقدم / فيصل البريدان</p>
-                    <p>📅 تاريخ التقرير: ${currentDate}</p>
                     <hr style="border: 1px solid #667eea;">
                     <h3>🔍 نتائج البحث عن ${searchTypeText} (بحث بال${searchMethodText}: ${searchValue})</h3>
                 </div>
@@ -4733,10 +4757,18 @@ function autoRefreshSearch() {
             resultCards.forEach((card, index) => {
                 const title = card.querySelector('h3')?.innerText || `النتيجة ${index + 1}`;
                 const items = card.querySelectorAll('.result-item');
+                const recordId = card.getAttribute('data-id') || '';
+                const barcodeId = `bc_${index}_${Date.now()}`;
                 
                 content += `
                     <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 20px; page-break-inside: avoid;">
-                        <h4 style="color: #667eea; margin-bottom: 10px; border-bottom: 1px solid #667eea; padding-bottom: 5px;">${title}</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #667eea; padding-bottom: 8px; margin-bottom: 10px;">
+                            <h4 style="color: #667eea; margin: 0;">${title}</h4>
+                            ${recordId ? `<div style="text-align: center;">
+                                <svg id="${barcodeId}" style="display:block;"></svg>
+                                <div style="font-size: 10px; color: #555; margin-top: 2px;">${recordId}</div>
+                            </div>` : ''}
+                        </div>
                         <table style="width: 100%; border-collapse: collapse; direction: rtl;">
                 `;
                 
@@ -4757,10 +4789,11 @@ function autoRefreshSearch() {
                 `;
             });
             
+            const pdfUserName = currentUser ? currentUser.name : 'مستخدم';
+            const pdfDate = new Date().toLocaleString('ar-SA', { numberingSystem: 'latn' });
             const footer = `
-                <div style="text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 11px; color: #888;">
-                    <p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</p>
-                    <p>فرع المرقب - الإصدار 2.4</p>
+                <div style="text-align: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid #ddd; font-size: 12px; color: #555;">
+                    <p>👤 أُعدّ بواسطة: <strong>${pdfUserName}</strong> &nbsp;|&nbsp; 📅 ${pdfDate}</p>
                 </div>
             `;
             
@@ -4780,11 +4813,10 @@ function autoRefreshSearch() {
                         width: 100%;
                         border-collapse: collapse;
                     }
-                    /* ========== محاذاة وسط لجميع جداول التقارير ========== */
-.report-table th,
-.report-table td {
-    text-align: center !important;
-}
+                    .report-table th,
+                    .report-table td {
+                        text-align: center !important;
+                    }
                     @media print {
                         body {
                             padding: 10px;
@@ -4805,7 +4837,30 @@ function autoRefreshSearch() {
             const printWindow = window.open('', '_blank');
             printWindow.document.write(fullHtml);
             printWindow.document.close();
-            printWindow.print();
+
+            // تهيئة الباركود ثم الطباعة
+            printWindow.onload = function() {
+                const barcodeScript = printWindow.document.createElement('script');
+                barcodeScript.src = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js';
+                barcodeScript.onload = function() {
+                    printWindow.document.querySelectorAll('svg[id^="bc_"]').forEach(svg => {
+                        const recordId = svg.closest('div')?.querySelector('div')?.textContent?.trim();
+                        if (recordId && recordId !== '-') {
+                            try {
+                                printWindow.JsBarcode(svg, recordId, {
+                                    format: 'CODE128',
+                                    width: 1,
+                                    height: 28,
+                                    displayValue: false,
+                                    margin: 1
+                                });
+                            } catch(e) {}
+                        }
+                    });
+                    setTimeout(() => printWindow.print(), 400);
+                };
+                printWindow.document.head.appendChild(barcodeScript);
+            };
             
             showMessage('✅ تم فتح نتائج البحث للطباعة (PDF)', false);
         }
@@ -4818,7 +4873,6 @@ function autoRefreshSearch() {
             const status = document.getElementById('martyrStatus').value;
             if (!id || !rank || !name || !status) { showMessage('الحقول المطلوبة فارغة', true); return; }
           
-// التحقق من صحة الرقم الوطني (يسمح بفارغ، 12 رقم، أو كلمة "بلا" - قابل للتكرار)
 const nationalId = document.getElementById('martyrNationalId').value.trim();
 if (!isValidMartyrNationalId(nationalId)) {
     showMessage('الرقم الوطني يجب أن يكون 12 رقماً أو كلمة "بلا" أو يترك فارغاً', true);
@@ -4827,8 +4881,6 @@ if (!isValidMartyrNationalId(nationalId)) {
     return;
 }
 
-// ملاحظة: كلمة "بلا" مسموح بتكرارها في الشهداء والجرحى
-// إذا كان الرقم 12 رقماً، سيتم السماح به حتى لو تكرر (حسب طلبك)
               martyrs.push({
                 id, rank, name, status,
                 eventDate: document.getElementById('martyrEventDate').value,
@@ -4982,7 +5034,6 @@ if (!isValidMartyrNationalId(nationalId)) {
             });
         }
 
-        // ==================== دوال سلة المحذوفات والسجل ====================
         function displayAuditLog() {
             const tbody = document.getElementById('auditTableBody');
             if (auditLogs.length === 0) { tbody.innerHTML = '<tr><td colspan="8">لا توجد سجلات</td></tr>'; return; }
@@ -5001,7 +5052,6 @@ async function updateMilitary() {
     const name = document.getElementById('milName').value.trim();
     if (!id || !rank || !name) { showMessage('الحقول المطلوبة (*) فارغة', true); return; }
     
-    // ====== ✅ جديد: التحقق من عدم تكرار الرقم العسكري ======
     const duplicate = militaries.find(m => 
         m.id.toString() === id && m.id.toString() !== editMilitaryId.toString()
     );
@@ -5011,9 +5061,7 @@ async function updateMilitary() {
         document.getElementById('milId').focus();
         return;
     }
-    // =====================================================
     
-    // التحقق من صحة الرقم الوطني وعدم تكراره
     const nationalId = document.getElementById('milNationalId').value.trim();
     if (nationalId !== '' && !isValidNationalId(nationalId)) {
         showMessage('الرقم الوطني يجب أن يكون 12 رقماً بالضبط أو يترك فارغاً', true);
@@ -5066,7 +5114,6 @@ async function updateCivilian() {
     const name = document.getElementById('civName').value.trim();
     if (!id || !rank || !name) { showMessage('الحقول المطلوبة (*) فارغة', true); return; }
     
-    // ====== ✅ جديد: التحقق من عدم تكرار الرقم الوظيفي ======
     const duplicate = civilians.find(c => 
         c.id.toString() === id && c.id.toString() !== editCivilianId.toString()
     );
@@ -5076,7 +5123,6 @@ async function updateCivilian() {
         document.getElementById('civId').focus();
         return;
     }
-    // ====================================================
     
     const nationalId = document.getElementById('civNationalId').value.trim();
     if (nationalId !== '' && !isValidNationalId(nationalId)) {
@@ -5121,10 +5167,7 @@ async function updateCivilian() {
 }
 
 async function updateMartyr() {
-       // التحقق من الصلاحية الخاصة
     if (currentUser.role === 'salary') {
-        // مستخدم المرتبات: يسمح فقط بتعديل الحالة ونوع المرتب
-        // (سنطبق هذا في واجهة مخصصة)
     } else if (!hasPermission('edit', 'martyr')) {
         showMessage('ليس لديك صلاحية للتعديل', true);
         return;
@@ -5141,7 +5184,6 @@ async function updateMartyr() {
     
     if (!id || !rank || !name || !status) { showMessage('الرجاء تعبئة الحقول المطلوبة (*)', true); return; }
     
-    // ====== ✅ جديد: التحقق من عدم تكرار الرقم العسكري في الشهداء ======
     const duplicate = martyrs.find(m => 
         m.id.toString() === id && m.id.toString() !== editMartyrId.toString()
     );
@@ -5151,7 +5193,6 @@ async function updateMartyr() {
         document.getElementById('martyrId').focus();
         return;
     }
-    // ============================================================
     
     const nationalId = document.getElementById('martyrNationalId').value.trim();
     if (!isValidMartyrNationalId(nationalId)) {
@@ -5197,9 +5238,6 @@ async function updateMartyr() {
     
     backToMenu();
 }
-/**
- * دالة تصدير سجل التغييرات إلى PDF
- */
 function exportAuditLogToPDF() {
     if (auditLogs.length === 0) {
         showMessage('⚠️ لا توجد سجلات لتصديرها', true);
@@ -5321,7 +5359,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.4</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.5</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -5341,7 +5379,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.4</p>' +
+   '<p>فرع المرقب - الإصدار 2.5</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -5371,7 +5409,6 @@ function exportAuditLogToPDF() {
             showConfirmModal('حذف نهائي؟', async () => { if (await permanentDeleteFromTrash(id)) { showMessage('تم الحذف'); displayTrash(); } });
         }
 
-        // ==================== دوال  ====================
 function showMilitarySummary() { 
     currentReportTitle = 'كشف بأسماء جميع العسكريين التابعين لفرع المرقب\n(ضباط-ضباط صف-جنود)'; 
     const sorted = [...militaries].sort((a, b) => parseInt(a.id) - parseInt(b.id));
@@ -5389,15 +5426,13 @@ function showReportTable(headers, rows) {
     const now = new Date();
     const printDate = now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
-    // استخراج أول وآخر سجل
     let firstId = '';
     let lastId = '';
     if (rows.length > 0) {
-        firstId = rows[0][1] || '';  // الرقم في العمود الثاني
+        firstId = rows[0][1] || '';
         lastId = rows[rows.length - 1][1] || '';
     }
     
-    // إنشاء باركود ID فريد (لتجنب التعارض)
     const barcodeId = 'barcode_' + Date.now();
     
     let html = `<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
@@ -5410,9 +5445,8 @@ function showReportTable(headers, rows) {
     </div>
 </div>`;
 
-
     html += `<div class="report-title" style="text-align: center; white-space: pre-line; font-size: 18px; font-weight: bold; margin-bottom: 15px;">${currentReportTitle}</div>`;
-    html += `<div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+    html += `<div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</thead><tbody>`;
     
     if (rows.length === 0) {
         html += `<tr><td colspan="${headers.length}" style="text-align:center; padding: 20px;">لا توجد بيانات متطابقة</td></tr>`;
@@ -5428,7 +5462,6 @@ function showReportTable(headers, rows) {
     document.getElementById('reportActions').style.display = 'flex';
     currentReportHtml = html;
     
-    // توليد الباركود بعد إدراج الـ HTML
     if (rows.length > 0 && firstId && lastId) {
         setTimeout(() => {
             try {
@@ -5448,14 +5481,7 @@ JsBarcode(`#${barcodeId}`, barcodeText, {
         }, 200);
     }
 }
-// ==================== دوال التقارير الجديدة ====================
-
-/**
- * دالة موحدة لعرض تقارير الشهداء والجرحى بناءً على نوع التقرير.
- * @param {string} reportType - نوع التقرير المطلوب.
- */
 function showMartyrsReport(reportType) {
-    // تصفية البيانات الأساسية
     const allMartyrs = martyrs.filter(m => m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
     const allInjured = martyrs.filter(m => m.status === 'جريح حرب');
 
@@ -5528,7 +5554,6 @@ case 'martyrs_rank_retired':
             return;
     }
 
-    // تجهيز البيانات لعرضها في الجدول
     const rows = filteredData.map((m, i) => [
         i + 1,
         m.id || '-',
@@ -5541,9 +5566,7 @@ case 'martyrs_rank_retired':
         m.salaryType || '-'
     ]);
 
-  // تعيين العنوان العام للتقرير
 currentReportTitle = title;
-// عرض الجدول مع تنسيق خاص للموقوفين
 if (reportType === 'martyrs_suspended') {
     const shortHeaders = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'نوع المرتب'];
     const shortRows = filteredData.map((m, i) => [
@@ -5583,60 +5606,44 @@ if (reportType === 'martyrs_suspended') {
 }
 }
 
-// ==================== دالة تقارير الضباط ====================
-
-/**
- * دالة لعرض تقارير الضباط (الشهداء أو الجرحى) غير المتقاعدين والموقوفين
- * @param {string} type - نوع التقرير: 'martyrs' للشهداء أو 'injured' للجرحى
- */
 function showOfficersReport(type) {
-    // رتب الضباط من ملازم ثان إلى لواء (العسكرية)
     const officerRanks = [
         'ملازم تان', 'ملازم أول', 'نقيب', 'رائد', 'مقدم', 'عقيد', 'عميد', 'لواء',
         'فريق تان', 'فريق أول'
     ];
     
-    // رتب الضباط الشرفية
     const honoraryRanks = [
         'ملازم تان شرف', 'ملازم أول شرف', 'نقيب شرف', 'رائد شرف',
         'مقدم شرف', 'عقيد شرف', 'عميد شرف'
     ];
     
-    // دمج جميع رتب الضباط
     const allOfficerRanks = [...officerRanks, ...honoraryRanks];
     
-    // تصفية البيانات حسب النوع
     let baseData = [];
     let title = '';
     
     if (type === 'martyrs') {
-        // شهداء العمليات والواجب فقط
         baseData = martyrs.filter(m => m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
         title = '🎖️ كشف بأسماء الضباط الشهداء (غير متقاعدين وموقوفين)';
     } else if (type === 'injured') {
-        // الجرحى فقط
         baseData = martyrs.filter(m => m.status === 'جريح حرب');
         title = '🎖️ كشف بأسماء الضباط الجرحى (غير متقاعدين وموقوفين)';
     }
     
-    // تصفية الضباط فقط + غير متقاعدين أو موقوفين
     const filteredData = baseData.filter(m => {
         const isOfficer = allOfficerRanks.includes(m.rank);
         const isNotRetired = m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف';
         return isOfficer && isNotRetired;
     });
     
-    // ترتيب النتائج حسب الرتبة
     filteredData.sort((a, b) => {
         const rankA = allOfficerRanks.indexOf(a.rank);
         const rankB = allOfficerRanks.indexOf(b.rank);
         return rankA - rankB;
     });
     
-    // تعريف العناوين
     const headers = ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'تاريخ الحدث', 'المكان', 'الحالة الوظيفية', 'نوع المرتب'];
     
-    // تجهيز البيانات للعرض
     const rows = filteredData.map((m, i) => [
         i + 1,
         m.id || '-',
@@ -5649,10 +5656,8 @@ function showOfficersReport(type) {
         m.salaryType || '-'
     ]);
     
-    // تعيين العنوان العام للتقرير
     currentReportTitle = title;
     
-    // عرض الجدول
     showReportTable(headers, rows);
 }
         async function exportAllData() {
@@ -5699,9 +5704,59 @@ function showOfficersReport(type) {
             link.click();
             URL.revokeObjectURL(link.href);
         }
-
+function sendReportToWhatsApp() {
+    if (!currentReportHtml) {
+        showMessage('❌ لا يوجد تقرير لإرساله', true);
+        return;
+    }
+    
+    const reportTitle = currentReportTitle;
+    const currentDate = new Date().toLocaleString('ar-SA');
+    const userName = currentUser ? currentUser.name : 'مستخدم';
+    
+    const table = document.querySelector('#reportContent .report-table');
+    let tableText = '';
+    
+    if (table) {
+        const rows = table.querySelectorAll('tr');
+        rows.forEach((row, rowIndex) => {
+            const cells = row.querySelectorAll('th, td');
+            const rowText = Array.from(cells).map(cell => cell.textContent.trim()).join(' | ');
+            tableText += rowText + '\n';
+        });
+    } else {
+        tableText = 'لا توجد بيانات لعرضها';
+    }
+    
+    let message = `📋 *${reportTitle}*\n`;
+    message += `📅 التاريخ: ${currentDate}\n`;
+    message += `👤 المستخدم: ${userName}\n`;
+    message += `📊 نظام إدارة شؤون الشهداء - فرع المرقب\n`;
+    message += `👨‍💼 المقدم / فيصل البريدان\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+    message += `*البيانات:*\n`;
+    message += `${tableText}\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `🕐 تم الإرسال بواسطة النظام الآلي`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    if (encodedMessage.length > 4000) {
+        showMessage('⚠️ التقرير طويل جداً للإرسال عبر واتساب، استخدم تصدير PDF بدلاً', true);
+        return;
+    }
+    const phoneNumber = '';
+    let whatsappUrl = '';
+    if (phoneNumber) {
+        whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    } else {
+        whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    }
+    
+    window.open(whatsappUrl, '_blank');
+    
+    showMessage('✅ تم فتح واتساب لإرسال التقرير', false);
+}
 function printReport() {
-    // نسخ الباركود كـ SVG مع إجباره على الظهور
     const originalSvg = document.querySelector('#reportContent svg');
     let barcodeHtml = '';
     if (originalSvg) {
@@ -5713,7 +5768,6 @@ function printReport() {
         barcodeHtml = svgClone.outerHTML;
     }
     
-    // ✅ استخراج أول وآخر اسم من الجدول (قبل فتح النافذة)
     var firstName = '';
     var lastName = '';
     var tableRows = document.querySelectorAll('#reportContent .report-table tbody tr');
@@ -5722,19 +5776,23 @@ function printReport() {
         var lastRow = tableRows[tableRows.length - 1];
         var firstCells = firstRow.querySelectorAll('td');
         var lastCells = lastRow.querySelectorAll('td');
-        // العمود الرابع (index 3) يحتوي على الاسم
         if (firstCells.length >= 4) firstName = firstCells[3].textContent.trim();
         if (lastCells.length >= 4) lastName = lastCells[3].textContent.trim();
     }
 
-    var footerText = '';
+    const printUserName = currentUser ? currentUser.name : 'مستخدم';
+    const printDate = new Date().toLocaleString('ar-SA', { numberingSystem: 'latn' });
+    var footerText = '<div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #667eea;">';
     if (firstName && lastName) {
-        footerText = `<div style="text-align: center; margin-top: 15px; padding-top: 10px; border-top: 2px solid #667eea; font-size: 14px; font-weight: bold; color: #333;">
+        footerText += `<div style="text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-bottom: 6px;">
             📋 يبدأ الكشف بـ: <span style="color: #667eea;">${firstName}</span> &nbsp;|&nbsp; وينتهي بـ: <span style="color: #667eea;">${lastName}</span>
         </div>`;
     }
+    footerText += `<div style="text-align: center; font-size: 12px; color: #555; margin-top: 4px;">
+        👤 أُعدّ بواسطة: <strong>${printUserName}</strong> &nbsp;|&nbsp; 📅 ${printDate}
+    </div>`;
+    footerText += '</div>';
 
-    // استبدال SVG في التقرير بنسخة مضمونة الظهور
     let reportHtml = currentReportHtml;
     if (barcodeHtml) {
         reportHtml = reportHtml.replace(/<svg[^>]*>[\s\S]*?<\/svg>/, barcodeHtml);
@@ -5823,14 +5881,12 @@ function printReport() {
         win.print();
     }, 800);
 }
-// ==================== تايمر وقت الرجوع ووقت الإغلاق (عرض فقط) ====================
 let returnTime = null;
 let logoutTime = null;
 let timerInterval = null;
 
 let RETURN_MINUTES = parseInt(localStorage.getItem('returnMinutes') || '1');
 let LOGOUT_MINUTES = parseInt(localStorage.getItem('logoutMinutes') || '2');
-// ==================== دوال إعدادات التايمر ====================
 function openTimerSettings() {
     var modal = document.getElementById('timerSettingsModal');
     document.getElementById('returnMinutesInput').value = RETURN_MINUTES;
@@ -5897,7 +5953,6 @@ function updateTimersVisibility() {
     var isInquiry = document.getElementById('inquiryPage').style.display === 'block';
     var isLoginPage = document.getElementById('loginPage').style.display === 'block';
     
-    // في صفحة الدخول: إخفاء الكل
     if (isLoginPage) {
         if (timersContainer) timersContainer.style.display = 'none';
         if (logoutTimer) logoutTimer.style.display = 'none';
@@ -5905,11 +5960,9 @@ function updateTimersVisibility() {
     }
     
     if (isMainMenu || isInquiry) {
-        // القائمة الرئيسية: إخفاء العائم، إظهار الإغلاق في user-bar
         if (timersContainer) timersContainer.style.display = 'none';
         if (logoutTimer) logoutTimer.style.display = 'inline-block';
     } else {
-        // النماذج الأخرى: إظهار الرجوع في الأعلى، إخفاء الإغلاق
         if (logoutTimer) logoutTimer.style.display = 'none';
         if (timersContainer) timersContainer.style.display = 'flex';
         if (returnTimer) returnTimer.style.display = 'inline-block';
@@ -5923,7 +5976,6 @@ function updateTimersDisplay() {
     var isInquiry = document.getElementById('inquiryPage').style.display === 'block';
     var isLoginPage = document.getElementById('loginPage').style.display === 'block';
     
-    // ========== تايمر الرجوع (فقط في النماذج الأخرى) ==========
     if (!isMainMenu && !isInquiry && !isLoginPage && returnTime && returnEl) {
         var diff = returnTime - now;
         if (diff > 0) {
@@ -5938,7 +5990,6 @@ function updateTimersDisplay() {
         }
     }
     
-    // ========== تايمر الإغلاق (فقط في القائمة الرئيسية والاستعلام) ==========
     if ((isMainMenu || isInquiry) && logoutTime && logoutEl) {
         var diff = logoutTime - now;
         if (diff > 0) {
@@ -5969,12 +6020,10 @@ function resetTimers() {
     returnTime = now + (RETURN_MINUTES * 60 * 1000);
     logoutTime = now + (LOGOUT_MINUTES * 60 * 1000);
     
-    // إعادة تشغيل المؤقت إذا كان متوقفاً
     if (!timerInterval) {
         timerInterval = setInterval(updateTimersDisplay, 1000);
     }
     
-    // إظهار التايمر في مكانه الصحيح
     var isMainMenu = document.getElementById('mainMenu').style.display === 'block';
     var logoutTimer = document.getElementById('logoutTimeDisplay');
     
@@ -5988,7 +6037,6 @@ function stopTimers() {
         clearInterval(timerInterval);
         timerInterval = null;
     }
-    // لا تخفي التايمر - اتركه يظهر 00:00:00
 }
 
 function setupIdleDetection() {
@@ -5999,14 +6047,12 @@ function setupIdleDetection() {
         });
     });
 }
-// تعديل دالة الخروج لإيقاف التايمر
 var originalLogout = logout;
 logout = async function() {
     stopTimers();
     await originalLogout();
 };
 
-// ==================== دوال الإضافة ====================
 async function addMilitary() {
     if (!hasPermission('add', 'military')) { showMessage('ليس لديك صلاحية للإضافة', true); return; }
     
@@ -6024,7 +6070,6 @@ async function addMilitary() {
         return;
     }
     
-// التحقق من صحة الرقم الوطني وعدم تكراره (مع استثناء السجل الحالي)
 const nationalId = document.getElementById('milNationalId').value.trim();
 if (nationalId !== '' && !isValidNationalId(nationalId)) {
     showMessage('الرقم الوطني يجب أن يكون 12 رقماً بالضبط أو يترك فارغاً', true);
@@ -6033,7 +6078,6 @@ if (nationalId !== '' && !isValidNationalId(nationalId)) {
     return;
 }
 
-// التحقق من عدم تكرار الرقم الوطني (مع استثناء السجل الحالي من التدقيق)
 if (nationalId !== '') {
     const duplicateCheck = checkNationalIdDuplicate(nationalId, 'military', editMilitaryId);
     if (duplicateCheck.isDuplicate) {
@@ -6088,7 +6132,6 @@ async function addCivilian() {
         return;
     }
     
-// التحقق من صحة الرقم الوطني وعدم تكراره (مع استثناء السجل الحالي)
 const nationalId = document.getElementById('civNationalId').value.trim();
 if (nationalId !== '' && !isValidNationalId(nationalId)) {
     showMessage('الرقم الوطني يجب أن يكون 12 رقماً بالضبط أو يترك فارغاً', true);
@@ -6097,7 +6140,6 @@ if (nationalId !== '' && !isValidNationalId(nationalId)) {
     return;
 }
 
-// التحقق من عدم تكرار الرقم الوطني (مع استثناء السجل الحالي من التدقيق)
 if (nationalId !== '') {
     const duplicateCheck = checkNationalIdDuplicate(nationalId, 'civilian', editCivilianId);
     if (duplicateCheck.isDuplicate) {
@@ -6135,7 +6177,6 @@ if (nationalId !== '') {
     backToMenu();
 }
 
-// ==================== نظام الدردشة العامة والخاصة ====================
 let chatMessages = [];
 let privateChats = {};
 let unreadCount = 0;
@@ -6209,7 +6250,6 @@ function selectPrivateChatUser(username) {
     
     highlightSelectedUser(username);
     loadPrivateChatMessages(username);
-       // تعليم المحادثة كمقروءة
     const chatKey = getPrivateChatKey(currentUser.name, username);
     const messages = privateChats[chatKey] || [];
     if (messages.length > 0) {
@@ -6240,7 +6280,6 @@ async function loadOnlineUsersForChat() {
         const onlineSnapshot = await database.ref('/onlineUsers').once('value');
         const onlineData = onlineSnapshot.val() || {};
         
-        // جلب الرسائل غير المقروءة
         const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
         const chatsSnapshot = await database.ref('/privateChats').once('value');
         const allChats = chatsSnapshot.val() || {};
@@ -6252,7 +6291,6 @@ async function loadOnlineUsersForChat() {
             const isOnline = onlineData[user.username] ? true : false;
             const dotClass = isOnline ? 'online-dot' : 'offline-dot';
             
-            // حساب عدد الرسائل غير المقروءة من هذا المستخدم
             let unreadCount = 0;
             for (const [chatKey, messages] of Object.entries(allChats)) {
                 if (chatKey.includes(currentUser.name) && chatKey.includes(user.username)) {
@@ -6314,7 +6352,6 @@ function startPrivateChatListener(username) {
     
     database.ref(`/privateChats/${chatKey}`).off('value');
     
-    // متغير لتتبع آخر رسالة معروضة
     let lastMessageId = null;
     
     database.ref(`/privateChats/${chatKey}`).on('value', (snapshot) => {
@@ -6324,41 +6361,31 @@ function startPrivateChatListener(username) {
         
         privateChats[chatKey] = messages;
         
-        // ==== التحقق من وجود رسالة جديدة من الطرف الآخر ====
         if (messages.length > 0) {
             const latestMsg = messages[messages.length - 1];
             
-            // إذا كانت رسالة جديدة من المستخدم الآخر ولم نعرض إشعاراً لها بعد
             if (latestMsg.username !== currentUser.name && 
                 latestMsg.id !== lastMessageId) {
                 
                 lastMessageId = latestMsg.id;
                 
-                // إظهار الإشعار فقط إذا:
-                // 1. الدردشة مغلقة، أو
-                // 2. المحادثة الحالية ليست مع هذا المستخدم
                 if (!chatOpen || 
                     currentChatType !== 'private' || 
                     currentPrivateChatUser !== username) {
                     
-                    // إظهار إشعار منبثق
                     showPrivateMessageNotification(username, latestMsg.text);
                     
-                    // زيادة عداد غير المقروء
                     unreadCount++;
                     updateUnreadBadge();
                     
-                    // تشغيل صوت التنبيه
                     playNotificationSound();
                 }
             }
         }
         
-        // تحديث العرض إذا كنا في نفس المحادثة
         if (currentChatType === 'private' && currentPrivateChatUser === username && chatOpen) {
     displayChatMessages();
     scrollChatToBottom();
-    // تعليم المحادثة كمقروءة
     if (messages.length > 0) {
         const lastMsg = messages[messages.length - 1];
         markChatAsRead(chatKey, lastMsg.id);
@@ -6536,13 +6563,11 @@ function stopChatListener() {
 }
 
 function playNotificationSound() {
-    // إذا كانت رسالة خاصة، استخدم نغمة مختلفة
     if (currentChatType === 'private') {
         playPrivateNotificationSound();
         return;
     }
     
-    // النغمة العادية للرسائل العامة
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
@@ -6651,7 +6676,6 @@ async function clearChat() {
     }
 }
 
-// تحديث قائمة المستخدمين في الدردشة
 async function updateChatUsersList() {
     const select = document.getElementById('chatTypeSelect');
     if (!select) return;
@@ -6672,11 +6696,6 @@ async function updateChatUsersList() {
         console.error('خطأ في تحديث قائمة المستخدمين:', e);
     }
 }
-// ==================== دوال حساب حجم الذاكرة ====================
-
-/**
- * دالة مساعدة لتحويل عدد البايتات إلى صيغة مقروءة
- */
 function formatBytes(bytes) {
     if (bytes === 0) return '0 بايت';
     const k = 1024;
@@ -6685,10 +6704,6 @@ function formatBytes(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-/**
- * دالة حساب الحجم التقريبي للبيانات المحملة في الذاكرة
- * تستخدم JSON.stringify لحساب الحجم الفعلي للنص
- */
 function calculateMemoryUsage() {
     const data = {
         militaries: militaries,
@@ -6699,7 +6714,6 @@ function calculateMemoryUsage() {
         trashBin: trashBin
     };
     
-    // حساب حجم كل نوع من البيانات بالبايت
     const sizes = {};
     let totalBytes = 0;
     
@@ -6724,9 +6738,6 @@ function calculateMemoryUsage() {
     };
 }
 
-/**
- * دالة عرض إحصائيات الذاكرة في الواجهة الرئيسية
- */
 function displayMemoryStats() {
     const statsContainer = document.getElementById('memoryStatsContainer');
     if (!statsContainer) return;
@@ -6735,7 +6746,6 @@ function displayMemoryStats() {
     
     let html = '';
     
-    // بطاقة الحجم الإجمالي
     html += `
     <div class="memory-main">
         <h4>💾 إجمالي حجم الذاكرة للبيانات</h4>
@@ -6748,7 +6758,6 @@ function displayMemoryStats() {
         </div>
     </div>`;
     
-    // بطاقة تفصيلية لعدد السجلات
     html += `
     <div class="stats-card">
         <h4>📊 عدد السجلات</h4>
@@ -6782,22 +6791,12 @@ function displayMemoryStats() {
     
     statsContainer.innerHTML = html;
 }
-// ==================== دالة التحقق من صحة الرقم الوطني ====================
-
-/**
- * دالة التحقق من صحة الرقم الوطني
- * تقبل القيمة الفارغة أو 12 رقماً بالضبط
- * @param {HTMLElement} input - حقل الإدخال
- * @param {string} errorDivId - معرف عنصر عرض الخطأ
- */
 function validateNationalId(input, errorDivId) {
     const errorDiv = document.getElementById(errorDivId);
     const value = input.value.trim();
     
-    // إزالة أي أحرف غير رقمية
     input.value = value.replace(/\D/g, '');
     
-    // إذا كان الحقل فارغاً - لا مشكلة
     if (input.value === '') {
         input.style.borderColor = '';
         if (errorDiv) {
@@ -6807,7 +6806,6 @@ function validateNationalId(input, errorDivId) {
         return true;
     }
     
-     // التحقق من الطول
     if (input.value.length > 0 && input.value.length !== 12) {
         input.style.borderColor = '#e53e3e';
         if (errorDiv) {
@@ -6817,7 +6815,6 @@ function validateNationalId(input, errorDivId) {
         return false;
     }
     
-    // صحيح
     input.style.borderColor = '#48bb78';
     if (errorDiv) {
         errorDiv.style.display = 'none';
@@ -6826,29 +6823,17 @@ function validateNationalId(input, errorDivId) {
     return true;
 }
 
-/**
- * دالة التحقق من الرقم الوطني قبل الإرسال
- * @param {string} nationalId - قيمة الرقم الوطني
- * @returns {boolean} - true إذا كان صحيحاً
- */
 function isValidNationalId(nationalId) {
     if (!nationalId || nationalId.trim() === '') {
-        return true; // فارغ مسموح
+        return true;
     }
     const cleaned = nationalId.trim().replace(/\D/g, '');
     return cleaned.length === 12;
 }
-/**
- * دالة التحقق من صحة الرقم الوطني في نموذج الشهداء والجرحى
- * تقبل: فارغ، 12 رقماً، أو كلمة "بلا"
- * @param {HTMLElement} input - حقل الإدخال
- * @param {string} errorDivId - معرف عنصر عرض الخطأ
- */
 function validateMartyrNationalId(input, errorDivId) {
     const errorDiv = document.getElementById(errorDivId);
     let value = input.value.trim();
     
-    // إذا كان الحقل فارغاً - لا مشكلة
     if (value === '') {
         input.style.borderColor = '';
         if (errorDiv) {
@@ -6858,7 +6843,6 @@ function validateMartyrNationalId(input, errorDivId) {
         return true;
     }
     
-    // السماح بكلمة "بلا" (مع مراعاة اختلاف الكتابة)
     if (value === 'بلا' || value === 'بلي' || value === 'بلاء' || value === 'بلا ') {
         input.value = 'بلا';
         input.style.borderColor = '#48bb78';
@@ -6869,10 +6853,8 @@ function validateMartyrNationalId(input, errorDivId) {
         return true;
     }
     
-    // التحقق إذا كانت القيمة تحتوي على أحرف عربية (أثناء كتابة "بلا")
     const arabicPattern = /[\u0600-\u06FF]/;
     if (arabicPattern.test(value)) {
-        // السماح بكتابة "بلا" تدريجياً
         if (value === 'ب' || value === 'بل' || value === 'بلا') {
             input.style.borderColor = '#48bb78';
             if (errorDiv) {
@@ -6881,7 +6863,6 @@ function validateMartyrNationalId(input, errorDivId) {
             }
             return true;
         } else {
-            // أحرف عربية أخرى غير مسموحة
             input.style.borderColor = '#e53e3e';
             if (errorDiv) {
                 errorDiv.style.display = 'block';
@@ -6891,10 +6872,8 @@ function validateMartyrNationalId(input, errorDivId) {
         }
     }
     
-    // إزالة أي أحرف غير رقمية (للأرقام فقط)
     const numericValue = value.replace(/\D/g, '');
     
-    // إذا كان هناك أرقام، نتحقق من الطول
     if (numericValue.length > 0) {
         input.value = numericValue;
         
@@ -6907,7 +6886,6 @@ function validateMartyrNationalId(input, errorDivId) {
             return false;
         }
         
-        // 12 رقماً بالضبط - صحيح
         input.style.borderColor = '#48bb78';
         if (errorDiv) {
             errorDiv.style.display = 'none';
@@ -6915,45 +6893,28 @@ function validateMartyrNationalId(input, errorDivId) {
         }
         return true;
     }
-    // إذا لم تنطبق أي حالة، أرجع false
     return false;
 }
 
-
-/**
- * دالة التحقق من صحة الرقم الوطني للشهداء والجرحى
- * @param {string} nationalId - قيمة الرقم الوطني
- * @returns {boolean} - true إذا كان صحيحاً
- */
 function isValidMartyrNationalId(nationalId) {
     if (!nationalId || nationalId.trim() === '') {
-        return true; // فارغ مسموح
+        return true;
     }
     
     const trimmed = nationalId.trim();
     
-    // السماح بكلمة "بلا"
     if (trimmed === 'بلا') {
         return true;
     }
     
-    // التحقق من 12 رقماً
     const cleaned = trimmed.replace(/\D/g, '');
     return cleaned.length === 12;
 }
-/**
- * دالة التحقق من عدم تكرار الرقم الوطني في جميع السجلات
- * @param {string} nationalId - الرقم الوطني المراد التحقق منه
- * @param {string} excludeType - نوع السجل المستثنى (military, civilian, martyr)
- * @param {string} excludeId - الرقم التعريفي للسجل المستثنى (في حالة التعديل)
- * @returns {object} - { isDuplicate: boolean, foundIn: string, recordName: string }
- */
 function checkNationalIdDuplicate(nationalId, excludeType = null, excludeId = null) {
     if (!nationalId || nationalId.trim() === '') {
         return { isDuplicate: false, foundIn: '', recordName: '' };
     }
     
-    // استثناء كلمة "بلا" من فحص التكرار (مسموح بتكرارها)
     if (nationalId.trim() === 'بلا') {
         return { isDuplicate: false, foundIn: '', recordName: '' };
     }
@@ -6963,7 +6924,6 @@ if (cleaned.length !== 12) {
     return { isDuplicate: false, foundIn: '', recordName: '' };
 }
     
-    // التحقق في العسكريين
     if (excludeType !== 'military' || excludeId) {
         const foundInMilitary = militaries.find(m => 
             m.nationalId && m.nationalId.replace(/\D/g, '') === cleaned && 
@@ -6974,7 +6934,6 @@ if (cleaned.length !== 12) {
         }
     }
     
-    // التحقق في الموظفين
     if (excludeType !== 'civilian' || excludeId) {
         const foundInCivilian = civilians.find(c => 
             c.nationalId && c.nationalId.replace(/\D/g, '') === cleaned && 
@@ -6985,7 +6944,6 @@ if (cleaned.length !== 12) {
         }
     }
     
-    // التحقق في الشهداء والجرحى
     if (excludeType !== 'martyr' || excludeId) {
         const foundInMartyr = martyrs.find(m => 
             m.nationalId && m.nationalId.replace(/\D/g, '') === cleaned && 
@@ -6998,7 +6956,6 @@ if (cleaned.length !== 12) {
     
     return { isDuplicate: false, foundIn: '', recordName: '' };
 }
-// ==================== دوال مسح النماذج ====================
 function clearMilitaryForm() {
     document.getElementById('milId').value = '';
     document.getElementById('milRank').value = '';
@@ -7036,51 +6993,151 @@ function clearCivilianForm() {
     document.getElementById('civAddress').value = '';
     document.getElementById('civPhone').value = '';
 }
-// واجهة تعديل خاصة لمستخدم المرتبات
 function showSalaryEditForm(martyrId) {
     const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
     if (!martyr) return;
-    
-    const newSalaryType = prompt(
-        `💰 تعديل نوع المرتب والحالة\n\n` +
-        `الاسم: ${martyr.name}\n` +
-        `الرتبة: ${martyr.rank}\n` +
-        `الصفة: ${martyr.status}\n\n` +
-        `📌 نوع المرتب الحالي: ${martyr.salaryType || 'غير محدد'}\n` +
-        `📌 الحالة الحالية: ${martyr.employmentStatus || 'غير محدد'}\n\n` +
-        `1️⃣ - راتب شهري\n` +
-        `2️⃣ - منحة شهرية\n` +
-        `3️⃣ - لا يتقاضي\n\n` +
-        `4️⃣ - متقاعد\n` +
-        `5️⃣ - غير متقاعد\n` +
-        `6️⃣ - موقوف\n\n` +
-        `✏️ أدخل الأرقام (مثال: 1,5 للراتب الشهري + غير متقاعد):`
-    );
-    
-    if (!newSalaryType) return;
-    
-    const parts = newSalaryType.split(',');
+
+    // إنشاء النافذة المنبثقة
+    const overlay = document.createElement('div');
+    overlay.id = 'salaryEditOverlay';
+    overlay.style.cssText = `
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 99999; direction: rtl;
+    `;
+
+    overlay.innerHTML = `
+        <div style="background: var(--card-bg, #fff); border-radius: 16px; padding: 24px;
+                    width: 92%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+            <h3 style="text-align:center; color:#667eea; margin-bottom:16px;">💰 تعديل المرتب والحالة</h3>
+            <div style="background: var(--bg-secondary, #f7f8fa); border-radius:10px; padding:12px; margin-bottom:16px; font-size:14px; line-height:2;">
+                <div>👤 <strong>${martyr.name}</strong></div>
+                <div>⭐ ${martyr.rank} &nbsp;|&nbsp; 🕊️ ${martyr.status}</div>
+                <div>💰 المرتب الحالي: <strong>${martyr.salaryType || 'غير محدد'}</strong></div>
+                <div>📋 الحالة الحالية: <strong>${martyr.employmentStatus || 'غير محدد'}</strong></div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:6px;">💰 نوع المرتب:</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button onclick="salarySelectOption(this,'salary','راتب شهري')"
+                        style="flex:1; padding:10px; border-radius:8px; border:2px solid #ddd;
+                               background:var(--card-bg,#fff); cursor:pointer; font-size:13px; font-weight:bold;">
+                        1️⃣ راتب شهري
+                    </button>
+                    <button onclick="salarySelectOption(this,'salary','منحة شهرية')"
+                        style="flex:1; padding:10px; border-radius:8px; border:2px solid #ddd;
+                               background:var(--card-bg,#fff); cursor:pointer; font-size:13px; font-weight:bold;">
+                        2️⃣ منحة شهرية
+                    </button>
+                    <button onclick="salarySelectOption(this,'salary','لا يتقاضي')"
+                        style="flex:1; padding:10px; border-radius:8px; border:2px solid #ddd;
+                               background:var(--card-bg,#fff); cursor:pointer; font-size:13px; font-weight:bold;">
+                        3️⃣ لا يتقاضي
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:6px;">📋 الحالة الوظيفية:</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button onclick="salarySelectOption(this,'status','متقاعد')"
+                        style="flex:1; padding:10px; border-radius:8px; border:2px solid #ddd;
+                               background:var(--card-bg,#fff); cursor:pointer; font-size:13px; font-weight:bold;">
+                        4️⃣ متقاعد
+                    </button>
+                    <button onclick="salarySelectOption(this,'status','غير متقاعد')"
+                        style="flex:1; padding:10px; border-radius:8px; border:2px solid #ddd;
+                               background:var(--card-bg,#fff); cursor:pointer; font-size:13px; font-weight:bold;">
+                        5️⃣ غير متقاعد
+                    </button>
+                    <button onclick="salarySelectOption(this,'status','موقوف')"
+                        style="flex:1; padding:10px; border-radius:8px; border:2px solid #ddd;
+                               background:var(--card-bg,#fff); cursor:pointer; font-size:13px; font-weight:bold;">
+                        6️⃣ موقوف
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:6px;">
+                    ✏️ أو أدخل الأرقام يدوياً (مثال: 1,5):
+                </label>
+                <input id="salaryManualInput" type="text" inputmode="numeric" pattern="[0-9,]*"
+                    placeholder="مثال: 1,5"
+                    style="width:100%; padding:10px; border-radius:8px; border:2px solid #ddd;
+                           font-size:15px; text-align:center; box-sizing:border-box;
+                           background:var(--card-bg,#fff); color:var(--text-primary,#333);">
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button onclick="confirmSalaryEdit('${martyrId}')"
+                    style="flex:1; padding:12px; background:#667eea; color:white; border:none;
+                           border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer;">
+                    ✅ حفظ
+                </button>
+                <button onclick="document.getElementById('salaryEditOverlay').remove()"
+                    style="flex:1; padding:12px; background:#e53e3e; color:white; border:none;
+                           border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer;">
+                    ❌ إلغاء
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+function salarySelectOption(btn, group, value) {
+    // إلغاء تحديد بقية أزرار المجموعة
+    const parent = btn.closest('div');
+    parent.querySelectorAll('button').forEach(b => {
+        b.style.borderColor = '#ddd';
+        b.style.background = 'var(--card-bg, #fff)';
+        b.style.color = 'var(--text-primary, #333)';
+    });
+    btn.style.borderColor = '#667eea';
+    btn.style.background = '#667eea';
+    btn.style.color = 'white';
+    btn.dataset.selected = value;
+
+    // تحديث حقل الإدخال اليدوي تلقائياً
+    const input = document.getElementById('salaryManualInput');
+    const salaryMap = { 'راتب شهري': '1', 'منحة شهرية': '2', 'لا يتقاضي': '3' };
+    const statusMap = { 'متقاعد': '4', 'غير متقاعد': '5', 'موقوف': '6' };
+    const allMaps = { ...salaryMap, ...statusMap };
+    const current = input.value.split(',').map(s => s.trim()).filter(Boolean);
+    const newNum = allMaps[value];
+    if (newNum && !current.includes(newNum)) {
+        // استبدل رقم المجموعة نفسها إن وجد
+        const groupNums = group === 'salary' ? ['1','2','3'] : ['4','5','6'];
+        const filtered = current.filter(n => !groupNums.includes(n));
+        filtered.push(newNum);
+        input.value = filtered.join(',');
+    }
+}
+
+function confirmSalaryEdit(martyrId) {
+    const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+    if (!martyr) return;
+
+    const input = document.getElementById('salaryManualInput').value;
+    const parts = input.split(',').map(s => s.trim()).filter(Boolean);
     const salaryMap = { '1': 'راتب شهري', '2': 'منحة شهرية', '3': 'لا يتقاضي' };
     const statusMap = { '4': 'متقاعد', '5': 'غير متقاعد', '6': 'موقوف' };
-    
+
     let updated = false;
-    
     parts.forEach(part => {
-        part = part.trim();
-        if (salaryMap[part]) {
-            martyr.salaryType = salaryMap[part];
-            updated = true;
-        }
-        if (statusMap[part]) {
-            martyr.employmentStatus = statusMap[part];
-            updated = true;
-        }
+        if (salaryMap[part]) { martyr.salaryType = salaryMap[part]; updated = true; }
+        if (statusMap[part]) { martyr.employmentStatus = statusMap[part]; updated = true; }
     });
-    
+
     if (updated) {
         saveMartyrsToFirebase();
-        addAuditLog('تعديل مرتبات', 'martyr', martyr.id, martyr.name, 
+        addAuditLog('تعديل مرتبات', 'martyr', martyr.id, martyr.name,
             `تم تعديل المرتب إلى: ${martyr.salaryType} والحالة إلى: ${martyr.employmentStatus}`);
+        document.getElementById('salaryEditOverlay').remove();
         showMessage('✅ تم تحديث المرتب والحالة بنجاح');
         if (document.getElementById('searchPage').style.display === 'block') search();
     } else {
@@ -7114,7 +7171,6 @@ function clearMartyrForm() {
     document.getElementById('martyrEmploymentStatus').value = '';
     document.getElementById('martyrSalaryType').value = '';
 }
-// ==================== دالة بحث المستعلم ====================
 function inquirySearch() {
     const num = document.getElementById('inquiryNumber').value.trim();
     const resultsDiv = document.getElementById('inquiryResults');
@@ -7220,8 +7276,6 @@ function inquirySearch() {
     resultsDiv.innerHTML = html;
     document.getElementById('inquiryNumber').value = '';
 }
-// ==================== دوال فتح وإغلاق نوافذ التقارير ====================
-
 function openBranchReportsModal() {
     var modal = document.getElementById('branchReportsModal');
     modal.style.display = 'flex';
@@ -7250,7 +7304,6 @@ function closeMartyrsReportsModal() {
     document.getElementById('martyrsReportsModal').style.display = 'none';
 }
 
-// إغلاق النوافذ بضغط Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeBranchReportsModal();
@@ -7258,7 +7311,6 @@ document.addEventListener('keydown', function(e) {
         closeTimerSettings();
     }
 });
-        // ==================== تهيئة النظام ====================
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
             currentUser = JSON.parse(savedUser);
@@ -7266,13 +7318,7 @@ document.addEventListener('keydown', function(e) {
             showMainMenu();
         }
         
-        // تهيئة كشف الخمول
         setupIdleDetection();
-// ==================== تقرير كشف ضباط الفرع (من بيانات العسكريين) ====================
-/**
- * يستبعد الرتب: جندي، جندي أول، نائب عريف، عريف، رع س، رع و
- * أي يظهر من ملازم تان فما فوق
- */
 function showOfficersReport_Branch() {
     const excludedRanks = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
     const filtered = militaries.filter(m => !excludedRanks.includes(m.rank));
@@ -7284,10 +7330,6 @@ function showOfficersReport_Branch() {
     showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], rows);
 }
 
-// ==================== تقرير كشف العسكريين المراتب (من بيانات العسكريين) ====================
-/**
- * يشمل فقط الرتب: جندي، جندي أول، نائب عريف، عريف، رع س، رع و
- */
 function showSoldiersReport_Branch() {
     const includedRanks = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
     const filtered = militaries.filter(m => includedRanks.includes(m.rank));
@@ -7298,14 +7340,12 @@ function showSoldiersReport_Branch() {
     const rows = sorted.map((m, i) => [i + 1, m.id || '-', m.rank || '-', m.name || '-']);
     showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], rows);
 }
-        // ==================== نظام تتبع الأجهزة ====================
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     let deviceType = 'كمبيوتر';
     let deviceName = 'غير معروف';
     let browser = 'غير معروف';
     
-    // تحديد نوع الجهاز
     if (/Android/i.test(ua)) {
         deviceType = '📱 هاتف أندرويد';
     } else if (/iPhone|iPad|iPod/i.test(ua)) {
@@ -7318,7 +7358,6 @@ function getDeviceInfo() {
         deviceType = '🖥️ لينكس';
     }
     
-    // تحديد المتصفح
     if (/Chrome/i.test(ua) && !/Edge/i.test(ua)) {
         browser = 'Chrome';
     } else if (/Firefox/i.test(ua)) {
@@ -7364,24 +7403,19 @@ async function logDeviceAccess() {
         timestamp: new Date().toISOString()
     };
     
-    // حفظ في Firebase
     database.ref('/deviceLogs/' + Date.now()).set(logData);
     
-    // حفظ محلياً للعرض
     return logData;
 }
 
-// استدعاء عند تسجيل الدخول
 const originalShowMainMenu = showMainMenu;
 showMainMenu = async function() {
     await originalShowMainMenu();
     await logDeviceAccess();
 };
-// ==================== نظام حظر الأجهزة والمستخدمين ====================
 let blockedIPs = [];
 let blockedUsers = [];
 
-// تحميل قائمة الحظر من Firebase
 async function loadBlockList() {
     try {
         const snapIP = await database.ref('/blockedIPs').once('value');
@@ -7392,7 +7426,6 @@ async function loadBlockList() {
     } catch(e) {}
 }
 
-// حظر IP
 async function blockIP(ip, reason) {
     if (!blockedIPs.includes(ip)) {
         blockedIPs.push(ip);
@@ -7401,19 +7434,16 @@ async function blockIP(ip, reason) {
     }
 }
 
-// فك حظر IP
 async function unblockIP(ip) {
     blockedIPs = blockedIPs.filter(i => i !== ip);
     await database.ref('/blockedIPs').set(blockedIPs);
     showMessage('✅ تم فك الحظر عن: ' + ip);
 }
 
-// حظر مستخدم
 async function blockUser(username) {
     if (!blockedUsers.includes(username)) {
         blockedUsers.push(username);
         await database.ref('/blockedUsers').set(blockedUsers);
-        // تعطيل حسابه أيضاً
         const user = users.find(u => u.username === username);
         if (user) {
             user.status = 'inactive';
@@ -7423,7 +7453,6 @@ async function blockUser(username) {
     }
 }
 
-// التحقق من الحظر (استدعاء عند تسجيل الدخول)
 async function checkIfBlocked() {
     await loadBlockList();
     const ip = await getIPAddress();
@@ -7441,170 +7470,386 @@ async function checkIfBlocked() {
     return false;
 }
 
-// عرض قائمة الأجهزة المحظورة
 async function showBlockedDevices() {
     await loadBlockList();
-    
-    let msg = '📱 قائمة المحظورين:\n\n';
-    msg += '🔒 عناوين IP محظورة:\n';
-    if (blockedIPs.length === 0) {
-        msg += 'لا يوجد\n';
-    } else {
-        blockedIPs.forEach((ip, i) => {
-            msg += (i+1) + '. ' + ip + '\n';
-        });
-    }
-    
-    msg += '\n👤 مستخدمين محظورين:\n';
-    if (blockedUsers.length === 0) {
-        msg += 'لا يوجد';
-    } else {
-        blockedUsers.forEach((u, i) => {
-            msg += (i+1) + '. ' + u + '\n';
-        });
-    }
-    
-    const action = prompt(msg + '\n\n✏️ للفك: اكتب "فك IP:العنوان" أو "فك مستخدم:الاسم"');
-    
-    if (action) {
-        if (action.startsWith('فك IP:')) {
-            const ip = action.replace('فك IP:', '').trim();
-            await unblockIP(ip);
-        } else if (action.startsWith('فك مستخدم:')) {
-            const username = action.replace('فك مستخدم:', '').trim();
-            blockedUsers = blockedUsers.filter(u => u !== username);
-            await database.ref('/blockedUsers').set(blockedUsers);
-            showMessage('✅ تم فك الحظر عن: ' + username);
-        }
-    }
+    document.getElementById('blockModal')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'blockModal';
+    overlay.style.cssText = `
+        position:fixed; inset:0; background:rgba(0,0,0,0.65);
+        display:flex; align-items:center; justify-content:center;
+        z-index:99999; direction:rtl; padding:20px 10px; overflow-y:auto;
+    `;
+
+    const ipRows = blockedIPs.length === 0
+        ? `<tr><td colspan="3" style="text-align:center;padding:16px;color:#999;">لا توجد عناوين محظورة</td></tr>`
+        : blockedIPs.map((ip, i) => `
+            <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
+                <td style="padding:10px;text-align:center;color:#667eea;font-weight:bold;">${i+1}</td>
+                <td style="padding:10px;text-align:center;font-family:monospace;">${ip}</td>
+                <td style="padding:10px;text-align:center;">
+                    <button onclick="confirmUnblockIP('${ip}')"
+                        style="padding:5px 12px;background:#27ae60;color:white;border:none;border-radius:7px;cursor:pointer;font-size:12px;">
+                        🔓 فك الحظر
+                    </button>
+                </td>
+            </tr>`).join('');
+
+    const userRows = blockedUsers.length === 0
+        ? `<tr><td colspan="3" style="text-align:center;padding:16px;color:#999;">لا يوجد مستخدمون محظورون</td></tr>`
+        : blockedUsers.map((u, i) => `
+            <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
+                <td style="padding:10px;text-align:center;color:#667eea;font-weight:bold;">${i+1}</td>
+                <td style="padding:10px;text-align:center;">👤 ${u}</td>
+                <td style="padding:10px;text-align:center;">
+                    <button onclick="confirmUnblockUser('${u}')"
+                        style="padding:5px 12px;background:#27ae60;color:white;border:none;border-radius:7px;cursor:pointer;font-size:12px;">
+                        🔓 فك الحظر
+                    </button>
+                </td>
+            </tr>`).join('');
+
+    overlay.innerHTML = `
+        <div style="background:var(--card-bg,#fff);border-radius:18px;width:100%;max-width:600px;
+                    box-shadow:0 10px 40px rgba(0,0,0,0.35);overflow:hidden;">
+
+            <div style="background:linear-gradient(135deg,#c0392b,#e74c3c);padding:18px 22px;
+                        display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <h2 style="color:white;margin:0;font-size:17px;">🚫 إدارة المحظورين</h2>
+                    <p style="color:rgba(255,255,255,0.8);margin:4px 0 0;font-size:12px;">
+                        🔒 IP: <strong style="color:white;">${blockedIPs.length}</strong>
+                        &nbsp;|&nbsp; 👤 مستخدمين: <strong style="color:white;">${blockedUsers.length}</strong>
+                    </p>
+                </div>
+                <button onclick="document.getElementById('blockModal').remove()"
+                    style="background:rgba(255,255,255,0.2);border:none;color:white;
+                           font-size:20px;cursor:pointer;border-radius:50%;width:36px;height:36px;">✕</button>
+            </div>
+
+            <div style="padding:18px 20px 0;">
+                <h4 style="color:#c0392b;margin:0 0 8px;font-size:14px;">🔒 عناوين IP المحظورة</h4>
+                <div style="overflow-x:auto;border-radius:10px;border:1px solid #eee;">
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead>
+                            <tr style="background:linear-gradient(135deg,#c0392b,#e74c3c);">
+                                <th style="padding:10px;color:white;text-align:center;width:50px;">#</th>
+                                <th style="padding:10px;color:white;text-align:center;">عنوان IP</th>
+                                <th style="padding:10px;color:white;text-align:center;">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>${ipRows}</tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="padding:16px 20px 0;">
+                <h4 style="color:#c0392b;margin:0 0 8px;font-size:14px;">👤 المستخدمون المحظورون</h4>
+                <div style="overflow-x:auto;border-radius:10px;border:1px solid #eee;">
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead>
+                            <tr style="background:linear-gradient(135deg,#c0392b,#e74c3c);">
+                                <th style="padding:10px;color:white;text-align:center;width:50px;">#</th>
+                                <th style="padding:10px;color:white;text-align:center;">اسم المستخدم</th>
+                                <th style="padding:10px;color:white;text-align:center;">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>${userRows}</tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="padding:16px 20px;text-align:center;">
+                <button onclick="document.getElementById('blockModal').remove()"
+                    style="padding:10px 36px;background:#667eea;color:white;border:none;
+                           border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">
+                    ✅ إغلاق
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 }
 
-// حظر جهاز أو مستخدم
-async function blockDeviceOrUser() {
-    const action = prompt(
-        '🚫 خيارات الحظر:\n\n' +
-        '1️⃣ - حظر جهاز (IP)\n' +
-        '2️⃣ - حظر مستخدم\n' +
-        '3️⃣ - عرض المحظورين\n\n' +
-        '✏️ أدخل رقم الخيار:'
-    );
-    
-    if (action === '1') {
-        const ip = prompt('✏️ أدخل عنوان IP للحظر:');
-        if (ip) {
-            const reason = prompt('✏️ سبب الحظر (اختياري):') || 'غير محدد';
-            await blockIP(ip, reason);
+async function confirmUnblockIP(ip) {
+    showConfirmModal(`⚠️ هل تريد فك حظر IP: ${ip}؟`, async function(confirmed) {
+        if (confirmed) {
+            await unblockIP(ip);
+            showMessage(`✅ تم فك الحظر عن: ${ip}`);
+            document.getElementById('blockModal')?.remove();
+            await showBlockedDevices();
         }
-    } else if (action === '2') {
-        const username = prompt('✏️ أدخل اسم المستخدم للحظر:');
-        if (username && username !== 'فيصل') {
-            await blockUser(username);
-        } else if (username === 'فيصل') {
-            showMessage('❌ لا يمكن حظر المدير', true);
-        }
-    } else if (action === '3') {
-        await showBlockedDevices();
-    }
+    });
 }
-// عرض سجل الأجهزة التي دخلت النظام
+
+async function confirmUnblockUser(username) {
+    showConfirmModal(`⚠️ هل تريد فك حظر المستخدم: ${username}؟`, async function(confirmed) {
+        if (confirmed) {
+            blockedUsers = blockedUsers.filter(u => u !== username);
+            await database.ref('/blockedUsers').set(blockedUsers);
+            // إعادة تفعيل الحساب في بيانات المستخدمين
+            const user = users.find(u => u.username === username);
+            if (user && user.status === 'inactive') {
+                user.status = 'active';
+                await saveUsersToFirebase();
+            }
+            showMessage(`✅ تم فك الحظر عن: ${username} وتفعيل حسابه`);
+            document.getElementById('blockModal')?.remove();
+            await showBlockedDevices();
+        }
+    });
+}
+
+async function blockDeviceOrUser() {
+    document.getElementById('blockActionModal')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'blockActionModal';
+    overlay.style.cssText = `
+        position:fixed; inset:0; background:rgba(0,0,0,0.65);
+        display:flex; align-items:center; justify-content:center;
+        z-index:99999; direction:rtl; padding:20px;
+    `;
+
+    overlay.innerHTML = `
+        <div style="background:var(--card-bg,#fff);border-radius:18px;width:100%;max-width:420px;
+                    box-shadow:0 10px 40px rgba(0,0,0,0.35);overflow:hidden;">
+
+            <div style="background:linear-gradient(135deg,#2c3e50,#e74c3c);padding:18px 22px;
+                        display:flex;justify-content:space-between;align-items:center;">
+                <h2 style="color:white;margin:0;font-size:17px;">🚫 خيارات الحظر</h2>
+                <button onclick="document.getElementById('blockActionModal').remove()"
+                    style="background:rgba(255,255,255,0.2);border:none;color:white;
+                           font-size:20px;cursor:pointer;border-radius:50%;width:36px;height:36px;">✕</button>
+            </div>
+
+            <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+
+                <div style="background:var(--bg-secondary,#f7f8fa);border-radius:12px;padding:16px;">
+                    <label style="font-weight:bold;font-size:13px;display:block;margin-bottom:8px;color:#c0392b;">
+                        🔒 حظر جهاز عبر IP
+                    </label>
+                    <input id="blockIpInput" type="text" inputmode="text" placeholder="مثال: 192.168.1.1"
+                        style="width:100%;padding:9px;border-radius:8px;border:1px solid #ddd;
+                               font-size:14px;box-sizing:border-box;margin-bottom:8px;
+                               background:var(--card-bg,#fff);color:var(--text-primary,#333);">
+                    <input id="blockIpReason" type="text" placeholder="سبب الحظر (اختياري)"
+                        style="width:100%;padding:9px;border-radius:8px;border:1px solid #ddd;
+                               font-size:14px;box-sizing:border-box;margin-bottom:8px;
+                               background:var(--card-bg,#fff);color:var(--text-primary,#333);">
+                    <button onclick="submitBlockIP()"
+                        style="width:100%;padding:9px;background:#c0392b;color:white;border:none;
+                               border-radius:9px;font-size:14px;font-weight:bold;cursor:pointer;">
+                        🚫 حظر IP
+                    </button>
+                </div>
+
+                <div style="background:var(--bg-secondary,#f7f8fa);border-radius:12px;padding:16px;">
+                    <label style="font-weight:bold;font-size:13px;display:block;margin-bottom:8px;color:#8e44ad;">
+                        👤 حظر مستخدم
+                    </label>
+                    <input id="blockUserInput" type="text" placeholder="اسم المستخدم"
+                        style="width:100%;padding:9px;border-radius:8px;border:1px solid #ddd;
+                               font-size:14px;box-sizing:border-box;margin-bottom:8px;
+                               background:var(--card-bg,#fff);color:var(--text-primary,#333);">
+                    <button onclick="submitBlockUser()"
+                        style="width:100%;padding:9px;background:#8e44ad;color:white;border:none;
+                               border-radius:9px;font-size:14px;font-weight:bold;cursor:pointer;">
+                        🚫 حظر المستخدم
+                    </button>
+                </div>
+
+                <button onclick="document.getElementById('blockActionModal').remove(); showBlockedDevices();"
+                    style="padding:10px;background:#2c3e50;color:white;border:none;
+                           border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">
+                    📋 عرض قائمة المحظورين
+                </button>
+
+                <button onclick="document.getElementById('blockActionModal').remove()"
+                    style="padding:10px;background:#95a5a6;color:white;border:none;
+                           border-radius:10px;font-size:14px;cursor:pointer;">
+                    ✕ إغلاق
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+async function submitBlockIP() {
+    const ip = document.getElementById('blockIpInput').value.trim();
+    const reason = document.getElementById('blockIpReason').value.trim() || 'غير محدد';
+    if (!ip) { showMessage('❌ الرجاء إدخال عنوان IP', true); return; }
+    await blockIP(ip, reason);
+    document.getElementById('blockActionModal')?.remove();
+}
+
+async function submitBlockUser() {
+    const username = document.getElementById('blockUserInput').value.trim();
+    if (!username) { showMessage('❌ الرجاء إدخال اسم المستخدم', true); return; }
+    if (username === 'فيصل') { showMessage('❌ لا يمكن حظر المدير', true); return; }
+    await blockUser(username);
+    document.getElementById('blockActionModal')?.remove();
+}
 async function showDeviceLogs() {
     if (!currentUser || currentUser.role !== 'admin') {
         showMessage('❌ هذه الصفحة متاحة للمدير فقط', true);
         return;
     }
-    
-    // جلب سجل الأجهزة من Firebase
+
     let deviceLogs = [];
-    let data = null;
+    let rawData = null;
     try {
         const snapshot = await database.ref('/deviceLogs').once('value');
-        data = snapshot.val();
-        if (data) {
-            deviceLogs = Object.values(data);
+        rawData = snapshot.val();
+        if (rawData) {
+            deviceLogs = Object.entries(rawData).map(([k, v]) => ({ _key: k, ...v }));
             deviceLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         }
     } catch(e) {}
-    
-    // النافذة الأولى: عرض السجلات فقط
-    let msg1 = '📱 سجل دخول الأجهزة:\n\n';
-    
-    if (deviceLogs.length === 0) {
-        msg1 += 'لا توجد سجلات بعد\n';
-    } else {
-        msg1 += `📊 إجمالي السجلات: ${deviceLogs.length}\n\n`;
-        const recent = deviceLogs.slice(0, 5);
-        recent.forEach((log, i) => {
-            const time = new Date(log.timestamp).toLocaleString('ar-SA');
-            msg1 += `${i+1}. 👤 ${log.username || 'غير معروف'}\n`;
-            msg1 += `   📱 ${log.deviceType || 'غير معروف'}\n`;
-            msg1 += `   🌐 IP: ${log.ip || 'غير معروف'}\n`;
-            msg1 += `   🕐 ${time}\n\n`;
-        });
-    }
-    
-    msg1 += 'اضغط "حسناً" للمتابعة إلى الخيارات';
-    
-    // عرض النافذة الأولى
-    const step1 = prompt(msg1);
-    if (step1 === null) return; // ألغى المستخدم
-    
-    // النافذة الثانية: خيارات المسح
-    let msg2 = '🗑️ خيارات المسح:\n\n';
-    msg2 += '1️⃣ - مسح جميع السجلات\n';
-    msg2 += '2️⃣ - الاحتفاظ بآخر عدد\n';
-    msg2 += '3️⃣ - حظر جهاز أو مستخدم\n';
-    msg2 += '0️⃣ - إغلاق بدون تغيير\n\n';
-    msg2 += '✏️ أدخل رقم الخيار:';
-    
-    const action = prompt(msg2);
-    
-    if (action === '1') {
+
+    // إزالة أي نافذة سابقة
+    document.getElementById('deviceLogsOverlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'deviceLogsOverlay';
+    overlay.style.cssText = `
+        position:fixed; inset:0; background:rgba(0,0,0,0.65);
+        display:flex; align-items:flex-start; justify-content:center;
+        z-index:99999; direction:rtl; overflow-y:auto; padding:20px 10px;
+    `;
+
+    const typeColor = t => {
+        if (!t) return '#888';
+        if (t.includes('أندرويد') || t.includes('آيفون')) return '#27ae60';
+        return '#2980b9';
+    };
+
+    const rows = deviceLogs.length === 0
+        ? `<tr><td colspan="6" style="text-align:center;padding:30px;color:#999;">لا توجد سجلات بعد</td></tr>`
+        : deviceLogs.map((log, i) => {
+            const time = new Date(log.timestamp).toLocaleString('ar-SA', { numberingSystem: 'latn' });
+            const color = typeColor(log.deviceType);
+            return `
+                <tr style="background:${i % 2 === 0 ? 'var(--bg-secondary,#f7f8fa)' : 'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
+                    <td style="padding:10px;text-align:center;font-weight:bold;color:#667eea;">${i + 1}</td>
+                    <td style="padding:10px;text-align:center;">👤 ${log.username || 'غير معروف'}</td>
+                    <td style="padding:10px;text-align:center;color:${color};">${log.deviceType || 'غير معروف'}</td>
+                    <td style="padding:10px;text-align:center;font-size:12px;color:#555;">${log.browser || '-'}</td>
+                    <td style="padding:10px;text-align:center;font-family:monospace;font-size:12px;">${log.ip || '-'}</td>
+                    <td style="padding:10px;text-align:center;font-size:12px;">🕐 ${time}</td>
+                </tr>`;
+        }).join('');
+
+    overlay.innerHTML = `
+        <div style="background:var(--card-bg,#fff); border-radius:18px; width:100%; max-width:860px;
+                    box-shadow:0 10px 40px rgba(0,0,0,0.35); overflow:hidden;">
+
+            <!-- رأس النافذة -->
+            <div style="background:linear-gradient(135deg,#2c3e50,#3498db); padding:20px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="color:white;margin:0;font-size:18px;">📱 سجل دخول الأجهزة</h2>
+                    <p style="color:rgba(255,255,255,0.75);margin:4px 0 0;font-size:13px;">
+                        📊 إجمالي السجلات: <strong style="color:white;">${deviceLogs.length}</strong>
+                    </p>
+                </div>
+                <button onclick="document.getElementById('deviceLogsOverlay').remove()"
+                    style="background:rgba(255,255,255,0.2);border:none;color:white;
+                           font-size:20px;cursor:pointer;border-radius:50%;width:36px;height:36px;">✕</button>
+            </div>
+
+            <!-- أزرار الإجراءات -->
+            <div style="display:flex;gap:10px;padding:16px 20px;flex-wrap:wrap;border-bottom:1px solid #eee;">
+                <button onclick="deviceLogAction('deleteAll')"
+                    style="padding:9px 16px;background:#e53e3e;color:white;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:bold;">
+                    🗑️ مسح جميع السجلات
+                </button>
+                <button onclick="deviceLogAction('keepLast')"
+                    style="padding:9px 16px;background:#ed8936;color:white;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:bold;">
+                    ✂️ الاحتفاظ بآخر عدد
+                </button>
+                <button onclick="deviceLogAction('block')"
+                    style="padding:9px 16px;background:#2c3e50;color:white;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:bold;">
+                    🚫 حظر جهاز أو مستخدم
+                </button>
+            </div>
+
+            <!-- الجدول -->
+            <div style="overflow-x:auto; padding:0;">
+                <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:600px;">
+                    <thead>
+                        <tr style="background:linear-gradient(135deg,#667eea,#764ba2);">
+                            <th style="padding:12px 10px;color:white;text-align:center;">#</th>
+                            <th style="padding:12px 10px;color:white;text-align:center;">👤 المستخدم</th>
+                            <th style="padding:12px 10px;color:white;text-align:center;">📱 نوع الجهاز</th>
+                            <th style="padding:12px 10px;color:white;text-align:center;">🌐 المتصفح</th>
+                            <th style="padding:12px 10px;color:white;text-align:center;">🔌 IP</th>
+                            <th style="padding:12px 10px;color:white;text-align:center;">🕐 التاريخ والوقت</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+
+            <!-- تذييل -->
+            <div style="padding:14px 20px;text-align:center;border-top:1px solid #eee;">
+                <button onclick="document.getElementById('deviceLogsOverlay').remove()"
+                    style="padding:10px 40px;background:#667eea;color:white;border:none;border-radius:10px;
+                           font-size:14px;font-weight:bold;cursor:pointer;">
+                    ✅ إغلاق
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+async function deviceLogAction(action) {
+    if (action === 'deleteAll') {
         showConfirmModal('⚠️ هل أنت متأكد من مسح جميع سجلات الأجهزة؟', async function(confirmed) {
             if (confirmed) {
                 await database.ref('/deviceLogs').remove();
                 showMessage('✅ تم مسح جميع سجلات الأجهزة');
+                document.getElementById('deviceLogsOverlay')?.remove();
             }
         });
-    }
-    else if (action === '2') {
-        const count = prompt('✏️ كم سجل تريد الاحتفاظ به؟\n(سيتم حذف السجلات الأقدم)');
-        if (count && !isNaN(count) && parseInt(count) > 0) {
-            const num = parseInt(count);
-            if (num >= deviceLogs.length) {
-                showMessage('⚠️ العدد المطلوب أكبر من عدد السجلات الحالية');
-                return;
+    } else if (action === 'keepLast') {
+        const overlay = document.getElementById('deviceLogsOverlay');
+        const countStr = prompt('✏️ كم سجل تريد الاحتفاظ به؟\n(سيتم حذف السجلات الأقدم)');
+        if (!countStr || isNaN(countStr) || parseInt(countStr) <= 0) return;
+        const num = parseInt(countStr);
+        const snapshot = await database.ref('/deviceLogs').once('value');
+        const rawData = snapshot.val();
+        if (!rawData) return;
+        const keys = Object.keys(rawData);
+        if (num >= keys.length) { showMessage('⚠️ العدد المطلوب أكبر من عدد السجلات الحالية'); return; }
+        showConfirmModal(`⚠️ سيتم حذف السجلات الأقدم والاحتفاظ بآخر ${num} سجل. متأكد؟`, async function(confirmed) {
+            if (confirmed) {
+                const sortedKeys = keys.sort((a, b) => new Date(rawData[b].timestamp) - new Date(rawData[a].timestamp));
+                const toDelete = sortedKeys.slice(num);
+                const updates = {};
+                toDelete.forEach(k => updates[k] = null);
+                if (Object.keys(updates).length > 0) await database.ref('/deviceLogs').update(updates);
+                showMessage(`✅ تم حذف ${toDelete.length} سجل`);
+                overlay?.remove();
+                showDeviceLogs();
             }
-            showConfirmModal('⚠️ سيتم حذف السجلات الأقدم والاحتفاظ بآخر ' + num + ' سجل. متأكد؟', async function(confirmed) {
-                if (confirmed) {
-                    const keys = Object.keys(data || {});
-                    const sortedKeys = keys.sort((a, b) => {
-                        const timeA = data[a].timestamp || '';
-                        const timeB = data[b].timestamp || '';
-                        return new Date(timeB) - new Date(timeA);
-                    });
-                    
-                    const keysToDelete = sortedKeys.slice(num);
-                    const updates = {};
-                    keysToDelete.forEach(key => { updates[key] = null; });
-                    
-                    if (Object.keys(updates).length > 0) {
-                        await database.ref('/deviceLogs').update(updates);
-                    }
-                    
-                    showMessage('✅ تم حذف ' + keysToDelete.length + ' سجل');
-                }
-            });
-        }
-    }
-    else if (action === '3') {
+        });
+    } else if (action === 'block') {
+        document.getElementById('deviceLogsOverlay')?.remove();
         await blockDeviceOrUser();
     }
 }
-// ==================== تقرير شهداء الضباط البالغين سن التقاعد ====================
 function showMartyrsOfficersRetirementReport() {
     const today = new Date();
 
-    // سن التقاعد لكل رتبة
     const retirementAge = {
         'ملازم تان':        40,
         'ملازم أول':        42,
@@ -7626,18 +7871,14 @@ function showMartyrsOfficersRetirementReport() {
     const officerRanks = Object.keys(retirementAge);
 
     const filtered = martyrs.filter(m => {
-        // الصفة: شهيد فقط
         const isShaheed = (m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
         if (!isShaheed) return false;
 
-        // الرتبة: ضباط فقط
         if (!officerRanks.includes(m.rank)) return false;
 
-        // الحالة: غير متقاعد أو موقوف فقط
         const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
         if (!validStatus) return false;
 
-        // العمر: بلغ سن تقاعد رتبته أو تجاوزه
         if (!m.birthDate) return false;
         const birthYear = parseInt((m.birthDate || '').substring(0, 4));
         if (!birthYear || isNaN(birthYear)) return false;
@@ -7668,7 +7909,6 @@ function showMartyrsOfficersRetirementReport() {
 
     showReportTable(headers, rows);
 }
-// ==================== تقرير شهداء المراتب البالغين سن التقاعد ====================
 function showMartyrsRetirementAgeReport() {
     const ranksIncluded = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
     const today = new Date();
@@ -7686,7 +7926,7 @@ function showMartyrsRetirementAgeReport() {
         const birthYear = parseInt((m.birthDate || '').substring(0, 4));
         if (!birthYear || isNaN(birthYear)) return false;
         const age = today.getFullYear() - birthYear;
-        return age >= 50;  // أو 65 في تقرير الموظفين;
+        return age >= 50;
     });
 
     const sorted = [...filtered].sort((a, b) => parseInt(a.id) - parseInt(b.id));
@@ -7711,23 +7951,18 @@ function showMartyrsRetirementAgeReport() {
 
     showReportTable(headers, rows);
 }
-// ==================== تقرير شهداء الموظفين البالغين سن التقاعد ====================
 function showMartyrsStaffRetirementAgeReport() {
     const today = new Date();
 
     const filtered = martyrs.filter(m => {
-        // الصفة: شهيد فقط
         const isShaheed = (m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
         if (!isShaheed) return false;
 
-        // الرتبة: موظف فقط
         if (m.rank !== 'موظف') return false;
 
-        // الحالة: غير متقاعد أو موقوف فقط
         const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
         if (!validStatus) return false;
 
-        // العمر: 65 سنة فأكثر
        const birthYear = parseInt((m.birthDate || '').substring(0, 4));
         if (!birthYear || isNaN(birthYear)) return false;
         const age = today.getFullYear() - birthYear;
@@ -7756,23 +7991,18 @@ function showMartyrsStaffRetirementAgeReport() {
 
     showReportTable(headers, rows);
 }
-// ==================== تقرير جرحى المراتب البالغين سن التقاعد ====================
 function showInjuredRetirementAgeReport() {
     const ranksIncluded = ['جندي', 'جندي أول', 'نائب عريف', 'عريف', 'رع س', 'رع و'];
     const today = new Date();
 
     const filtered = martyrs.filter(m => {
-        // الصفة: جريح حرب فقط
         if (m.status !== 'جريح حرب') return false;
 
-        // الرتبة: من الرتب المحددة فقط
         if (!ranksIncluded.includes(m.rank)) return false;
 
-        // الحالة: غير متقاعد أو موقوف فقط
         const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
         if (!validStatus) return false;
 
-        // العمر: 50 سنة فأكثر (حسب السنة فقط)
         if (!m.birthDate) return false;
         const birthYear = parseInt((m.birthDate || '').substring(0, 4));
         if (!birthYear || isNaN(birthYear)) return false;
@@ -7802,7 +8032,6 @@ function showInjuredRetirementAgeReport() {
 
     showReportTable(headers, rows);
 }
-// ==================== تقرير جرحى الضباط البالغين سن التقاعد ====================
 function showInjuredOfficersRetirementReport() {
     const today = new Date();
 
@@ -7827,17 +8056,13 @@ function showInjuredOfficersRetirementReport() {
     const officerRanks = Object.keys(retirementAge);
 
     const filtered = martyrs.filter(m => {
-        // الصفة: جريح حرب فقط
         if (m.status !== 'جريح حرب') return false;
 
-        // الرتبة: ضباط فقط
         if (!officerRanks.includes(m.rank)) return false;
 
-        // الحالة: غير متقاعد أو موقوف فقط
         const validStatus = (m.employmentStatus === 'غير متقاعد' || m.employmentStatus === 'موقوف');
         if (!validStatus) return false;
 
-        // العمر: بلغ سن تقاعد رتبته أو تجاوزه
         if (!m.birthDate) return false;
         const birthYear = parseInt((m.birthDate || '').substring(0, 4));
         if (!birthYear || isNaN(birthYear)) return false;
@@ -7868,69 +8093,54 @@ function showInjuredOfficersRetirementReport() {
 
     showReportTable(headers, rows);
 }
-// ==================== حماية شاشة الدخول ====================
 (function() {
-    // منع الزر الأيمن للماوس
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         return false;
     });
 
-    // منع اختصارات لوحة المفاتيح
     document.addEventListener('keydown', function(e) {
-        // F12
         if (e.keyCode === 123) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+U (عرض المصدر)
         if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 117)) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+S (حفظ)
         if (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 115)) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+Shift+I (أدوات المطور)
         if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 105)) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+Shift+J (كونسول)
         if (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.keyCode === 106)) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+Shift+C (فحص العنصر)
         if (e.ctrlKey && e.shiftKey && (e.keyCode === 67 || e.keyCode === 99)) {
             e.preventDefault();
             return false;
         }
     });
 
-    // منع تحديد النص
     document.addEventListener('selectstart', function(e) {
         e.preventDefault();
         return false;
     });
 
-    // منع النسخ
     document.addEventListener('copy', function(e) {
         e.preventDefault();
         return false;
     });
 
-    // منع القص
     document.addEventListener('cut', function(e) {
         e.preventDefault();
         return false;
     });
 })();
-// ==================== نظام طباعة الباركود للسجلات ====================
-
-// دالة فتح نافذة الباركود من نتائج البحث
 function openBarcodeModal(type, recordId) {
     let record = null;
     let recordType = '';
@@ -7977,7 +8187,6 @@ function openBarcodeModal(type, recordId) {
     document.getElementById('barcodePrintContent').innerHTML = html;
     document.getElementById('barcodePrintModal').style.display = 'flex';
     
-    // توليد الباركود
     setTimeout(() => {
         try {
             JsBarcode('#' + barcodeId, recordNumber, {
@@ -7994,18 +8203,15 @@ function openBarcodeModal(type, recordId) {
         }
     }, 300);
     
-    // إغلاق النافذة عند النقر خارجها
     document.getElementById('barcodePrintModal').onclick = function(e) {
         if (e.target === this) closeBarcodeModal();
     };
 }
 
-// دالة إغلاق نافذة الباركود
 function closeBarcodeModal() {
     document.getElementById('barcodePrintModal').style.display = 'none';
 }
 
-// دالة طباعة بطاقة الباركود
 function printBarcodeCard() {
     const content = document.getElementById('barcodePrintContent').innerHTML;
     const now = new Date().toLocaleDateString('ar-SA');
@@ -8103,7 +8309,6 @@ function printBarcodeCard() {
         <body>
             <div class="card-container">
                 <div class="barcode-card">
-                    <!-- العنوان الرئيسي في أعلى منتصف البطاقة -->
                     <div class="card-title-main">💳 بطاقة تعريفية</div>
                     <div>
                         <div class="card-header">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</div>
@@ -8133,32 +8338,15 @@ function printBarcodeCard() {
     }, 600);
 }
 
-// إضافة أزرار الباركود في نتائج البحث
-// (سنعدل دالة search() لإضافة زر الباركود)
-
-// ==================== نظام الصلاحيات الفرعية ====================
-let pendingUserData = null; // بيانات المستخدم المؤقتة قبل الحفظ
-let pendingEditUserId = null; // معرف المستخدم المراد تعديله
-
-// ==================== نظام إشعارات الرسائل الخاصة ====================
-
-/**
- * إظهار إشعار منبثق عند وصول رسالة خاصة جديدة
- * @param {string} fromUsername - اسم المرسل
- * @param {string} messageText - نص الرسالة (مختصر)
- */
 function showPrivateMessageNotification(fromUsername, messageText) {
-    // إزالة أي إشعارات سابقة
     const container = document.getElementById('notificationsContainer');
     if (!container) return;
     
-    // اختصار نص الرسالة إذا كان طويلاً
     let shortText = messageText;
     if (messageText.length > 50) {
         shortText = messageText.substring(0, 50) + '...';
     }
     
-    // إنشاء عنصر الإشعار
     const notification = document.createElement('div');
     notification.className = 'private-notification';
     notification.innerHTML = `
@@ -8170,34 +8358,27 @@ function showPrivateMessageNotification(fromUsername, messageText) {
         <button class="notify-close" onclick="this.parentElement.remove()">✕</button>
     `;
     
-    // النقر على الإشعار يفتح المحادثة مع المرسل
     notification.onclick = function(e) {
         if (e.target.className === 'notify-close') return;
         
-        // فتح الدردشة إذا كانت مغلقة
         if (!chatOpen) {
             toggleChat();
         }
         
-        // التبديل إلى المحادثة الخاصة مع المرسل
         currentChatType = 'private';
         document.getElementById('privateChatUsersList').style.display = 'block';
         selectPrivateChatUser(fromUsername);
         
-        // تحديث القائمة المنسدلة
         const select = document.getElementById('chatTypeSelect');
         if (select) {
             select.value = 'private_' + fromUsername;
         }
         
-        // إزالة الإشعار
         notification.remove();
     };
     
-    // إضافة الإشعار إلى الحاوية
     container.appendChild(notification);
     
-    // إزالة تلقائية بعد 5 ثواني
     setTimeout(() => {
         if (notification.parentElement) {
             notification.style.animation = 'fadeOutNotify 0.5s ease forwards';
@@ -8209,20 +8390,14 @@ function showPrivateMessageNotification(fromUsername, messageText) {
         }
     }, 5000);
     
-    // تحديث عنوان الصفحة لإظهار إشعار
     updatePageTitle(fromUsername);
 }
 
-/**
- * تحديث عنوان الصفحة لإظهار إشعار غير مقروء
- */
 function updatePageTitle(fromUsername) {
     const originalTitle = document.title;
     
-    // إضافة إشعار للعنوان
     document.title = `💬 رسالة من ${fromUsername} - ${originalTitle}`;
     
-    // وميض العنوان
     let flashCount = 0;
     const flashInterval = setInterval(() => {
         if (flashCount >= 6) {
@@ -8240,14 +8415,10 @@ function updatePageTitle(fromUsername) {
     }, 1000);
 }
 
-/**
- * تشغيل نغمة تنبيه أقوى للرسائل الخاصة
- */
 function playPrivateNotificationSound() {
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // نغمتين متتاليتين للتمييز
         const playTone = (frequency, startTime, duration) => {
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
@@ -8265,50 +8436,39 @@ function playPrivateNotificationSound() {
         playTone(1100, audioCtx.currentTime + 0.15, 0.2);
     } catch(e) {}
 }
-// ==================== تحميل الرسائل الخاصة غير المقروءة عند تسجيل الدخول ====================
 async function loadUnreadPrivateMessages() {
     if (!currentUser) return;
     
     try {
-        // جلب جميع المحادثات الخاصة
         const snapshot = await database.ref('/privateChats').once('value');
         const allChats = snapshot.val() || {};
         
-        // آخر رسالة معروضة (مخزنة محلياً)
         const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
         
         let hasNewMessages = false;
         
-        // فحص كل محادثة خاصة
         for (const [chatKey, messages] of Object.entries(allChats)) {
             const msgList = Object.values(messages);
             if (msgList.length === 0) continue;
             
-            // استخراج اسم المستخدم الآخر من المفتاح
             const users = chatKey.split('_');
             const otherUser = users.find(u => u !== currentUser.name);
             if (!otherUser) continue;
             
-            // ترتيب الرسائل زمنياً
             msgList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             
-            // آخر رسالة في هذه المحادثة
             const lastMsg = msgList[msgList.length - 1];
             
-            // هل هذه رسالة جديدة (من المستخدم الآخر ولم نرها بعد)؟
             const lastSeenId = lastSeen[chatKey] || 0;
             
             if (lastMsg.username !== currentUser.name && lastMsg.id > lastSeenId) {
-                // رسالة جديدة - إظهار إشعار
                 showPrivateMessageNotification(otherUser, lastMsg.text);
                 hasNewMessages = true;
                 
-                // تحديث آخر رسالة معروضة
                 lastSeen[chatKey] = lastMsg.id;
             }
         }
         
-        // حفظ آخر الرسائل المعروضة
         if (hasNewMessages) {
             localStorage.setItem('lastSeenMessages', JSON.stringify(lastSeen));
         }
@@ -8318,13 +8478,11 @@ async function loadUnreadPrivateMessages() {
     }
 }
 
-// تحديث آخر رسالة معروضة عند قراءة المحادثة
 function markChatAsRead(chatKey, messageId) {
     const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
     lastSeen[chatKey] = messageId;
     localStorage.setItem('lastSeenMessages', JSON.stringify(lastSeen));
 }
-// ==================== عداد الرسائل غير المقروءة لكل مستخدم ====================
 async function loadUnreadCounts() {
     if (!currentUser) return;
     
@@ -8372,7 +8530,6 @@ function updateUsersListWithBadges(unreadCounts) {
         const username = item.getAttribute('data-username');
         if (!username) return;
         
-        // إزالة الشارة القديمة
         const oldBadge = item.querySelector('.unread-count-badge');
         if (oldBadge) oldBadge.remove();
         
@@ -8386,7 +8543,6 @@ function updateUsersListWithBadges(unreadCounts) {
         }
     });
 }
-// ==================== مؤشر الاتصال في صفحة الدخول ====================
 function updateLoginConnectionStatus() {
     var indicator = document.getElementById('loginStatusIndicator');
     if (!indicator) return;
@@ -8400,14 +8556,11 @@ function updateLoginConnectionStatus() {
     }
 }
 
-// تحديث الحالة عند تحميل الصفحة
 updateLoginConnectionStatus();
 
-// الاستماع لتغييرات الاتصال
 window.addEventListener('online', updateLoginConnectionStatus);
 window.addEventListener('offline', updateLoginConnectionStatus);
- // ==================== تقارير المرتبات والمنح ====================
-function showSalaryReport(type) {
+ function showSalaryReport(type) {
     let filteredData = [];
     let title = '';
     
@@ -8437,7 +8590,6 @@ function showSalaryReport(type) {
             return;
     }
     
-    // ترتيب حسب الرقم العسكري
     filteredData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
     
     currentReportTitle = title;
