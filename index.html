@@ -2016,6 +2016,8 @@
     <link rel="manifest" href="manifest.json">
     <!-- مكتبة الباركود JsBarcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <!-- مكتبة قراءة Excel SheetJS -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <div id="userInfoModal" class="user-info-modal">
@@ -2137,6 +2139,7 @@
                 <button class="menu-btn add-military" id="addMilitaryBtn" onclick="showAddMilitary()">➕ إضافة عسكري</button>
                 <button class="menu-btn add-civilian" id="addCivilianBtn" onclick="showAddCivilian()">👨‍💼 إضافة موظف</button>
                 <button class="menu-btn add-martyrs" id="addMartyrsBtn" onclick="showAddMartyrs()">🕊️ إضافة شهداء وجرحى</button>
+                <button class="menu-btn" id="importExcelBtn" onclick="showImportExcel()" style="background:linear-gradient(135deg,#27ae60,#2ecc71);color:white;">📥 استيراد Excel</button>
                 <button class="menu-btn search" onclick="showSearch()">🔍 بحث</button>
                 <button class="menu-btn reports" onclick="showReports()">💼 التقارير</button>
                 <button class="menu-btn users" id="usersBtn" onclick="showUsersManagement()" style="display:none;">🚻 إدارة المستخدمين</button>
@@ -5080,6 +5083,8 @@ async function updateMilitary() {
         }
     }
     
+    const oldMilitary = { ...militaries[index] };
+
     militaries[index] = {
         id, rank, name, 
         motherName: document.getElementById('milMotherName').value.trim(), 
@@ -5096,9 +5101,23 @@ async function updateMilitary() {
         address: document.getElementById('milAddress').value.trim(), 
         phone: document.getElementById('milPhone').value.trim() 
     };
+
+    const fieldLabels = {
+        id: 'الرقم العسكري', rank: 'الرتبة', name: 'الاسم',
+        motherName: 'اسم الأم', maritalStatus: 'الحالة الاجتماعية',
+        promotionRank: 'رتبة الترقية', lastPromotionDate: 'تاريخ آخر ترقية',
+        decisionInfo: 'معلومات القرار', nationalId: 'الرقم الوطني',
+        idCardNumber: 'رقم بطاقة الهوية', passportNumber: 'رقم جواز السفر',
+        recordNo: 'رقم السجل', birthDate: 'تاريخ الميلاد',
+        birthPlace: 'مكان الميلاد', address: 'العنوان', phone: 'الهاتف'
+    };
+    const changedFields = Object.keys(fieldLabels).filter(k =>
+        (oldMilitary[k] || '') !== (militaries[index][k] || '')
+    ).map(k => `${fieldLabels[k]}: (${oldMilitary[k] || 'فارغ'} ← ${militaries[index][k] || 'فارغ'})`);
+    const details = changedFields.length > 0 ? 'الحقول المعدّلة: ' + changedFields.join(' | ') : 'لا تغييرات';
     
     await saveMilitariesToFirebase(); 
-    await addAuditLog('تعديل', 'military', id, name, 'تم تعديل بيانات العسكري'); 
+    await addAuditLog('تعديل', 'military', id, name, details); 
     showMessage('✅ تم تعديل بيانات العسكري بنجاح');
     document.getElementById('milId').style.borderColor = '';
     backToMenu();
@@ -5142,6 +5161,8 @@ async function updateCivilian() {
         }
     }
     
+    const oldCivilian = { ...civilians[index] };
+
     civilians[index] = {
         id, rank, name, 
         motherName: document.getElementById('civMotherName').value.trim(), 
@@ -5158,9 +5179,23 @@ async function updateCivilian() {
         address: document.getElementById('civAddress').value.trim(), 
         phone: document.getElementById('civPhone').value.trim() 
     };
-    
+
+    const civFieldLabels = {
+        id: 'الرقم الوظيفي', rank: 'الدرجة', name: 'الاسم',
+        motherName: 'اسم الأم', maritalStatus: 'الحالة الاجتماعية',
+        promotionRank: 'درجة الترقية', lastPromotionDate: 'تاريخ آخر ترقية',
+        decisionInfo: 'معلومات القرار', nationalId: 'الرقم الوطني',
+        idCardNumber: 'رقم بطاقة الهوية', passportNumber: 'رقم جواز السفر',
+        recordNo: 'رقم السجل', birthDate: 'تاريخ الميلاد',
+        birthPlace: 'مكان الميلاد', address: 'العنوان', phone: 'الهاتف'
+    };
+    const civChangedFields = Object.keys(civFieldLabels).filter(k =>
+        (oldCivilian[k] || '') !== (civilians[index][k] || '')
+    ).map(k => `${civFieldLabels[k]}: (${oldCivilian[k] || 'فارغ'} ← ${civilians[index][k] || 'فارغ'})`);
+    const civDetails = civChangedFields.length > 0 ? 'الحقول المعدّلة: ' + civChangedFields.join(' | ') : 'لا تغييرات';
+
     await saveCiviliansToFirebase(); 
-    await addAuditLog('تعديل', 'civilian', id, name, 'تم تعديل بيانات الموظف'); 
+    await addAuditLog('تعديل', 'civilian', id, name, civDetails); 
     showMessage('✅ تم تعديل بيانات الموظف بنجاح');
     document.getElementById('civId').style.borderColor = '';
     backToMenu();
@@ -5202,6 +5237,8 @@ async function updateMartyr() {
         return;
     }
     
+    const oldMartyr = { ...martyrs[index] };
+
     martyrs[index] = {
         id, rank, name, status,
         eventDate: document.getElementById('martyrEventDate').value,
@@ -5226,9 +5263,26 @@ async function updateMartyr() {
         employmentStatus: document.getElementById('martyrEmploymentStatus').value,
         salaryType: document.getElementById('martyrSalaryType').value
     };
-    
+
+    const martyrFieldLabels = {
+        id: 'الرقم العسكري', rank: 'الرتبة', name: 'الاسم', status: 'الصفة',
+        eventDate: 'تاريخ الحادثة', location: 'الموقع',
+        legalMemoNo: 'رقم المذكرة القانونية', legalMemoDate: 'تاريخ المذكرة',
+        attestationNo: 'رقم الشهادة', attestationDate: 'تاريخ الشهادة',
+        promotionRank: 'رتبة الترقية', promotionDueDate: 'تاريخ استحقاق الترقية',
+        promotionDecisionNo: 'رقم قرار الترقية', nationalId: 'الرقم الوطني',
+        recordNo: 'رقم السجل', birthDate: 'تاريخ الميلاد', address: 'العنوان',
+        motherName: 'اسم الأم', maritalStatus: 'الحالة الاجتماعية',
+        agentName: 'اسم الوكيل', bankName: 'اسم البنك', accountNo: 'رقم الحساب',
+        phone: 'الهاتف', employmentStatus: 'الحالة الوظيفية', salaryType: 'نوع المرتب'
+    };
+    const martyrChangedFields = Object.keys(martyrFieldLabels).filter(k =>
+        (oldMartyr[k] || '') !== (martyrs[index][k] || '')
+    ).map(k => `${martyrFieldLabels[k]}: (${oldMartyr[k] || 'فارغ'} ← ${martyrs[index][k] || 'فارغ'})`);
+    const martyrDetails = martyrChangedFields.length > 0 ? 'الحقول المعدّلة: ' + martyrChangedFields.join(' | ') : 'لا تغييرات';
+
     await saveMartyrsToFirebase();
-    await addAuditLog('تعديل', 'martyr', id, name, `تم تعديل بيانات ${status}`);
+    await addAuditLog('تعديل', 'martyr', id, name, martyrDetails);
     showMessage('✅ تم تعديل البيانات بنجاح');
     document.getElementById('martyrId').style.borderColor = '';
     
@@ -7696,6 +7750,297 @@ async function submitBlockUser() {
     await blockUser(username);
     document.getElementById('blockActionModal')?.remove();
 }
+// ================== استيراد Excel ==================
+
+function showImportExcel() {
+    if (!hasPermission('add', 'military') && !hasPermission('add', 'civilian') && !hasPermission('add', 'martyr')) {
+        showMessage('❌ ليس لديك صلاحية الاستيراد', true); return;
+    }
+    document.getElementById('importExcelOverlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'importExcelOverlay';
+    overlay.style.cssText = `
+        position:fixed;inset:0;background:rgba(0,0,0,0.65);
+        display:flex;align-items:center;justify-content:center;
+        z-index:99999;direction:rtl;padding:20px;overflow-y:auto;
+    `;
+    overlay.innerHTML = `
+        <div style="background:var(--card-bg,#fff);border-radius:18px;width:100%;max-width:500px;
+                    box-shadow:0 10px 40px rgba(0,0,0,0.35);overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#27ae60,#2ecc71);padding:18px 22px;
+                        display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <h2 style="color:white;margin:0;font-size:17px;">📥 استيراد من Excel</h2>
+                    <p style="color:rgba(255,255,255,0.85);margin:4px 0 0;font-size:12px;">
+                        دعم ملفات .xlsx و .xls
+                    </p>
+                </div>
+                <button onclick="document.getElementById('importExcelOverlay').remove()"
+                    style="background:rgba(255,255,255,0.2);border:none;color:white;
+                           font-size:20px;cursor:pointer;border-radius:50%;width:36px;height:36px;">✕</button>
+            </div>
+
+            <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+
+                <div style="background:var(--bg-secondary,#f7f8fa);border-radius:12px;padding:14px;">
+                    <label style="font-weight:bold;font-size:13px;display:block;margin-bottom:8px;">
+                        📋 نوع البيانات:
+                    </label>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button onclick="importSelectType(this,'military')"
+                            style="flex:1;padding:9px;border-radius:8px;border:2px solid #ddd;
+                                   background:var(--card-bg,#fff);cursor:pointer;font-size:13px;font-weight:bold;">
+                            ⭐ عسكريين
+                        </button>
+                        <button onclick="importSelectType(this,'civilian')"
+                            style="flex:1;padding:9px;border-radius:8px;border:2px solid #ddd;
+                                   background:var(--card-bg,#fff);cursor:pointer;font-size:13px;font-weight:bold;">
+                            👨‍💼 موظفين
+                        </button>
+                        <button onclick="importSelectType(this,'martyr')"
+                            style="flex:1;padding:9px;border-radius:8px;border:2px solid #ddd;
+                                   background:var(--card-bg,#fff);cursor:pointer;font-size:13px;font-weight:bold;">
+                            🕊️ شهداء/جرحى
+                        </button>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-secondary,#f7f8fa);border-radius:12px;padding:14px;">
+                    <label style="font-weight:bold;font-size:13px;display:block;margin-bottom:8px;">
+                        📁 اختر ملف Excel:
+                    </label>
+                    <input type="file" id="importExcelFile" accept=".xlsx,.xls"
+                        style="width:100%;padding:9px;border-radius:8px;border:1px solid #ddd;
+                               font-size:13px;box-sizing:border-box;
+                               background:var(--card-bg,#fff);color:var(--text-primary,#333);">
+                </div>
+
+                <div id="importExcelPreview" style="display:none;"></div>
+
+                <div style="background:#fff3cd;border-radius:10px;padding:12px;font-size:12px;color:#856404;">
+                    <strong>📌 تنسيق الأعمدة المطلوب:</strong><br>
+                    <span id="importExcelHint" style="line-height:2;">اختر نوع البيانات أولاً</span>
+                </div>
+
+                <div style="display:flex;gap:10px;">
+                    <button onclick="previewImportExcel()"
+                        style="flex:1;padding:11px;background:#3498db;color:white;border:none;
+                               border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">
+                        👁️ معاينة
+                    </button>
+                    <button id="confirmImportBtn" onclick="confirmImportExcel()" disabled
+                        style="flex:1;padding:11px;background:#27ae60;color:white;border:none;
+                               border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;opacity:0.5;">
+                        ✅ استيراد
+                    </button>
+                    <button onclick="document.getElementById('importExcelOverlay').remove()"
+                        style="flex:1;padding:11px;background:#e74c3c;color:white;border:none;
+                               border-radius:10px;font-size:14px;cursor:pointer;">
+                        ❌ إلغاء
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+let importExcelType = null;
+let importExcelData = [];
+
+const importFieldHints = {
+    military: 'الرقم العسكري* | الرتبة* | الاسم* | اسم الأم | الحالة الاجتماعية | الرقم الوطني | رقم بطاقة الهوية | رقم جواز السفر | رقم السجل | تاريخ الميلاد | مكان الميلاد | العنوان | الهاتف | رتبة الترقية | تاريخ آخر ترقية | معلومات القرار',
+    civilian: 'الرقم الوظيفي* | الدرجة* | الاسم* | اسم الأم | الحالة الاجتماعية | الرقم الوطني | رقم بطاقة الهوية | رقم جواز السفر | رقم السجل | تاريخ الميلاد | مكان الميلاد | العنوان | الهاتف | درجة الترقية | تاريخ آخر ترقية | معلومات القرار',
+    martyr: 'الرقم العسكري* | الرتبة* | الاسم* | الصفة* | تاريخ الحادثة | الموقع | رقم المذكرة | تاريخ المذكرة | رقم الشهادة | تاريخ الشهادة | الرقم الوطني | رقم السجل | تاريخ الميلاد | العنوان | اسم الأم | الحالة الاجتماعية | اسم الوكيل | اسم البنك | رقم الحساب | الهاتف | الحالة الوظيفية | نوع المرتب'
+};
+
+const importFieldMaps = {
+    military: {
+        'الرقم العسكري': 'id', 'الرتبة': 'rank', 'الاسم': 'name',
+        'اسم الأم': 'motherName', 'الحالة الاجتماعية': 'maritalStatus',
+        'الرقم الوطني': 'nationalId', 'رقم بطاقة الهوية': 'idCardNumber',
+        'رقم جواز السفر': 'passportNumber', 'رقم السجل': 'recordNo',
+        'تاريخ الميلاد': 'birthDate', 'مكان الميلاد': 'birthPlace',
+        'العنوان': 'address', 'الهاتف': 'phone',
+        'رتبة الترقية': 'promotionRank', 'تاريخ آخر ترقية': 'lastPromotionDate',
+        'معلومات القرار': 'decisionInfo'
+    },
+    civilian: {
+        'الرقم الوظيفي': 'id', 'الدرجة': 'rank', 'الاسم': 'name',
+        'اسم الأم': 'motherName', 'الحالة الاجتماعية': 'maritalStatus',
+        'الرقم الوطني': 'nationalId', 'رقم بطاقة الهوية': 'idCardNumber',
+        'رقم جواز السفر': 'passportNumber', 'رقم السجل': 'recordNo',
+        'تاريخ الميلاد': 'birthDate', 'مكان الميلاد': 'birthPlace',
+        'العنوان': 'address', 'الهاتف': 'phone',
+        'درجة الترقية': 'promotionRank', 'تاريخ آخر ترقية': 'lastPromotionDate',
+        'معلومات القرار': 'decisionInfo'
+    },
+    martyr: {
+        'الرقم العسكري': 'id', 'الرتبة': 'rank', 'الاسم': 'name', 'الصفة': 'status',
+        'تاريخ الحادثة': 'eventDate', 'الموقع': 'location',
+        'رقم المذكرة': 'legalMemoNo', 'تاريخ المذكرة': 'legalMemoDate',
+        'رقم الشهادة': 'attestationNo', 'تاريخ الشهادة': 'attestationDate',
+        'الرقم الوطني': 'nationalId', 'رقم السجل': 'recordNo',
+        'تاريخ الميلاد': 'birthDate', 'العنوان': 'address',
+        'اسم الأم': 'motherName', 'الحالة الاجتماعية': 'maritalStatus',
+        'اسم الوكيل': 'agentName', 'اسم البنك': 'bankName',
+        'رقم الحساب': 'accountNo', 'الهاتف': 'phone',
+        'الحالة الوظيفية': 'employmentStatus', 'نوع المرتب': 'salaryType'
+    }
+};
+
+function importSelectType(btn, type) {
+    importExcelType = type;
+    importExcelData = [];
+    btn.closest('div').querySelectorAll('button').forEach(b => {
+        b.style.borderColor = '#ddd';
+        b.style.background = 'var(--card-bg,#fff)';
+        b.style.color = 'var(--text-primary,#333)';
+    });
+    btn.style.borderColor = '#27ae60';
+    btn.style.background = '#27ae60';
+    btn.style.color = 'white';
+    document.getElementById('importExcelHint').textContent = importFieldHints[type] || '';
+    document.getElementById('importExcelPreview').style.display = 'none';
+    document.getElementById('confirmImportBtn').disabled = true;
+    document.getElementById('confirmImportBtn').style.opacity = '0.5';
+}
+
+function previewImportExcel() {
+    if (!importExcelType) { showMessage('❌ اختر نوع البيانات أولاً', true); return; }
+    const file = document.getElementById('importExcelFile').files[0];
+    if (!file) { showMessage('❌ اختر ملف Excel أولاً', true); return; }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const wb = XLSX.read(e.target.result, { type: 'binary' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+            if (rows.length === 0) { showMessage('❌ الملف فارغ أو لا يحتوي على بيانات', true); return; }
+
+            const fieldMap = importFieldMaps[importExcelType];
+            importExcelData = rows.map(row => {
+                const obj = {};
+                Object.keys(row).forEach(col => {
+                    const key = fieldMap[col.trim()];
+                    if (key) obj[key] = String(row[col] || '').trim();
+                });
+                return obj;
+            }).filter(r => r.id && r.name);
+
+            if (importExcelData.length === 0) {
+                showMessage('❌ لم يتم العثور على بيانات صالحة. تأكد من أسماء الأعمدة', true);
+                return;
+            }
+
+            // حساب الجديد والمحدَّث
+            const existingArr = importExcelType === 'military' ? militaries : importExcelType === 'civilian' ? civilians : martyrs;
+            let newCount = 0, updateCount = 0;
+            importExcelData.forEach(r => {
+                existingArr.find(x => x.id.toString() === r.id.toString()) ? updateCount++ : newCount++;
+            });
+
+            const previewDiv = document.getElementById('importExcelPreview');
+            const sample = importExcelData.slice(0, 3);
+            previewDiv.style.display = 'block';
+            previewDiv.innerHTML = `
+                <div style="background:var(--bg-secondary,#f7f8fa);border-radius:12px;padding:14px;font-size:13px;">
+                    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="background:#27ae60;color:white;padding:4px 12px;border-radius:20px;font-weight:bold;">
+                            📊 إجمالي: ${importExcelData.length}
+                        </span>
+                        <span style="background:#3498db;color:white;padding:4px 12px;border-radius:20px;font-weight:bold;">
+                            ➕ جديد: ${newCount}
+                        </span>
+                        <span style="background:#e67e22;color:white;padding:4px 12px;border-radius:20px;font-weight:bold;">
+                            ✏️ تحديث: ${updateCount}
+                        </span>
+                    </div>
+                    <strong>📋 عينة من البيانات:</strong>
+                    <div style="overflow-x:auto;margin-top:8px;">
+                        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                            <tr style="background:#667eea;color:white;">
+                                <th style="padding:6px;text-align:center;">الرقم</th>
+                                <th style="padding:6px;text-align:center;">الاسم</th>
+                                <th style="padding:6px;text-align:center;">الحالة</th>
+                            </tr>
+                            ${sample.map((r,i) => {
+                                const exists = existingArr.find(x => x.id.toString() === r.id.toString());
+                                return `<tr style="background:${i%2===0?'white':'#f7f8fa'}">
+                                    <td style="padding:6px;text-align:center;">${r.id}</td>
+                                    <td style="padding:6px;text-align:center;">${r.name}</td>
+                                    <td style="padding:6px;text-align:center;color:${exists?'#e67e22':'#27ae60'}">
+                                        ${exists ? '✏️ تحديث' : '➕ جديد'}
+                                    </td>
+                                </tr>`;
+                            }).join('')}
+                        </table>
+                    </div>
+                </div>
+            `;
+            document.getElementById('confirmImportBtn').disabled = false;
+            document.getElementById('confirmImportBtn').style.opacity = '1';
+        } catch(err) {
+            showMessage('❌ خطأ في قراءة الملف: ' + err.message, true);
+        }
+    };
+    reader.readAsBinaryString(file);
+}
+
+async function confirmImportExcel() {
+    if (!importExcelData.length) return;
+    const btn = document.getElementById('confirmImportBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري الاستيراد...';
+
+    let added = 0, updated = 0, errors = 0;
+
+    if (importExcelType === 'military') {
+        importExcelData.forEach(r => {
+            try {
+                const idx = militaries.findIndex(x => x.id.toString() === r.id.toString());
+                if (idx >= 0) { militaries[idx] = { ...militaries[idx], ...r }; updated++; }
+                else { militaries.push(r); added++; }
+            } catch(e) { errors++; }
+        });
+        await saveMilitariesToFirebase();
+
+    } else if (importExcelType === 'civilian') {
+        importExcelData.forEach(r => {
+            try {
+                const idx = civilians.findIndex(x => x.id.toString() === r.id.toString());
+                if (idx >= 0) { civilians[idx] = { ...civilians[idx], ...r }; updated++; }
+                else { civilians.push(r); added++; }
+            } catch(e) { errors++; }
+        });
+        await saveCiviliansToFirebase();
+
+    } else if (importExcelType === 'martyr') {
+        importExcelData.forEach(r => {
+            try {
+                const idx = martyrs.findIndex(x => x.id.toString() === r.id.toString());
+                if (idx >= 0) { martyrs[idx] = { ...martyrs[idx], ...r }; updated++; }
+                else { martyrs.push(r); added++; }
+            } catch(e) { errors++; }
+        });
+        await saveMartyrsToFirebase();
+    }
+
+    await addAuditLog('استيراد Excel', importExcelType, '-', '-',
+        `تم الاستيراد: ${added} جديد، ${updated} تحديث، ${errors} خطأ`);
+
+    document.getElementById('importExcelOverlay').remove();
+    showMessage(`✅ تم الاستيراد: ➕ ${added} جديد | ✏️ ${updated} تحديث${errors ? ` | ❌ ${errors} خطأ` : ''}`);
+    importExcelData = [];
+    importExcelType = null;
+}
+
+// ================== نهاية استيراد Excel ==================
+
 async function showDeviceLogs() {
     if (!currentUser || currentUser.role !== 'admin') {
         showMessage('❌ هذه الصفحة متاحة للمدير فقط', true);
