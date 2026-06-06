@@ -1598,10 +1598,12 @@
     gap: 8px;
     background: var(--user-bar-bg);
     border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
 }
 
 .chat-input-area input {
     flex: 1;
+    min-width: 0;
     padding: 8px 12px;
     border: 1px solid var(--border-color);
     border-radius: 20px;
@@ -1623,6 +1625,196 @@
 
 .chat-input-area button:hover {
     background: #5a67d8;
+}
+
+/* زر حذف الرسالة */
+.chat-message {
+    position: relative;
+}
+.msg-delete-btn {
+    display: none;
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 10;
+    transition: transform 0.15s;
+}
+.chat-message.own .msg-delete-btn {
+    left: auto;
+    right: 6px;
+}
+.chat-message:hover .msg-delete-btn {
+    display: flex;
+}
+.msg-delete-btn:hover {
+    transform: scale(1.15);
+}
+.msg-deleted {
+    font-style: italic;
+    opacity: 0.5;
+    font-size: 12px;
+}
+/* نقاط الاتصال في قائمة المستخدمين */
+.online-dot, .offline-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.online-dot {
+    background: #48bb78;
+    box-shadow: 0 0 0 2px rgba(72,187,120,0.3);
+    animation: pulse-green 2s infinite;
+}
+.offline-dot { background: #a0aec0; }
+@keyframes pulse-green {
+    0%   { box-shadow: 0 0 0 0 rgba(72,187,120,0.5); }
+    70%  { box-shadow: 0 0 0 5px rgba(72,187,120,0); }
+    100% { box-shadow: 0 0 0 0 rgba(72,187,120,0); }
+}
+.user-chat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 13px;
+}
+.user-chat-item:hover  { background: rgba(102,126,234,0.1); }
+.user-chat-item.active { background: rgba(102,126,234,0.2); font-weight: bold; }
+.user-status-label {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+.user-status-label.online  { background: rgba(72,187,120,0.15); color: #276749; }
+.user-status-label.offline { background: rgba(160,174,192,0.2);  color: #718096; }
+
+.attach-btn {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 8px 12px !important;
+    font-size: 16px !important;
+    border-radius: 20px !important;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.attach-btn:hover {
+    background: var(--border-color) !important;
+}
+
+/* شريط التحميل */
+.upload-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    margin-top: 4px;
+    display: none;
+}
+.upload-progress-fill {
+    height: 100%;
+    background: #667eea;
+    border-radius: 2px;
+    transition: width 0.2s;
+}
+
+/* رسائل الملفات */
+.msg-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(102,126,234,0.1);
+    border: 1px solid rgba(102,126,234,0.3);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-top: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
+}
+.msg-file:hover {
+    background: rgba(102,126,234,0.2);
+}
+.msg-file-icon { font-size: 22px; }
+.msg-file-info { display: flex; flex-direction: column; }
+.msg-file-name { font-size: 12px; font-weight: bold; word-break: break-all; }
+.msg-file-size { font-size: 10px; opacity: 0.7; }
+
+/* معاينة الصورة في الرسالة */
+.msg-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: block;
+    margin-top: 4px;
+    object-fit: cover;
+    transition: opacity 0.2s;
+}
+.msg-image:hover { opacity: 0.85; }
+
+/* نافذة معاينة الصورة الكاملة */
+.img-preview-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+}
+.img-preview-overlay.open { display: flex; }
+.img-preview-overlay img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 10px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.img-preview-close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.img-preview-download {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
 }
 /* ========== تنسيق الزرين الرئيسيين في صفحة التقارير ========== */
 .main-report-btn {
@@ -2074,7 +2266,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.5</p>
+                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.8</p>
                 </div>
             </div>
             <div class="form-group">
@@ -2108,7 +2300,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.5
+    📌 الإصدار 2.8
 </div>
             </div>
             <div class="user-bar">
@@ -2140,6 +2332,7 @@
                 <button class="menu-btn add-civilian" id="addCivilianBtn" onclick="showAddCivilian()">👨‍💼 إضافة موظف</button>
                 <button class="menu-btn add-martyrs" id="addMartyrsBtn" onclick="showAddMartyrs()">🕊️ إضافة شهداء وجرحى</button>
                 <button class="menu-btn" id="importExcelBtn" onclick="showImportExcel()" style="background:linear-gradient(135deg,#27ae60,#2ecc71);color:white;">📥 استيراد Excel</button>
+             <button class="menu-btn" id="exportExcelBtn" onclick="showExportExcelModal()" style="background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;">📊 تصدير Excel</button> 
                 <button class="menu-btn search" onclick="showSearch()">🔍 بحث</button>
                 <button class="menu-btn reports" onclick="showReports()">💼 التقارير</button>
                 <button class="menu-btn users" id="usersBtn" onclick="showUsersManagement()" style="display:none;">🚻 إدارة المستخدمين</button>
@@ -2328,7 +2521,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.5</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.8</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2552,6 +2745,30 @@
     </div>
   </div>
 </div>
+<div id="exportExcelModal" class="reports-modal" style="display: none;">
+    <div class="reports-modal-content" style="max-width: 450px;">
+        <div class="reports-modal-header" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
+            <h2>📊 تصدير إلى Excel</h2>
+            <button class="reports-modal-close" onclick="closeExportExcelModal()">✕</button>
+        </div>
+        <div class="reports-modal-body">
+            <div class="reports-modal-buttons">
+                <button class="modal-report-btn" style="background: #2c3e50;" onclick="exportToExcelData('military')">
+                    <span class="modal-btn-icon">⭐</span>
+                    <span class="modal-btn-text">تصدير بيانات العسكريين</span>
+                </button>
+                <button class="modal-report-btn" style="background: #1e3c72;" onclick="exportToExcelData('civilian')">
+                    <span class="modal-btn-icon">👨‍💼</span>
+                    <span class="modal-btn-text">تصدير بيانات الموظفين</span>
+                </button>
+                <button class="modal-report-btn" style="background: #800000;" onclick="exportToExcelData('martyr')">
+                    <span class="modal-btn-icon">🕊️</span>
+                    <span class="modal-btn-text">تصدير بيانات الشهداء والجرحى</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <div id="branchReportsModal" class="reports-modal" style="display: none;">
     <div class="reports-modal-content">
@@ -2702,7 +2919,7 @@
             <select id="chatTypeSelect" onchange="switchChatType()" style="padding: 4px 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 11px; margin-right: 5px; background: white; color: #333;">
                 <option value="general">📢 عام</option>
             </select>
-            <button class="chat-close" onclick="clearChat()" style="background:#e53e3e;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;margin-right:5px;">🗑️ مسح</button>
+            <button id="clearChatBtn" class="chat-close" onclick="clearChat()" style="background:#e53e3e;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;margin-right:5px;">🗑️ مسح</button>
             <button class="chat-close" onclick="toggleChat()">✕</button>
         </div>
     </div>
@@ -2710,8 +2927,20 @@
         <div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:13px;">لا توجد رسائل بعد</div>
     </div>
     <div class="chat-input-area" id="chatInputArea">
+        <input type="file" id="fileAttachInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" style="display:none" onchange="handleFileAttach(this)">
+        <button class="attach-btn" onclick="document.getElementById('fileAttachInput').click()" title="إرفاق صورة أو مستند">📎</button>
         <input type="text" id="chatInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key==='Enter')sendMessage()">
         <button onclick="sendMessage()">إرسال</button>
+    </div>
+    <div class="upload-progress-bar" id="uploadProgressBar">
+        <div class="upload-progress-fill" id="uploadProgressFill" style="width:0%"></div>
+    </div>
+
+    <!-- نافذة معاينة الصورة -->
+    <div class="img-preview-overlay" id="imgPreviewOverlay" onclick="closeImgPreview(event)">
+        <button class="img-preview-close" onclick="closeImgPreview()">✕</button>
+        <img id="imgPreviewFull" src="" alt="معاينة">
+        <a id="imgPreviewDownload" href="#" download class="img-preview-download">⬇️ تحميل</a>
     </div>
     <div id="privateChatUsersList" style="display:none; max-height: 200px; overflow-y: auto; padding: 10px; background: var(--user-bar-bg); border-top: 1px solid var(--border-color);">
         <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">👥 اختر مستخدم للمحادثة:</p>
@@ -2747,6 +2976,89 @@
             }
         }
 
+function showExportExcelModal() {
+    // ✅ التحقق من صلاحية المدير فقط
+    if (!currentUser || currentUser.role !== 'admin') {
+        showMessage('❌ هذه الخاصية متاحة للمدير فقط', true);
+        return;
+    }
+    document.getElementById('exportExcelModal').style.display = 'flex';
+}
+    
+
+function closeExportExcelModal() {
+    document.getElementById('exportExcelModal').style.display = 'none';
+}
+
+function exportToExcelData(type) {
+    if (!currentUser || currentUser.role !== 'admin') {
+        showMessage('❌ هذه الخاصية متاحة للمدير فقط', true);
+        closeExportExcelModal();
+        return;
+    }
+    let data = [];
+    let filename = '';
+    let headers = [];
+    let sheetName = '';
+    
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ar-SA');
+    
+    if (type === 'military') {
+        data = militaries;
+        filename = `العسكريين_${now.toISOString().slice(0,19).replace(/:/g, '-')}.xlsx`;
+        sheetName = 'العسكريين';
+        headers = ['الرقم العسكري', 'الرتبة', 'الاسم', 'اسم الأم', 'الحالة الاجتماعية', 'الرقم الوطني', 'رقم البطاقة', 'رقم جواز السفر', 'رقم القيد', 'تاريخ الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف', 'رتبة الترقية', 'تاريخ آخر ترقية', 'معلومات القرار'];
+    } else if (type === 'civilian') {
+        data = civilians;
+        filename = `الموظفين_${now.toISOString().slice(0,19).replace(/:/g, '-')}.xlsx`;
+        sheetName = 'الموظفين';
+        headers = ['الرقم الوظيفي', 'الدرجة', 'الاسم', 'اسم الأم', 'الحالة الاجتماعية', 'الرقم الوطني', 'رقم البطاقة', 'رقم جواز السفر', 'رقم القيد', 'تاريخ الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف', 'الدرجة الحالية', 'تاريخ آخر ترقية', 'معلومات القرار'];
+    } else if (type === 'martyr') {
+        data = martyrs;
+        filename = `الشهداء_والجرحى_${now.toISOString().slice(0,19).replace(/:/g, '-')}.xlsx`;
+        sheetName = 'الشهداء والجرحى';
+        headers = ['الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'تاريخ الحدث', 'المكان', 'رقم المذكرة', 'تاريخ المذكرة', 'رقم الشهادة', 'تاريخ الشهادة', 'الرقم الوطني', 'رقم القيد', 'تاريخ الميلاد', 'العنوان', 'اسم الأم', 'الحالة الاجتماعية', 'اسم الوكيل', 'اسم البنك', 'رقم الحساب', 'الهاتف', 'الحالة الوظيفية', 'نوع المرتب'];
+    }
+    
+    const wsData = [headers];
+    
+    data.forEach(item => {
+        if (type === 'military') {
+            wsData.push([
+                item.id || '', item.rank || '', item.name || '', item.motherName || '', item.maritalStatus || '',
+                item.nationalId || '', item.idCardNumber || '', item.passportNumber || '', item.recordNo || '',
+                item.birthDate || '', item.birthPlace || '', item.address || '', item.phone || '',
+                item.promotionRank || '', item.lastPromotionDate || '', item.decisionInfo || ''
+            ]);
+        } else if (type === 'civilian') {
+            wsData.push([
+                item.id || '', item.rank || '', item.name || '', item.motherName || '', item.maritalStatus || '',
+                item.nationalId || '', item.idCardNumber || '', item.passportNumber || '', item.recordNo || '',
+                item.birthDate || '', item.birthPlace || '', item.address || '', item.phone || '',
+                item.promotionRank || '', item.lastPromotionDate || '', item.decisionInfo || ''
+            ]);
+        } else if (type === 'martyr') {
+            wsData.push([
+                item.id || '', item.rank || '', item.name || '', item.status || '', item.eventDate || '',
+                item.location || '', item.legalMemoNo || '', item.legalMemoDate || '', item.attestationNo || '',
+                item.attestationDate || '', item.nationalId || '', item.recordNo || '', item.birthDate || '',
+                item.address || '', item.motherName || '', item.maritalStatus || '', item.agentName || '',
+                item.bankName || '', item.accountNo || '', item.phone || '', item.employmentStatus || '', item.salaryType || ''
+            ]);
+        }
+    });
+    
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    
+    ws['!cols'] = headers.map(() => ({wch: 15}));
+    
+    XLSX.writeFile(wb, filename);
+    closeExportExcelModal();
+    showMessage(`✅ تم تصدير ${data.length} سجل بنجاح`);
+}
         function loadDarkModePreference() {
             const savedMode = localStorage.getItem('darkMode');
             const isDarkMode = savedMode === 'enabled';
@@ -3837,6 +4149,7 @@ async function showMainMenu() {
     
     setTimeout(function() {
         loadUnreadPrivateMessages();
+        startGlobalPrivateListener();
     }, 1500);
     
     const isAdminUser = currentUser.role === 'admin';
@@ -3845,7 +4158,7 @@ async function showMainMenu() {
     document.getElementById('exportBtn').style.display = isAdminUser ? 'inline-block' : 'none';
     document.getElementById('importArea').style.display = isAdminUser ? 'block' : 'none';
     document.getElementById('deviceLogBtn').style.display = isAdminUser ? 'inline-block' : 'none';
-    
+    document.getElementById('exportExcelBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
     setTimeout(() => {
         displayMemoryStats();
     }, 300);
@@ -5413,7 +5726,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.5</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.8</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -5433,7 +5746,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.5</p>' +
+   '<p>فرع المرقب - الإصدار 2.8</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -6259,6 +6572,12 @@ function toggleChat() {
             if (usersList) usersList.style.display = 'block';
             loadOnlineUsersForChat();
         }
+
+        // إظهار/إخفاء زر المسح حسب الصلاحية
+        const clearBtn = document.getElementById('clearChatBtn');
+        if (clearBtn) {
+            clearBtn.style.display = currentUser && currentUser.role === 'admin' ? 'inline-block' : 'none';
+        }
         
         document.getElementById('chatInput').focus();
         scrollChatToBottom();
@@ -6278,6 +6597,9 @@ function switchChatType() {
         if (usersList) usersList.style.display = 'none';
         if (chatHeaderTitle) chatHeaderTitle.innerHTML = '💬 محادثة المستخدمين';
         document.getElementById('chatInput').placeholder = 'اكتب رسالتك...';
+        // إظهار زر المسح للمدير فقط في العامة
+        const clearBtn = document.getElementById('clearChatBtn');
+        if (clearBtn) clearBtn.style.display = currentUser && currentUser.role === 'admin' ? 'inline-block' : 'none';
         displayChatMessages();
     } else if (value.startsWith('private_')) {
         const username = value.replace('private_', '');
@@ -6301,6 +6623,12 @@ function selectPrivateChatUser(username) {
         chatHeaderTitle.innerHTML = `💬 محادثة خاصة مع <span class="private-chat-badge">${username}</span>`;
     }
     document.getElementById('chatInput').placeholder = `رسالة خاصة إلى ${username}...`;
+
+    // إخفاء زر المسح للمحادثة الخاصة إذا لم يكن المدير
+    const clearBtn = document.getElementById('clearChatBtn');
+    if (clearBtn) {
+        clearBtn.style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
+    }
     
     highlightSelectedUser(username);
     loadPrivateChatMessages(username);
@@ -6323,6 +6651,8 @@ function highlightSelectedUser(username) {
     });
 }
 
+let onlineUsersRefreshTimer = null;
+
 async function loadOnlineUsersForChat() {
     const usersList = document.getElementById('onlineUsersForChat');
     if (!usersList) return;
@@ -6337,19 +6667,29 @@ async function loadOnlineUsersForChat() {
         const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
         const chatsSnapshot = await database.ref('/privateChats').once('value');
         const allChats = chatsSnapshot.val() || {};
+
+        // فرز: المتصلون أولاً ثم غير المتصلين
+        const userEntries = Object.values(allUsers).filter(u => u.username !== currentUser.name);
+        userEntries.sort((a, b) => {
+            const aOnline = !!onlineData[a.username];
+            const bOnline = !!onlineData[b.username];
+            if (aOnline !== bOnline) return bOnline - aOnline;
+            return (a.username || '').localeCompare(b.username || '');
+        });
         
         let html = '';
-        for (const [id, user] of Object.entries(allUsers)) {
-            if (user.username === currentUser.name) continue;
-            
-            const isOnline = onlineData[user.username] ? true : false;
+        for (const user of userEntries) {
+            const isOnline = !!onlineData[user.username];
             const dotClass = isOnline ? 'online-dot' : 'offline-dot';
-            
+            const statusLabel = isOnline ? 'متصل' : 'غير متصل';
+            const statusClass = isOnline ? 'online' : 'offline';
+
             let unreadCount = 0;
             for (const [chatKey, messages] of Object.entries(allChats)) {
-                if (chatKey.includes(currentUser.name) && chatKey.includes(user.username)) {
+                const parts = chatKey.split('_');
+                if (parts.includes(currentUser.name) && parts.includes(user.username)) {
                     const msgList = Object.values(messages);
-                    msgList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                    msgList.sort((a, b) => a.id - b.id);
                     const lastSeenId = lastSeen[chatKey] || 0;
                     for (const msg of msgList) {
                         if (msg.username !== currentUser.name && msg.id > lastSeenId) {
@@ -6366,13 +6706,23 @@ async function loadOnlineUsersForChat() {
                      onclick="selectPrivateChatUser('${user.username}')">
                     <span class="${dotClass}"></span>
                     <span style="flex:1;">${user.username}</span>
-                    <span style="font-size:10px;opacity:0.7;margin-right:5px;">${getRoleName(user.role)}</span>
+                    <span class="user-status-label ${statusClass}">${statusLabel}</span>
+                    <span style="font-size:10px;opacity:0.6;">${getRoleName(user.role)}</span>
                     ${unreadCount > 0 ? `<span style="background:#e53e3e;color:white;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:bold;">${unreadCount > 99 ? '99+' : unreadCount}</span>` : ''}
                 </div>
             `;
         }
         
-        usersList.innerHTML = html || '<p style="text-align:center;color:#888;">لا يوجد مستخدمين آخرين</p>';
+        usersList.innerHTML = html || '<p style="text-align:center;color:#888;font-size:12px;">لا يوجد مستخدمين آخرين</p>';
+
+        // تحديث تلقائي كل 30 ثانية
+        if (onlineUsersRefreshTimer) clearTimeout(onlineUsersRefreshTimer);
+        onlineUsersRefreshTimer = setTimeout(() => {
+            if (document.getElementById('privateChatUsersList')?.style.display !== 'none') {
+                loadOnlineUsersForChat();
+            }
+        }, 30000);
+
     } catch (e) {
         console.error('خطأ في تحميل المستخدمين:', e);
     }
@@ -6406,8 +6756,6 @@ function startPrivateChatListener(username) {
     
     database.ref(`/privateChats/${chatKey}`).off('value');
     
-    let lastMessageId = null;
-    
     database.ref(`/privateChats/${chatKey}`).on('value', (snapshot) => {
         const data = snapshot.val();
         const messages = data ? Object.values(data) : [];
@@ -6415,36 +6763,15 @@ function startPrivateChatListener(username) {
         
         privateChats[chatKey] = messages;
         
-        if (messages.length > 0) {
-            const latestMsg = messages[messages.length - 1];
-            
-            if (latestMsg.username !== currentUser.name && 
-                latestMsg.id !== lastMessageId) {
-                
-                lastMessageId = latestMsg.id;
-                
-                if (!chatOpen || 
-                    currentChatType !== 'private' || 
-                    currentPrivateChatUser !== username) {
-                    
-                    showPrivateMessageNotification(username, latestMsg.text);
-                    
-                    unreadCount++;
-                    updateUnreadBadge();
-                    
-                    playNotificationSound();
-                }
+        // تحديث العرض فقط إذا كانت المحادثة مفتوحة
+        if (currentChatType === 'private' && currentPrivateChatUser === username && chatOpen) {
+            displayChatMessages();
+            scrollChatToBottom();
+            if (messages.length > 0) {
+                const lastMsg = messages[messages.length - 1];
+                markChatAsRead(chatKey, lastMsg.id);
             }
         }
-        
-        if (currentChatType === 'private' && currentPrivateChatUser === username && chatOpen) {
-    displayChatMessages();
-    scrollChatToBottom();
-    if (messages.length > 0) {
-        const lastMsg = messages[messages.length - 1];
-        markChatAsRead(chatKey, lastMsg.id);
-    }
-}
     });
 }
 
@@ -6461,11 +6788,14 @@ function displayChatMessages() {
         let html = '';
         chatMessages.forEach(msg => {
             const isOwn = currentUser && msg.username === currentUser.name;
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            const canDelete = isOwn || isAdmin;
             const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
             html += `
-            <div class="chat-message ${isOwn ? 'own' : 'other'}">
+            <div class="chat-message ${isOwn ? 'own' : 'other'}" id="msg-${msg.id}">
+                ${canDelete ? `<button class="msg-delete-btn" onclick="deleteMessage('${msg.id}', 'general')" title="حذف الرسالة">🗑</button>` : ''}
                 <div class="msg-user">${msg.username} ${isOwn ? '(أنت)' : ''}</div>
-                <div>${msg.text}</div>
+                ${renderMessageContent(msg)}
                 <div class="msg-time">${time}</div>
             </div>`;
         });
@@ -6482,11 +6812,15 @@ function displayChatMessages() {
         let html = `<div class="private-msg-indicator">🔒 محادثة خاصة مع ${currentPrivateChatUser}</div>`;
         messages.forEach(msg => {
             const isOwn = currentUser && msg.username === currentUser.name;
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            const canDelete = isOwn || isAdmin;
             const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+            const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
             html += `
-            <div class="chat-message ${isOwn ? 'own' : 'other'}">
+            <div class="chat-message ${isOwn ? 'own' : 'other'}" id="msg-${msg.id}">
+                ${canDelete ? `<button class="msg-delete-btn" onclick="deleteMessage('${msg.id}', 'private', '${chatKey}')" title="حذف الرسالة">🗑</button>` : ''}
                 <div class="msg-user">${msg.username} ${isOwn ? '(أنت)' : ''}</div>
-                <div>${msg.text}</div>
+                ${renderMessageContent(msg)}
                 <div class="msg-time">${time}</div>
             </div>`;
         });
@@ -6511,6 +6845,216 @@ function scrollChatToBottom() {
     setTimeout(() => {
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }, 100);
+}
+
+// ========== حذف الرسالة ==========
+async function deleteMessage(msgId, type, chatKey = null) {
+    if (!currentUser) return;
+    if (!confirm('هل تريد حذف هذه الرسالة للجميع؟')) return;
+
+    try {
+        if (type === 'general') {
+            const idx = chatMessages.findIndex(m => String(m.id) === String(msgId));
+            if (idx === -1) return;
+
+            const isOwn = chatMessages[idx].username === currentUser.name;
+            const isAdmin = currentUser.role === 'admin';
+            if (!isOwn && !isAdmin) return;
+
+            // حذف كلي من المصفوفة
+            chatMessages.splice(idx, 1);
+            await saveChatMessagesToFirebase();
+            displayChatMessages();
+
+        } else if (type === 'private' && chatKey) {
+            const isAdmin = currentUser.role === 'admin';
+            const msgs = privateChats[chatKey] || [];
+            const idx = msgs.findIndex(m => String(m.id) === String(msgId));
+            if (idx === -1) return;
+
+            const isOwn = msgs[idx].username === currentUser.name;
+            if (!isOwn && !isAdmin) return;
+
+            // حذف كلي من المصفوفة
+            msgs.splice(idx, 1);
+            privateChats[chatKey] = msgs;
+
+            if (msgs.length === 0) {
+                await database.ref(`/privateChats/${chatKey}`).remove();
+            } else {
+                const obj = {};
+                msgs.forEach(m => { obj[m.id] = m; });
+                await database.ref(`/privateChats/${chatKey}`).set(obj);
+            }
+            displayChatMessages();
+        }
+    } catch (e) {
+        console.error('خطأ في حذف الرسالة:', e);
+        alert('حدث خطأ أثناء الحذف');
+    }
+}
+
+// ========== إرسال الملفات والصور ==========
+
+function getFileIcon(type) {
+    if (type.startsWith('image/')) return '🖼️';
+    if (type === 'application/pdf') return '📄';
+    if (type.includes('word') || type.includes('document')) return '📝';
+    if (type.includes('excel') || type.includes('sheet')) return '📊';
+    return '📎';
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function renderMessageContent(msg) {
+    if (msg.fileUrl) {
+        if (msg.fileType && msg.fileType.startsWith('image/')) {
+            return `<img class="msg-image" src="${msg.fileUrl}" alt="${msg.fileName || 'صورة'}" onclick="openImgPreview('${msg.fileUrl}', '${msg.fileName || 'صورة'}')">`;
+        } else {
+            const icon = getFileIcon(msg.fileType || '');
+            const size = msg.fileSize ? formatFileSize(msg.fileSize) : '';
+            return `<a class="msg-file" href="${msg.fileUrl}" target="_blank" download="${msg.fileName || 'ملف'}">
+                <span class="msg-file-icon">${icon}</span>
+                <span class="msg-file-info">
+                    <span class="msg-file-name">${msg.fileName || 'ملف'}</span>
+                    ${size ? `<span class="msg-file-size">${size}</span>` : ''}
+                </span>
+                <span style="margin-right:auto;font-size:11px;opacity:0.7;">⬇️ تحميل</span>
+            </a>`;
+        }
+    }
+    return `<div>${msg.text || ''}</div>`;
+}
+
+function openImgPreview(url, name) {
+    const overlay = document.getElementById('imgPreviewOverlay');
+    document.getElementById('imgPreviewFull').src = url;
+    const dl = document.getElementById('imgPreviewDownload');
+    dl.href = url;
+    dl.download = name || 'صورة';
+    overlay.classList.add('open');
+}
+
+function closeImgPreview(e) {
+    if (e && e.target !== document.getElementById('imgPreviewOverlay') && 
+        !e.target.classList.contains('img-preview-close')) return;
+    document.getElementById('imgPreviewOverlay').classList.remove('open');
+    document.getElementById('imgPreviewFull').src = '';
+}
+
+async function handleFileAttach(input) {
+    if (!input.files || !input.files[0]) return;
+    if (!currentUser) return;
+
+    const file = input.files[0];
+    input.value = '';
+
+    // حد الحجم: صور 5MB، مستندات 1MB
+    const maxSize = file.type.startsWith('image/') ? 5 * 1024 * 1024 : 1 * 1024 * 1024;
+    if (file.size > maxSize) {
+        alert('حجم الملف كبير جداً. الحد الأقصى: صور 5MB، مستندات 1MB');
+        return;
+    }
+
+    const progressBar = document.getElementById('uploadProgressBar');
+    const progressFill = document.getElementById('uploadProgressFill');
+    progressBar.style.display = 'block';
+    progressFill.style.width = '10%';
+
+    try {
+        const isImage = file.type.startsWith('image/');
+        let fileUrl = '';
+        let base64Data = '';
+
+        if (isImage) {
+            // ===== رفع الصور عبر ImgBB (مجاني) =====
+            // مفتاح ImgBB المجاني - يمكن الحصول على واحد من imgbb.com
+            const IMGBB_API_KEY = 'c279133d64ee94d11687031859269ce4';
+
+            // تحويل الصورة إلى base64
+            base64Data = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+
+            progressFill.style.width = '40%';
+
+            if (IMGBB_API_KEY === 'YOUR_IMGBB_API_KEY') {
+                // إذا لم يُضَف مفتاح ImgBB، نستخدم Base64 مباشرة
+                fileUrl = 'data:' + file.type + ';base64,' + base64Data;
+            } else {
+                const formData = new FormData();
+                formData.append('image', base64Data);
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error('فشل رفع الصورة على ImgBB');
+                fileUrl = json.data.url;
+            }
+
+        } else {
+            // ===== المستندات: تخزين كـ Base64 في Firebase Database =====
+            if (file.size > 1 * 1024 * 1024) {
+                progressBar.style.display = 'none';
+                alert('حجم المستند كبير جداً. الحد الأقصى للمستندات 1MB');
+                return;
+            }
+            base64Data = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+            fileUrl = base64Data; // Data URL مباشرة
+        }
+
+        progressFill.style.width = '90%';
+
+        const timestamp = Date.now();
+        const message = {
+            id: timestamp,
+            username: currentUser.name,
+            text: '',
+            fileUrl: fileUrl,
+            fileName: file.name,
+            fileType: file.type,
+            fileSize: file.size,
+            timestamp: new Date().toISOString()
+        };
+
+        progressFill.style.width = '100%';
+        setTimeout(() => { progressBar.style.display = 'none'; }, 400);
+
+        if (currentChatType === 'general') {
+            chatMessages.push(message);
+            if (chatMessages.length > 100) chatMessages.shift();
+            await saveChatMessagesToFirebase();
+            displayChatMessages();
+        } else if (currentChatType === 'private' && currentPrivateChatUser) {
+            const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
+            if (!privateChats[chatKey]) privateChats[chatKey] = [];
+            privateChats[chatKey].push(message);
+            const obj = {};
+            privateChats[chatKey].forEach(m => { obj[m.id] = m; });
+            await database.ref(`/privateChats/${chatKey}`).set(obj);
+            displayChatMessages();
+        }
+
+        scrollChatToBottom();
+
+    } catch (e) {
+        progressBar.style.display = 'none';
+        console.error('خطأ في رفع الملف:', e);
+        alert('حدث خطأ أثناء إرسال الملف: ' + e.message);
+    }
 }
 
 async function sendMessage() {
@@ -6645,6 +7189,10 @@ async function clearChat() {
     }
     
     if (currentChatType === 'private') {
+        if (currentUser.role !== 'admin') {
+            showMessage('❌ فقط المدير يمكنه مسح المحادثة الخاصة', true);
+            return;
+        }
         if (!currentPrivateChatUser) {
             showMessage('❌ اختر مستخدم أولاً', true);
             return;
@@ -8796,20 +9344,22 @@ async function loadUnreadPrivateMessages() {
             const msgList = Object.values(messages);
             if (msgList.length === 0) continue;
             
+            // تحقق أن المستخدم الحالي طرف في هذه المحادثة
             const users = chatKey.split('_');
+            if (!users.includes(currentUser.name)) continue;
+            
             const otherUser = users.find(u => u !== currentUser.name);
             if (!otherUser) continue;
             
             msgList.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             
             const lastMsg = msgList[msgList.length - 1];
-            
             const lastSeenId = lastSeen[chatKey] || 0;
             
+            // تحقق أن الرسالة مرسلة إلى المستخدم الحالي (ليس منه) وأنها جديدة
             if (lastMsg.username !== currentUser.name && lastMsg.id > lastSeenId) {
                 showPrivateMessageNotification(otherUser, lastMsg.text);
                 hasNewMessages = true;
-                
                 lastSeen[chatKey] = lastMsg.id;
             }
         }
@@ -8821,6 +9371,103 @@ async function loadUnreadPrivateMessages() {
     } catch (e) {
         console.error('خطأ في تحميل الرسائل غير المقروءة:', e);
     }
+}
+
+// مستمع عالمي للرسائل الخاصة الواردة للمستخدم الحالي في الوقت الفعلي
+let globalPrivateListenerRef = null;
+
+function startGlobalPrivateListener() {
+    if (!currentUser) return;
+
+    // إيقاف أي مستمع سابق
+    if (globalPrivateListenerRef) {
+        globalPrivateListenerRef.off('child_added');
+        globalPrivateListenerRef = null;
+    }
+
+    // نستمع على كل chatKey يبدأ برسائل جديدة فقط لهذا المستخدم
+    // نستخدم child_added على مسار privateChats لكل محادثة تخص المستخدم الحالي
+    const myName = currentUser.name;
+    const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+
+    // نجمع أولاً المحادثات الموجودة حتى لا تظهر إشعارات قديمة
+    database.ref('/privateChats').once('value', (snap) => {
+        const allChats = snap.val() || {};
+
+        for (const [chatKey, messages] of Object.entries(allChats)) {
+            if (!messages) continue;
+            // تحقق دقيق: المحادثة يجب أن تحتوي اسم المستخدم كجزء منفصل
+            const parts = chatKey.split('_');
+            if (!parts.includes(myName)) continue;
+
+            const msgList = Object.values(messages);
+            if (msgList.length === 0) continue;
+            msgList.sort((a, b) => a.id - b.id);
+            const lastMsg = msgList[msgList.length - 1];
+
+            // حفظ آخر رسالة موجودة حتى لا تُعاد معالجتها
+            if (!lastSeen[chatKey] || lastMsg.id > lastSeen[chatKey]) {
+                // فقط للرسائل التي أرسلها الطرف الآخر
+                if (lastMsg.username !== myName) {
+                    // لا نحدّث lastSeen هنا — نتركه للمستخدم حتى يفتح المحادثة
+                }
+                // نحفظ الـ id كحد أدنى لتجنب إعادة إشعارات الرسائل القديمة
+                if (!lastSeen[chatKey]) {
+                    lastSeen[chatKey] = lastMsg.id;
+                }
+            }
+        }
+        localStorage.setItem('lastSeenMessages', JSON.stringify(lastSeen));
+
+        // الآن نضع المستمعين على كل محادثة تخص هذا المستخدم
+        attachPrivateListeners(myName);
+    });
+}
+
+function attachPrivateListeners(myName) {
+    // نستمع على child_added لكل محادثة تخص المستخدم الحالي
+    // نستخدم مستمعاً واحداً على /privateChats ونُصفّي داخله
+    globalPrivateListenerRef = database.ref('/privateChats');
+
+    globalPrivateListenerRef.on('child_added', (chatSnap) => {
+        const chatKey = chatSnap.key;
+        const parts = chatKey.split('_');
+
+        // تحقق دقيق أن المستخدم الحالي طرف في هذه المحادثة
+        if (!parts.includes(myName)) return;
+
+        const otherUser = parts.find(u => u !== myName);
+        if (!otherUser) return;
+
+        // الآن استمع على child_added للرسائل الجديدة داخل هذه المحادثة
+        database.ref(`/privateChats/${chatKey}`).on('child_added', (msgSnap) => {
+            if (!currentUser || currentUser.name !== myName) return;
+
+            const msg = msgSnap.val();
+            if (!msg) return;
+
+            // تجاهل رسائلنا نحن
+            if (msg.username === myName) return;
+
+            // تحقق أنها رسالة جديدة لم تُعالَج بعد
+            const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+            const lastSeenId = lastSeen[chatKey] || 0;
+
+            if (msg.id <= lastSeenId) return;
+
+            // لا تُظهر الإشعار إذا كانت المحادثة مفتوحة حالياً
+            const chatAlreadyOpen = chatOpen &&
+                currentChatType === 'private' &&
+                currentPrivateChatUser === otherUser;
+
+            if (!chatAlreadyOpen) {
+                showPrivateMessageNotification(otherUser, msg.text);
+                unreadCount++;
+                updateUnreadBadge();
+                playNotificationSound();
+            }
+        });
+    });
 }
 
 function markChatAsRead(chatKey, messageId) {
