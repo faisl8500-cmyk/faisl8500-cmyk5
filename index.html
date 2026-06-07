@@ -2245,17 +2245,217 @@
             </div>
         </div>
     </div>
-<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
-    <div style="background: var(--card-bg); border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: fadeInUp 0.4s ease;">
-        <div style="font-size: 50px; margin-bottom: 20px; animation: bounce 1s infinite;">⏳</div>
-        <h2 style="color: #667eea; margin-bottom: 10px;">جاري تسجيل الدخول</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 20px;">يرجى الانتظار...</p>
-        <div style="width: 200px; height: 6px; background: var(--border-color); border-radius: 10px; overflow: hidden; margin: 0 auto;">
-            <div id="loadingBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px; transition: width 0.3s ease;"></div>
+<style>
+#loadingOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    overflow: hidden;
+}
+
+/* نجوم متحركة في الخلفية */
+#loadingOverlay .lo-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+#loadingOverlay .lo-star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    animation: loTwinkle var(--d, 3s) infinite ease-in-out;
+    opacity: 0;
+}
+@keyframes loTwinkle {
+    0%,100% { opacity: 0; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.8); }
+}
+
+/* البطاقة الرئيسية */
+#loadingOverlay .lo-card {
+    position: relative;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 28px;
+    padding: 44px 40px 36px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+    animation: loCardIn 0.5s cubic-bezier(.22,1,.36,1);
+}
+@keyframes loCardIn {
+    from { opacity:0; transform: translateY(30px) scale(0.95); }
+    to   { opacity:1; transform: translateY(0)    scale(1);    }
+}
+
+/* الأيقونة الدائرية الدوارة */
+#loadingOverlay .lo-icon-wrap {
+    position: relative;
+    width: 90px; height: 90px;
+    margin: 0 auto 24px;
+}
+#loadingOverlay .lo-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    animation: loSpin var(--spd, 1.4s) linear infinite;
+}
+#loadingOverlay .lo-ring-1 {
+    border-top-color: #667eea;
+    border-right-color: rgba(102,126,234,0.3);
+    --spd: 1.2s;
+}
+#loadingOverlay .lo-ring-2 {
+    inset: 8px;
+    border-bottom-color: #764ba2;
+    border-left-color: rgba(118,75,162,0.3);
+    --spd: 1.8s;
+    animation-direction: reverse;
+}
+#loadingOverlay .lo-ring-3 {
+    inset: 16px;
+    border-top-color: #a78bfa;
+    --spd: 2.4s;
+}
+#loadingOverlay .lo-icon-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    animation: loPulse 2s ease-in-out infinite;
+}
+@keyframes loSpin  { to { transform: rotate(360deg); } }
+@keyframes loPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+
+/* العنوان */
+#loadingOverlay .lo-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+#loadingOverlay .lo-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 26px;
+}
+
+/* شريط التقدم */
+#loadingOverlay .lo-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    position: relative;
+}
+#loadingOverlay .lo-bar-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: loShimmer 1.6s infinite;
+}
+@keyframes loShimmer {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(100%);  }
+}
+#loadingOverlay #loadingBar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #667eea, #a78bfa, #764ba2);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(102,126,234,0.7);
+}
+
+/* نص الحالة */
+#loadingOverlay #loadingStatus {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0;
+    min-height: 18px;
+    transition: opacity 0.3s;
+}
+
+/* نقاط تتابعية */
+#loadingOverlay .lo-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+}
+#loadingOverlay .lo-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(102,126,234,0.6);
+    animation: loDot 1.4s ease-in-out infinite;
+}
+#loadingOverlay .lo-dot:nth-child(2) { animation-delay: 0.2s; }
+#loadingOverlay .lo-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes loDot {
+    0%,80%,100% { transform: scale(0.7); opacity:0.4; }
+    40%          { transform: scale(1.2); opacity:1;   background:#a78bfa; }
+}
+</style>
+
+<div id="loadingOverlay">
+    <!-- نجوم الخلفية تُولَّد بـ JS -->
+    <div class="lo-stars" id="loStars"></div>
+
+    <div class="lo-card">
+        <!-- الأيقونة الدوارة -->
+        <div class="lo-icon-wrap">
+            <div class="lo-ring lo-ring-1"></div>
+            <div class="lo-ring lo-ring-2"></div>
+            <div class="lo-ring lo-ring-3"></div>
+            <div class="lo-icon-center">🔐</div>
         </div>
-        <p id="loadingStatus" style="font-size: 12px; color: #888; margin-top: 10px;">جارٍ الاتصال بقاعدة البيانات...</p>
+
+        <div class="lo-title">جارٍ تسجيل الدخول</div>
+        <div class="lo-subtitle">يرجى الانتظار لحظة...</div>
+
+        <div class="lo-bar-wrap">
+            <div class="lo-bar-glow"></div>
+            <div id="loadingBar"></div>
+        </div>
+        <p id="loadingStatus">جارٍ الاتصال بقاعدة البيانات...</p>
+
+        <div class="lo-dots">
+            <div class="lo-dot"></div>
+            <div class="lo-dot"></div>
+            <div class="lo-dot"></div>
+        </div>
     </div>
 </div>
+
+<script>
+// توليد النجوم
+(function(){
+    var container = document.getElementById('loStars');
+    if (!container) return;
+    for (var i = 0; i < 60; i++) {
+        var s = document.createElement('div');
+        s.className = 'lo-star';
+        s.style.left   = Math.random()*100 + '%';
+        s.style.top    = Math.random()*100 + '%';
+        s.style.setProperty('--d', (2 + Math.random()*4).toFixed(1) + 's');
+        s.style.animationDelay = (Math.random()*4).toFixed(1) + 's';
+        s.style.width  = s.style.height = (1 + Math.random()*2).toFixed(1) + 'px';
+        container.appendChild(s);
+    }
+})();
+</script>
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <div class="login-header">
@@ -2266,7 +2466,16 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px; color: #888;">📌 الإصدار 2.8</p>
+                    <p style="font-size: 10px;">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.9</span></p>
+                    <style>
+                        @keyframes blinkGreenBlack {
+                            0%,49%  { color: #00cc44; text-shadow: 0 0 8px #00cc44; }
+                            50%,100%{ color: #000000; text-shadow: none; }
+                        }
+                        #versionBlink {
+                            animation: blinkGreenBlack 1s step-start infinite;
+                        }
+                    </style>
                 </div>
             </div>
             <div class="form-group">
@@ -2300,7 +2509,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.8
+    📌 الإصدار 2.9
 </div>
             </div>
             <div class="user-bar">
@@ -2323,7 +2532,7 @@
                </div>
                 <div>
                     <button class="btn-refresh" id="refreshDataBtn" onclick="refreshAllData()">🔄 تحديث البيانات</button>
-                    <button class="btn-logout" onclick="logout()">🚪 تسجيل خروج</button>
+                    <button class="btn-logout" onclick="_confirmLogout()">🚪 تسجيل خروج</button>
                 </div>
             </div>
 <div id="memoryStatsContainer" class="stats-container" style="margin-bottom: 20px;"></div>
@@ -2521,12 +2730,12 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.8</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.9</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
             <div>
-                <button class="btn btn-back" onclick="logout()">🚪 تسجيل خروج</button>
+                <button class="btn btn-back" onclick="_confirmLogout()">🚪 تسجيل خروج</button>
             </div>
         </div>
         <div class="form-group">
@@ -3614,7 +3823,7 @@ function stopDigitalClock() {
             else { martyrs.push(item.data); await saveMartyrsToFirebase(); }
             trashBin = trashBin.filter(t => t.id !== trashId);
             await saveTrashBinToFirebase();
-            await addAuditLog('استعادة', item.type, item.originalId, item.data.name, 'تم استعادة السجل من سلة المحذوفات');
+            await addAuditLog('استعادة', item.type, item.originalId, item.data.name, `تم استعادة السجل من سلة المحذوفات بواسطة ${currentUser ? currentUser.name : 'غير معروف'}`);
             return true;
         }
 
@@ -3623,7 +3832,7 @@ function stopDigitalClock() {
             if (!item) return false;
             trashBin = trashBin.filter(t => t.id !== trashId);
             await saveTrashBinToFirebase();
-            await addAuditLog('حذف نهائي', item.type, item.originalId, item.data.name, 'تم حذف السجل نهائياً');
+            await addAuditLog('حذف نهائي', item.type, item.originalId, item.data.name, `تم حذف السجل نهائياً بواسطة ${currentUser ? currentUser.name : 'غير معروف'}`);
             return true;
         }
 
@@ -5222,6 +5431,7 @@ if (!isValidMartyrNationalId(nationalId)) {
                 salaryType: document.getElementById('martyrSalaryType').value
             });
             await saveMartyrsToFirebase();
+            await addAuditLog('إضافة', 'martyr', id, name, `تم إضافة ${status} جديد`);
             clearMartyrForm();
             showMessage('تمت الإضافة بنجاح');
             backToMenu();
@@ -5342,9 +5552,19 @@ if (!isValidMartyrNationalId(nationalId)) {
             
             showConfirmModal(`نقل "${record.name}" إلى سلة المحذوفات؟`, async () => {
                 await addToTrash(type, record, currentUser.name);
-                if (type === 'military') { militaries = militaries.filter(x => x.id.toString() !== id); await saveMilitariesToFirebase(); }
-                else if (type === 'civilian') { civilians = civilians.filter(x => x.id.toString() !== id); await saveCiviliansToFirebase(); }
-                else { martyrs = martyrs.filter(x => x.id.toString() !== id); await saveMartyrsToFirebase(); }
+                if (type === 'military') {
+                    militaries = militaries.filter(x => x.id.toString() !== id);
+                    await saveMilitariesToFirebase();
+                    await addAuditLog('حذف', 'military', record.id, record.name, `تم حذف العسكري ونقله إلى سلة المحذوفات بواسطة ${currentUser.name}`);
+                } else if (type === 'civilian') {
+                    civilians = civilians.filter(x => x.id.toString() !== id);
+                    await saveCiviliansToFirebase();
+                    await addAuditLog('حذف', 'civilian', record.id, record.name, `تم حذف الموظف ونقله إلى سلة المحذوفات بواسطة ${currentUser.name}`);
+                } else {
+                    martyrs = martyrs.filter(x => x.id.toString() !== id);
+                    await saveMartyrsToFirebase();
+                    await addAuditLog('حذف', 'martyr', record.id, record.name, `تم حذف الشهيد/الجريح ونقله إلى سلة المحذوفات بواسطة ${currentUser.name}`);
+                }
                 showMessage('تم النقل إلى سلة المحذوفات');
                 search();
             });
@@ -5726,7 +5946,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.8</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.9</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -5746,7 +5966,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.8</p>' +
+   '<p>فرع المرقب - الإصدار 2.9</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -7343,54 +7563,136 @@ function calculateMemoryUsage() {
 function displayMemoryStats() {
     const statsContainer = document.getElementById('memoryStatsContainer');
     if (!statsContainer) return;
-    
+
     const stats = calculateMemoryUsage();
-    
-    let html = '';
-    
-    html += `
-    <div class="memory-main">
-        <h4>💾 إجمالي حجم الذاكرة للبيانات</h4>
-        <div class="memory-value">${formatBytes(stats.totalBytes)}</div>
-        <div class="memory-unit">الحجم التقديري للبيانات المحملة حالياً</div>
-        <div class="memory-breakdown">
-            <div>🎖️ عسكريين<br>${formatBytes(stats.sizes.militaries)}</div>
-            <div>👨‍💼 موظفين<br>${formatBytes(stats.sizes.civilians)}</div>
-            <div>🕊️ شهداء/جرحى<br>${formatBytes(stats.sizes.martyrs)}</div>
-        </div>
+
+    // رتب الضباط
+    const officerRanks = [
+        'ملازم تان','ملازم أول','نقيب','رائد','مقدم','عقيد','عميد','لواء',
+        'فريق تان','فريق أول',
+        'ملازم تان شرف','ملازم أول شرف','نقيب شرف','رائد شرف',
+        'مقدم شرف','عقيد شرف','عميد شرف'
+    ];
+
+    const officersCount  = militaries.filter(m => officerRanks.includes(m.rank)).length;
+    const soldiersCount  = militaries.filter(m => !officerRanks.includes(m.rank)).length;
+    const civiliansCount = civilians.length;
+    const martyrsCount   = martyrs.length;
+    const totalAll       = officersCount + soldiersCount + civiliansCount + martyrsCount;
+
+    const cards = [
+        {
+            icon: '🎖️',
+            label: 'الضباط',
+            count: officersCount,
+            color1: '#1e3c72',
+            color2: '#2a5298',
+            bar: officersCount,
+        },
+        {
+            icon: '🪖',
+            label: 'باقي العسكريين',
+            count: soldiersCount,
+            color1: '#2c3e50',
+            color2: '#3498db',
+            bar: soldiersCount,
+        },
+        {
+            icon: '👨‍💼',
+            label: 'الموظفين',
+            count: civiliansCount,
+            color1: '#11998e',
+            color2: '#38ef7d',
+            bar: civiliansCount,
+        },
+        {
+            icon: '🕊️',
+            label: 'الشهداء والجرحى',
+            count: martyrsCount,
+            color1: '#800000',
+            color2: '#cc0000',
+            bar: martyrsCount,
+        },
+    ];
+
+    let html = `
+    <style>
+        .new-stats-grid {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: nowrap;
+        }
+        .new-stat-card {
+            flex: 1;
+            border-radius: 12px;
+            padding: 10px 6px 8px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+            transition: transform 0.2s ease;
+            min-width: 0;
+        }
+        .new-stat-card:hover { transform: translateY(-2px); }
+        .new-stat-card .ns-icon {
+            font-size: 18px;
+            margin-bottom: 3px;
+            display: block;
+        }
+        .new-stat-card .ns-count {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+        .new-stat-card .ns-label {
+            font-size: 10px;
+            opacity: 0.9;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .new-stats-total {
+            background: var(--user-bar-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .new-stats-total .nst-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        .new-stats-total .nst-count {
+            font-size: 20px;
+            font-weight: 800;
+            color: #667eea;
+            background: rgba(102,126,234,0.1);
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+    </style>
+    <div class="new-stats-grid">`;
+
+    cards.forEach(function(c) {
+        html += `
+        <div class="new-stat-card" style="background: linear-gradient(135deg, ${c.color1}, ${c.color2});">
+            <span class="ns-icon">${c.icon}</span>
+            <div class="ns-count">${c.count}</div>
+            <div class="ns-label">${c.label}</div>
+        </div>`;
+    });
+
+    html += `</div>
+    <div class="new-stats-total">
+        <div class="nst-label">📊 الإجمالي</div>
+        <div class="nst-count">${totalAll}</div>
     </div>`;
-    
-    html += `
-    <div class="stats-card">
-        <h4>📊 عدد السجلات</h4>
-        <div class="stats-details">
-            <div class="stat-item">
-                <label>🎖️ عسكريين</label>
-                <span>${stats.counts.militaries}</span>
-            </div>
-            <div class="stat-item">
-                <label>👨‍💼 موظفين</label>
-                <span>${stats.counts.civilians}</span>
-            </div>
-            <div class="stat-item">
-                <label>🕊️ شهداء/جرحى</label>
-                <span>${stats.counts.martyrs}</span>
-            </div>
-            <div class="stat-item">
-                <label>👥 مستخدمين</label>
-                <span>${stats.counts.users}</span>
-            </div>
-            <div class="stat-item">
-                <label>📋 سجلات</label>
-                <span>${stats.counts.auditLogs}</span>
-            </div>
-            <div class="stat-item">
-                <label>🗑️ محذوفات</label>
-                <span>${stats.counts.trashBin}</span>
-            </div>
-        </div>
-    </div>`;
-    
+
     statsContainer.innerHTML = html;
 }
 function validateNationalId(input, errorDivId) {
@@ -9600,6 +9902,144 @@ window.addEventListener('offline', updateLoginConnectionStatus);
     
     showReportTable(headers, rows);
 }
+
+// ========== دعم زر الرجوع على الهاتف ==========
+
+// متغير لتتبع الصفحة الحالية
+var _currentAppPage = 'login'; // login | menu | other
+
+// نضع حالة أولية في تاريخ المتصفح عند تحميل الصفحة
+history.replaceState({ appPage: 'base' }, '');
+
+// دالة تُستدعى كلما انتقل المستخدم لصفحة جديدة
+function _trackPage(pageName) {
+    _currentAppPage = pageName;
+    if (pageName === 'login') {
+        history.replaceState({ appPage: 'base' }, '');
+    } else {
+        history.pushState({ appPage: pageName }, '');
+    }
+}
+
+// اعتراض hideAllPages لتتبع الانتقالات
+var _origHideAllPages = hideAllPages;
+hideAllPages = function() {
+    _origHideAllPages();
+};
+
+// اعتراض backToMenu
+var _origBackToMenu = backToMenu;
+backToMenu = function() {
+    _origBackToMenu();
+    _currentAppPage = 'menu';
+    // لا نضيف تاريخ جديد — نترك popstate يعمل طبيعياً
+};
+
+// اعتراض كل دوال الانتقال لإضافة تتبع
+var _navFunctions = [
+    ['showAddMilitary',     'other'],
+    ['showAddCivilian',     'other'],
+    ['showAddMartyrs',      'other'],
+    ['showSearch',          'other'],
+    ['showReports',         'other'],
+    ['showAuditLog',        'other'],
+    ['showTrash',           'other'],
+    ['showUsersManagement', 'other'],
+    ['showOnlineUsers',     'other'],
+];
+_navFunctions.forEach(function(item) {
+    var fnName = item[0];
+    var orig = window[fnName];
+    if (typeof orig === 'function') {
+        window[fnName] = function() {
+            orig.apply(this, arguments);
+            _currentAppPage = 'other';
+            history.pushState({ appPage: 'other' }, '');
+        };
+    }
+});
+
+// حدث زر الرجوع
+window.addEventListener('popstate', function(e) {
+    if (!currentUser) return; // لم يسجل دخول بعد
+
+    if (_currentAppPage === 'other') {
+        // رجوع من صفحة فرعية → القائمة الرئيسية
+        _origHideAllPages();
+        document.getElementById('mainMenu').style.display = 'block';
+        _currentAppPage = 'menu';
+        if (typeof startTimers === 'function') startTimers();
+        // أضف حالة للقائمة حتى نتمكن من اكتشاف الرجوع منها
+        history.pushState({ appPage: 'menu' }, '');
+
+    } else if (_currentAppPage === 'menu') {
+        // رجوع من القائمة الرئيسية → اسأل عن الخروج
+        // أعد الحالة حتى لا تتغير الصفحة
+        history.pushState({ appPage: 'menu' }, '');
+        _showBackExitDialog();
+    }
+});
+
+// مودال تأكيد الخروج
+function _confirmLogout() {
+    _showBackExitDialog();
+}
+
+function _showBackExitDialog() {
+    // احذف القديم إن وجد
+    var old = document.getElementById('_backExitModal');
+    if (old) old.remove();
+
+    var modal = document.createElement('div');
+    modal.id = '_backExitModal';
+    modal.style.cssText = [
+        'position:fixed',
+        'top:0','left:0','right:0','bottom:0',
+        'z-index:999999',
+        'background:rgba(0,0,0,0.65)',
+        'display:flex',
+        'align-items:center',
+        'justify-content:center',
+        'padding:20px'
+    ].join(';');
+
+    modal.innerHTML =
+        '<div style="background:var(--card-bg,#fff);color:var(--text-color,#333);border-radius:20px;padding:30px 24px;width:100%;max-width:300px;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.5);">' +
+            '<div style="font-size:52px;margin-bottom:10px;">🚪</div>' +
+            '<h3 style="font-size:19px;margin-bottom:8px;font-weight:bold;">تسجيل الخروج</h3>' +
+            '<p style="font-size:14px;color:var(--text-secondary,#666);margin-bottom:22px;line-height:1.7;">هل تريد تسجيل الخروج<br>من النظام؟</p>' +
+            '<div style="display:flex;gap:10px;">' +
+                '<button id="_exitNo"  style="flex:1;padding:13px 0;border-radius:11px;border:2px solid var(--border-color,#ddd);background:var(--card-bg,#fff);color:var(--text-color,#333);font-size:15px;font-weight:bold;cursor:pointer;">❌ لا</button>' +
+                '<button id="_exitYes" style="flex:1;padding:13px 0;border-radius:11px;border:none;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;font-size:15px;font-weight:bold;cursor:pointer;">✅ نعم</button>' +
+            '</div>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+
+    document.getElementById('_exitNo').addEventListener('click', function() {
+        modal.remove();
+    });
+
+    document.getElementById('_exitYes').addEventListener('click', function() {
+        modal.remove();
+        logout();
+    });
+}
+
+// تتبع تسجيل الدخول الناجح: عند ظهور mainMenu نضبط الحالة
+(function() {
+    var observer = new MutationObserver(function() {
+        var menu = document.getElementById('mainMenu');
+        if (menu && menu.style.display === 'block' && _currentAppPage !== 'menu' && _currentAppPage !== 'other') {
+            _currentAppPage = 'menu';
+            history.pushState({ appPage: 'menu' }, '');
+        }
+    });
+    var menu = document.getElementById('mainMenu');
+    if (menu) observer.observe(menu, { attributes: true, attributeFilter: ['style'] });
+})();
+
+// ========== نهاية دعم زر الرجوع ==========
    </script>
 </body>
 </html>
