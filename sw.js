@@ -1,44 +1,49 @@
-const CACHE_NAME = 'far-almorqb-v2.1.1';
+// sw.js - Service Worker لمنظومة فرع المرقب
+const CACHE_NAME = 'far-almorqb-v1';
+
+// الملفات التي سيتم تخزينها مؤقتاً
 const urlsToCache = [
   '/faisl8500-cmyk5/',
   '/faisl8500-cmyk5/index.html',
   '/faisl8500-cmyk5/manifest.json',
-  '/faisl8500-cmyk5/logo.png',
-  '/faisl8500-cmyk5/icon-192.png',
-  '/faisl8500-cmyk5/icon-512.png'
+  '/faisl8500-cmyk5/logo.png'
 ];
 
-// تثبيت Service Worker وتخزين الملفات الأساسية
+// تثبيت الـ Service Worker
 self.addEventListener('install', event => {
+  console.log('[SW] Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        console.log('[SW] Caching files');
+        return cache.addAll(urlsToCache);
+      })
       .then(() => self.skipWaiting())
   );
 });
 
-// استراتيجية: محاولة الشبكة أولاً، ثم العودة إلى Cache
+// استرجاع الملفات من الكاش أو الشبكة
 self.addEventListener('fetch', event => {
   event.respondWith(
-    fetch(event.request)
+    caches.match(event.request)
       .then(response => {
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-        return response;
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
       })
-      .catch(() => caches.match(event.request))
   );
 });
 
-// تنظيف التخزين المؤقت القديم عند تنشيط Service Worker جديد
+// تنشيط الـ Service Worker وتنظيف الكاش القديم
 self.addEventListener('activate', event => {
+  console.log('[SW] Activating...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
           if (cache !== CACHE_NAME) {
+            console.log('[SW] Deleting old cache:', cache);
             return caches.delete(cache);
           }
         })
