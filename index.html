@@ -825,7 +825,7 @@
         .confirm-modal {
             display: none;
             position: fixed;
-            z-index: 2000;
+            z-index: 999999;
             left: 0;
             top: 0;
             width: 100%;
@@ -970,12 +970,18 @@
         }
 
         .result-actions {
-            margin-top: 20px;
+            margin-top: 14px;
             display: flex;
-            gap: 10px;
+            gap: 5px;
             justify-content: center;
-            padding-top: 15px;
+            flex-wrap: wrap;
+            padding-top: 12px;
             border-top: 1px solid var(--border-color);
+        }
+        .result-actions .btn {
+            padding: 7px 10px !important;
+            font-size: 13px !important;
+            border-radius: 8px !important;
         }
 
         /* صفحة إدارة المستخدمين */
@@ -2206,6 +2212,19 @@
 .private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#ffff00;padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.2);border:none;color:#ffff00;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.4);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
 </style>
     <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="فرع المرقب">
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/faisl8500-cmyk5/sw.js', { scope: '/faisl8500-cmyk5/' })
+                .then(function(reg) { console.log('SW registered:', reg.scope); })
+                .catch(function(err) { console.error('SW error:', err); });
+        });
+    }
+    </script>
     <!-- مكتبة الباركود JsBarcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     <!-- مكتبة قراءة Excel SheetJS -->
@@ -2466,7 +2485,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px;">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.9</span></p>
+                    <p style="font-size: 10px;">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.1</span></p>
                     <style>
                         @keyframes blinkGreenBlack {
                             0%,49%  { color: #00cc44; text-shadow: 0 0 8px #00cc44; }
@@ -2509,7 +2528,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.9
+    📌 الإصدار 2.1.1
 </div>
             </div>
             <div class="user-bar">
@@ -2720,6 +2739,27 @@
                 <div class="form-group"><label>رقم الهاتف</label><input type="text" id="martyrPhone"></div>
                 <div class="form-group"><label>الحالة</label><select id="martyrEmploymentStatus"><option value="">اختر</option><option value="متقاعد">متقاعد</option><option value="غير متقاعد">غير متقاعد</option><option value="موقوف">موقوف</option><option value="متوفي">💀 متوفي</option></select></div>
                 <div class="form-group"><label>نوع المرتب</label><select id="martyrSalaryType"><option value="">اختر</option><option value="راتب شهري">راتب شهري</option><option value="منحة شهرية">منحة شهرية</option><option value="لا يتقاضي">لا يتقاضي</option></select></div>
+
+                <!-- قسم رفع الملفات -->
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>📁 ملفات الشهيد / الجريح (صور أو PDF)</label>
+                    <div id="martyrFilesDropZone" onclick="document.getElementById('martyrFilesInput').click()" style="
+                        border: 2px dashed var(--border-color);
+                        border-radius: 12px;
+                        padding: 20px;
+                        text-align: center;
+                        cursor: pointer;
+                        transition: border-color 0.2s, background 0.2s;
+                        background: var(--input-bg);
+                    " onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor='var(--border-color)'">
+                        <div style="font-size: 32px;">📎</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">اضغط لاختيار صور أو ملفات PDF</div>
+                        <div style="font-size: 11px; color: #aaa; margin-top: 4px;">يمكن اختيار أكثر من ملف</div>
+                    </div>
+                    <input type="file" id="martyrFilesInput" multiple accept="image/*,.pdf" style="display:none" onchange="previewMartyrFiles(this)">
+                    <div id="martyrFilesPreview" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    <div id="martyrFilesUploadProgress" style="display:none; margin-top: 8px; font-size: 13px; color: #667eea;">⏳ جارٍ رفع الملفات...</div>
+                </div>
             </div>
             <button class="btn" id="submitMartyrBtn" onclick="addMartyr()">➕ إضافة</button>
             <button class="btn btn-edit" id="updateMartyrBtn" onclick="updateMartyr()" style="display:none;">💾 حفظ التعديل</button>
@@ -2730,7 +2770,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.9</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.1</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2797,15 +2837,40 @@
     <option value="salary">💰 مرتبات (تعديل المرتب والحالة)</option>
 </select>
                     </div>
+                    <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:10px;">
+                        <input type="checkbox" id="newCanViewFiles" style="width:18px;height:18px;cursor:pointer;">
+                        <label for="newCanViewFiles" style="cursor:pointer;font-weight:600;">📁 صلاحية فتح ملفات الشهداء والجرحى</label>
+                    </div>
                 </div>
-                <button class="btn btn-users" onclick="addUser()">➕ إضافة مستخدم</button>
             </div>
-            <h3 style="margin-bottom: 15px; color: #8e44ad;">📋 قائمة المستخدمين</h3>
+                <button class="btn btn-users" onclick="addUser()">➕ إضافة مستخدم</button>
             <div style="overflow-x: auto;">
                 <table class="users-table" id="usersTable">
                   <thead><tr><th>#</th><th>اسم المستخدم</th><th>الصلاحية</th><th>الحالة</th><th>الحظر</th><th>تاريخ الإضافة</th><th>الإجراءات</th></tr></thead>
                     <tbody id="usersTableBody"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- قسم رمز الملفات السري -->
+        <div class="users-card" id="filesPinSection">
+            <h3 style="margin-bottom:15px;color:#1e3c72;">🔐 رمز الملفات السري</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">هذا الرمز يُطلب عند فتح ملفات أي شهيد أو جريح</p>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <input type="password" id="newFilesPinInput" placeholder="أدخل الرمز الجديد" maxlength="10"
+                    inputmode="numeric"
+                    style="flex:1;min-width:150px;padding:12px;border-radius:10px;border:2px solid var(--border-color);background:var(--input-bg);color:var(--text-color);font-size:18px;text-align:center;letter-spacing:4px;">
+                <input type="password" id="newFilesPinConfirm" placeholder="تأكيد الرمز" maxlength="10"
+                    inputmode="numeric"
+                    style="flex:1;min-width:150px;padding:12px;border-radius:10px;border:2px solid var(--border-color);background:var(--input-bg);color:var(--text-color);font-size:18px;text-align:center;letter-spacing:4px;">
+                <button onclick="saveFilesPin()"
+                    style="padding:12px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;font-size:14px;font-weight:bold;cursor:pointer;white-space:nowrap;">
+                    💾 حفظ الرمز
+                </button>
+            </div>
+            <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);">
+                🔑 الرمز الحالي: <span id="currentPinDisplay" style="color:#667eea;font-weight:bold;">••••</span>
+                <button onclick="toggleShowPin()" style="margin-right:8px;background:none;border:none;color:#667eea;cursor:pointer;font-size:12px;">👁 إظهار</button>
             </div>
         </div>
     </div>
@@ -2946,6 +3011,11 @@
     <div id="subPermissionsDiv" style="display:none; margin-bottom:12px; padding:12px; background:var(--user-bar-bg); border-radius:10px;">
       <p style="font-weight:bold; color:#667eea; margin-bottom:8px; text-align:center; font-size:14px;">⚙️ تحديد الصلاحيات الفرعية</p>
       <div id="subPermissionsCheckboxes" style="display:flex; flex-direction:column; gap:6px;"></div>
+    </div>
+
+    <div style="padding:12px;background:var(--user-bar-bg);border-radius:10px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+        <input type="checkbox" id="editCanViewFiles" style="width:18px;height:18px;cursor:pointer;">
+        <label for="editCanViewFiles" style="cursor:pointer;font-weight:600;font-size:14px;">📁 صلاحية فتح ملفات الشهداء والجرحى</label>
     </div>
     
     <div style="display:flex; gap:10px; position:sticky; bottom:0; background:var(--card-bg); padding-top:8px;">
@@ -3282,6 +3352,7 @@ function exportToExcelData(type) {
         loadDarkModePreference();
 
         let militaries = [], civilians = [], martyrs = [];
+        let filesPin = '0000';
         let pendingUserData = null;
         let pendingEditUserId = null;
         let users = [];
@@ -3316,6 +3387,11 @@ function startRealTimeListeners() {
     
     console.log('🔄 بدء تشغيل المستمعات الفورية...');
     
+    // تحميل PIN الملفات من Firebase
+    database.ref('/settings/filesPin').on('value', snap => {
+        filesPin = snap.val() || '0000';
+    });
+
     if (militariesListener === null) {
         militariesListener = database.ref('/militaries').on('value', (snapshot) => {
             if (isUpdatingFromLocal) return;
@@ -3868,6 +3944,12 @@ function getRoleDesc(role) {
     if (!currentUser) return false;
     if (currentUser.role === 'admin') return true;
 
+    // صلاحية الملفات
+    if (permission === 'files') {
+        if (currentUser.role === 'admin') return true;
+        return currentUser.canViewFiles === true;
+    }
+
     if (permission === 'view') {
         const viewRoles = ['admin', 'modifier', 'adder', 'deleter', 'editor', 'viewer'];
         return viewRoles.includes(currentUser.role);
@@ -4101,6 +4183,10 @@ function showTrash() {
             hideAllPages();
             document.getElementById('usersPage').style.display = 'block';
             displayUsersList();
+            // إظهار قسم PIN للأدمن
+            const pinSection = document.getElementById('filesPinSection');
+            if (pinSection) pinSection.style.display = 'block';
+            document.getElementById('currentPinDisplay').textContent = '••••';
                   startTimers();
         }
 
@@ -4191,7 +4277,7 @@ async function login() {
         updateLoadingStatus('جارٍ تسجيل الدخول...', 80);
         
         resetLoginAttempts(username);
-        currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null };
+        currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null, canViewFiles: user.canViewFiles === true };
         loginTime = Date.now();
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         localStorage.setItem('loginTime', loginTime);
@@ -4574,6 +4660,7 @@ async function addUser() {
     const username = document.getElementById('newUsername').value.trim();
     const password = document.getElementById('newPassword').value;
     const role = document.getElementById('newRole').value;
+    const canViewFiles = document.getElementById('newCanViewFiles').checked;
     if (!username || !password || !role) { showMessage('جميع الحقول مطلوبة', true); return; }
     if (users.some(u => u.username === username)) { showMessage('❌ اسم المستخدم "' + username + '" موجود مسبقاً، اختر اسماً آخر', true); return; }
     
@@ -4585,7 +4672,8 @@ async function addUser() {
             role,
             status: 'active',
             createdAt: new Date().toISOString(),
-            permissions: null
+            permissions: null,
+            canViewFiles
         };
         
         openSubPermissionsForAdd(role);
@@ -4599,11 +4687,13 @@ async function addUser() {
         role,
         status: 'active',
         createdAt: new Date().toISOString(),
-        permissions: null
+        permissions: null,
+        canViewFiles
     });
     await saveUsersToFirebase();
     displayUsersList();
     ['newUsername', 'newPassword', 'newRole'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('newCanViewFiles').checked = false;
     showMessage('تم إضافة المستخدم بنجاح');
 }
 
@@ -4712,6 +4802,10 @@ function editUser(userId) {
     const modal = document.getElementById('editUserModal');
     modal.style.display = 'flex';
     modal.onclick = e => { if (e.target === modal) closeEditUserModal(); };
+
+    // ضبط قيمة صلاحية الملفات
+    const cb = document.getElementById('editCanViewFiles');
+    if (cb) cb.checked = user.canViewFiles === true;
 }
 function toggleSubPermissions(role, hasSub, userId) {
     const subDiv = document.getElementById('subPermissionsDiv');
@@ -4844,6 +4938,7 @@ async function confirmEditUser() {
         }
         
         pendingUserData.permissions = permissions;
+        pendingUserData.canViewFiles = document.getElementById('editCanViewFiles').checked;
         if (users.some(u => u.username === pendingUserData.username)) {
             showMessage('❌ اسم المستخدم موجود مسبقاً، اختر اسماً آخر', true);
             return;
@@ -4906,6 +5001,7 @@ async function confirmEditUser() {
     
     user.role = newRole;
     user.permissions = permissions;
+    user.canViewFiles = document.getElementById('editCanViewFiles').checked;
     user.status = 'active';
     await saveUsersToFirebase();
     displayUsersList();
@@ -5101,13 +5197,17 @@ function search() {
                 <button class="btn btn-edit" onclick="showSalaryEditForm('${result.id}')">💰 تعديل المرتب والحالة</button>
                 <button class="btn" style="background: #25D366;" onclick="sendRecordToWhatsApp('${type}', '${result.id}')">📱 واتساب</button>
             </div>`;
-        } else if (canEdit || canDelete) {
-            html += `<div class="result-actions">`;
-            if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
-            html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeModal('${type}', '${result.id}')">🎫 باركود</button>`;
-            if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
-            html += `<button class="btn" style="background: #25D366;" onclick="sendRecordToWhatsApp('${type}', '${result.id}')">📱 واتساب</button>`;
-            html += `</div>`;
+        } else {
+            const showFiles = type === 'martyr' && hasPermission('files');
+            if (canEdit || canDelete || showFiles) {
+                html += `<div class="result-actions">`;
+                if (canEdit) html += `<button class="btn btn-edit" onclick="editFromSearch('${type}', '${result.id}')">✏️ تعديل</button>`;
+                if (canEdit || canDelete) html += `<button class="btn" style="background: #8e44ad;" onclick="openBarcodeModal('${type}', '${result.id}')">🎫 باركود</button>`;
+                if (canDelete) html += `<button class="btn btn-delete" onclick="deleteFromSearch('${type}', '${result.id}')">🗑️ حذف</button>`;
+                if (showFiles) html += `<button class="btn" style="background:linear-gradient(135deg,#1e3c72,#2a5298);" onclick="openMartyrFilesModal('${result.id}')">📁 المستندات</button>`;
+                if (canEdit || canDelete) html += `<button class="btn" style="background: #25D366;" onclick="sendRecordToWhatsApp('${type}', '${result.id}')">📱 واتساب</button>`;
+                html += `</div>`;
+            }
         }
         
         html += `</div>`;
@@ -5406,6 +5506,10 @@ if (!isValidMartyrNationalId(nationalId)) {
     return;
 }
 
+            // رفع الملفات على ImgBB أولاً
+            const uploadedFiles = await uploadMartyrFiles(id, window._martyrPendingFiles || []);
+            window._martyrPendingFiles = [];
+
               martyrs.push({
                 id, rank, name, status,
                 eventDate: document.getElementById('martyrEventDate').value,
@@ -5428,7 +5532,8 @@ if (!isValidMartyrNationalId(nationalId)) {
                 accountNo: document.getElementById('martyrAccountNo').value,
                 phone: document.getElementById('martyrPhone').value,
                 employmentStatus: document.getElementById('martyrEmploymentStatus').value,
-                salaryType: document.getElementById('martyrSalaryType').value
+                salaryType: document.getElementById('martyrSalaryType').value,
+                files: uploadedFiles
             });
             await saveMartyrsToFirebase();
             await addAuditLog('إضافة', 'martyr', id, name, `تم إضافة ${status} جديد`);
@@ -5946,7 +6051,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.9</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.1</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -5966,7 +6071,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.9</p>' +
+   '<p>فرع المرقب - الإصدار 2.1.1</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -7560,6 +7665,160 @@ function calculateMemoryUsage() {
     };
 }
 
+function _showRanksModal(title, color, ranksData) {
+    let modal = document.getElementById('_ranksBreakdownModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = '_ranksBreakdownModal';
+        modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:16px;';
+        document.body.appendChild(modal);
+    }
+
+    let rows = ranksData.map(function(r) {
+        return `<tr style="border-bottom:1px solid var(--border-color);">
+            <td style="padding:9px 12px;font-weight:600;">${r.rank}</td>
+            <td style="padding:9px 12px;text-align:center;font-size:18px;font-weight:800;color:${r.count > 0 ? color : 'var(--text-secondary)'};">${r.count}</td>
+        </tr>`;
+    }).join('');
+
+    const total = ranksData.reduce((s, r) => s + r.count, 0);
+
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);color:var(--text-color);border-radius:20px;width:100%;max-width:360px;padding:22px 18px;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div>
+                    <div style="font-size:16px;font-weight:800;">${title}</div>
+                    <div style="font-size:12px;color:${color};">الإجمالي: ${total}</div>
+                </div>
+                <button onclick="document.getElementById('_ranksBreakdownModal').style.display='none';"
+                    style="background:var(--border-color);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--text-color);">✕</button>
+            </div>
+            <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr style="background:rgba(0,0,0,0.05);">
+                        <th style="padding:8px 12px;text-align:right;font-size:13px;">الرتبة</th>
+                        <th style="padding:8px 12px;text-align:center;font-size:13px;">العدد</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+    modal.style.display = 'flex';
+}
+
+function showOfficersBreakdown() {
+    const officerRanksList = [
+        'ملازم تان','ملازم أول','نقيب','رائد','مقدم','عقيد','عميد','لواء',
+        'فريق تان','فريق أول',
+        'ملازم تان شرف','ملازم أول شرف','نقيب شرف','رائد شرف',
+        'مقدم شرف','عقيد شرف','عميد شرف'
+    ];
+    const data = officerRanksList.map(function(r) {
+        return { rank: r, count: militaries.filter(m => m.rank === r).length };
+    }).filter(r => r.count > 0 || ['ملازم تان','ملازم أول','نقيب','رائد','مقدم','عقيد','عميد','لواء'].includes(r.rank));
+    _showRanksModal('🎖️ تفاصيل الضباط', '#2a5298', data);
+}
+
+function showSoldiersBreakdown() {
+    const soldierRanksList = [
+        'جندي','جندي أول','نائب عريف','عريف','رع س','رع و',
+        'رع و السابعة','رع و الثامنة','رع و التاسعة','رع و العاشرة',
+        'رع و الحادية عشر','رع و الثانية عشر','رع و الثالثة عشر'
+    ];
+    const data = soldierRanksList.map(function(r) {
+        return { rank: r, count: militaries.filter(m => m.rank === r).length };
+    }).filter(r => r.count > 0 || ['جندي','جندي أول','نائب عريف','عريف','رع س','رع و'].includes(r.rank));
+    _showRanksModal('🪖 تفاصيل باقي العسكريين', '#3498db', data);
+}
+
+function showMartyrsBreakdown() {
+    const officerRanks = ['ملازم تان','ملازم أول','نقيب','رائد','مقدم','عقيد','عميد','لواء',
+        'فريق تان','فريق أول','ملازم تان شرف','ملازم أول شرف','نقيب شرف','رائد شرف',
+        'مقدم شرف','عقيد شرف','عميد شرف'];
+
+    // تصنيف كل شهيد/جريح
+    function classify(m) {
+        if (officerRanks.includes(m.rank)) return 'ضابط';
+        // الموظفين: بدون رتبة عسكرية أو من قاعدة الموظفين
+        const civilianRanks = ['موظف','موظفة','مدني','مدنية',''];
+        if (!m.rank || civilianRanks.includes(m.rank)) return 'موظف';
+        return 'مرتبة';
+    }
+
+    const statusTypes = [
+        { key: 'شهيد', label: '🕊️ الشهداء', color: '#800000' },
+        { key: 'جريح', label: '🩸 الجرحى', color: '#c0392b' },
+    ];
+    const empTypes = [
+        { key: 'غير متقاعد', label: 'غير متقاعد' },
+        { key: 'موقوف',      label: 'موقوف' },
+        { key: 'متقاعد',     label: 'متقاعد' },
+    ];
+    const catTypes = [
+        { key: 'ضابط',  label: 'الضباط',  icon: '🎖️' },
+        { key: 'مرتبة', label: 'المراتب', icon: '🪖' },
+        { key: 'موظف',  label: 'الموظفين',icon: '👨‍💼' },
+    ];
+
+    let html = '<div style="overflow-y:auto;max-height:70vh;">';
+
+    statusTypes.forEach(function(st) {
+        // تصفية حسب نوع الحالة (شهيد أو جريح)
+        const group = martyrs.filter(m => m.status && m.status.includes(st.key));
+        const total = group.length;
+
+        html += `<div style="margin-bottom:18px;">
+            <div style="font-size:15px;font-weight:800;color:${st.color};margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid ${st.color}30;">
+                ${st.label} — الإجمالي: ${total}
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                <thead>
+                    <tr style="background:rgba(128,0,0,0.08);">
+                        <th style="padding:6px 8px;text-align:right;border-radius:6px 0 0 6px;">الفئة</th>
+                        <th style="padding:6px 8px;text-align:center;">غير متقاعد</th>
+                        <th style="padding:6px 8px;text-align:center;">موقوف</th>
+                        <th style="padding:6px 8px;text-align:center;border-radius:0 6px 6px 0;">متقاعد</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        catTypes.forEach(function(cat) {
+            const catGroup = group.filter(m => classify(m) === cat.key);
+            const counts = empTypes.map(function(et) {
+                return catGroup.filter(m => (m.employmentStatus || '') === et.key).length;
+            });
+            const rowTotal = counts.reduce((a,b) => a+b, 0);
+            html += `<tr style="border-bottom:1px solid var(--border-color);">
+                <td style="padding:7px 8px;font-weight:600;">${cat.icon} ${cat.label} (${rowTotal})</td>
+                ${counts.map(c => `<td style="padding:7px 8px;text-align:center;font-weight:bold;color:${c>0?'#667eea':'var(--text-secondary)'};">${c}</td>`).join('')}
+            </tr>`;
+        });
+
+        html += `</tbody></table></div>`;
+    });
+
+    html += '</div>';
+
+    // إظهار المودال
+    let modal = document.getElementById('_martyrsBreakdownModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = '_martyrsBreakdownModal';
+        modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:16px;';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);color:var(--text-color);border-radius:20px;width:100%;max-width:480px;padding:22px 18px;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-size:16px;font-weight:800;">🕊️ تفاصيل الشهداء والجرحى</div>
+                <button onclick="document.getElementById('_martyrsBreakdownModal').style.display='none';"
+                    style="background:var(--border-color);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--text-color);">✕</button>
+            </div>
+            ${html}
+        </div>`;
+    modal.style.display = 'flex';
+}
+
 function displayMemoryStats() {
     const statsContainer = document.getElementById('memoryStatsContainer');
     if (!statsContainer) return;
@@ -7588,6 +7847,8 @@ function displayMemoryStats() {
             color1: '#1e3c72',
             color2: '#2a5298',
             bar: officersCount,
+            clickable: true,
+            onclick: 'showOfficersBreakdown()'
         },
         {
             icon: '🪖',
@@ -7596,6 +7857,8 @@ function displayMemoryStats() {
             color1: '#2c3e50',
             color2: '#3498db',
             bar: soldiersCount,
+            clickable: true,
+            onclick: 'showSoldiersBreakdown()'
         },
         {
             icon: '👨‍💼',
@@ -7612,6 +7875,7 @@ function displayMemoryStats() {
             color1: '#800000',
             color2: '#cc0000',
             bar: martyrsCount,
+            clickable: true
         },
     ];
 
@@ -7679,11 +7943,14 @@ function displayMemoryStats() {
     <div class="new-stats-grid">`;
 
     cards.forEach(function(c) {
-        html += `
-        <div class="new-stat-card" style="background: linear-gradient(135deg, ${c.color1}, ${c.color2});">
+        const onclickVal = c.onclick || (c.clickable ? 'showMartyrsBreakdown()' : '');
+        const clickAttr = onclickVal
+            ? `onclick="${onclickVal}" style="cursor:pointer;background:linear-gradient(135deg,${c.color1},${c.color2});"`
+            : `style="background:linear-gradient(135deg,${c.color1},${c.color2});"`;
+        html += `<div class="new-stat-card" ${clickAttr}>
             <span class="ns-icon">${c.icon}</span>
             <div class="ns-count">${c.count}</div>
-            <div class="ns-label">${c.label}</div>
+            <div class="ns-label">${c.label}${onclickVal ? ' 🔍' : ''}</div>
         </div>`;
     });
 
@@ -8074,6 +8341,12 @@ function clearMartyrForm() {
     document.getElementById('martyrPhone').value = '';
     document.getElementById('martyrEmploymentStatus').value = '';
     document.getElementById('martyrSalaryType').value = '';
+    // تنظيف الملفات
+    const fp = document.getElementById('martyrFilesPreview');
+    if (fp) fp.innerHTML = '';
+    const fi = document.getElementById('martyrFilesInput');
+    if (fi) fi.value = '';
+    window._martyrPendingFiles = [];
 }
 function inquirySearch() {
     const num = document.getElementById('inquiryNumber').value.trim();
@@ -8219,6 +8492,9 @@ document.addEventListener('keydown', function(e) {
         if (savedUser) {
             currentUser = JSON.parse(savedUser);
             loginTime = parseInt(localStorage.getItem('loginTime') || '0');
+            // تحديث canViewFiles من قاعدة البيانات في حالة تغيّرت الصلاحيات
+            const freshUser = users.find(u => u.id === currentUser.id);
+            if (freshUser) currentUser.canViewFiles = freshUser.canViewFiles === true;
             showMainMenu();
         }
         
@@ -9903,78 +10179,478 @@ window.addEventListener('offline', updateLoginConnectionStatus);
     showReportTable(headers, rows);
 }
 
-// ========== دعم زر الرجوع على الهاتف ==========
+async function saveFilesPin() {
+    const pin1 = document.getElementById('newFilesPinInput').value.trim();
+    const pin2 = document.getElementById('newFilesPinConfirm').value.trim();
+    if (!pin1) { showMessage('❌ أدخل الرمز الجديد', true); return; }
+    if (pin1 !== pin2) { showMessage('❌ الرمزان غير متطابقين', true); return; }
+    if (pin1.length < 4) { showMessage('❌ الرمز يجب أن يكون 4 أرقام على الأقل', true); return; }
+    await database.ref('/settings/filesPin').set(pin1);
+    filesPin = pin1;
+    document.getElementById('newFilesPinInput').value = '';
+    document.getElementById('newFilesPinConfirm').value = '';
+    document.getElementById('currentPinDisplay').textContent = '••••';
+    showMessage('✅ تم حفظ الرمز السري بنجاح');
+}
 
-// متغير لتتبع الصفحة الحالية
-var _currentAppPage = 'login'; // login | menu | other
-
-// نضع حالة أولية في تاريخ المتصفح عند تحميل الصفحة
-history.replaceState({ appPage: 'base' }, '');
-
-// دالة تُستدعى كلما انتقل المستخدم لصفحة جديدة
-function _trackPage(pageName) {
-    _currentAppPage = pageName;
-    if (pageName === 'login') {
-        history.replaceState({ appPage: 'base' }, '');
+function toggleShowPin() {
+    const el = document.getElementById('currentPinDisplay');
+    if (el.textContent === '••••') {
+        el.textContent = filesPin || '0000';
     } else {
-        history.pushState({ appPage: pageName }, '');
+        el.textContent = '••••';
     }
 }
 
-// اعتراض hideAllPages لتتبع الانتقالات
-var _origHideAllPages = hideAllPages;
-hideAllPages = function() {
-    _origHideAllPages();
-};
+// ========== نافذة ملفات الشهيد/الجريح ==========
 
-// اعتراض backToMenu
-var _origBackToMenu = backToMenu;
-backToMenu = function() {
-    _origBackToMenu();
-    _currentAppPage = 'menu';
-    // لا نضيف تاريخ جديد — نترك popstate يعمل طبيعياً
-};
+function openMartyrFilesModal(martyrId) {
+    // طلب PIN أولاً
+    showFilesPinModal(martyrId);
+}
 
-// اعتراض كل دوال الانتقال لإضافة تتبع
-var _navFunctions = [
-    ['showAddMilitary',     'other'],
-    ['showAddCivilian',     'other'],
-    ['showAddMartyrs',      'other'],
-    ['showSearch',          'other'],
-    ['showReports',         'other'],
-    ['showAuditLog',        'other'],
-    ['showTrash',           'other'],
-    ['showUsersManagement', 'other'],
-    ['showOnlineUsers',     'other'],
-];
-_navFunctions.forEach(function(item) {
-    var fnName = item[0];
-    var orig = window[fnName];
-    if (typeof orig === 'function') {
-        window[fnName] = function() {
+function showFilesPinModal(martyrId) {
+    let modal = document.getElementById('_filesPinModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = '_filesPinModal';
+        modal.style.cssText = 'position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:20px;';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);color:var(--text-color);border-radius:20px;width:100%;max-width:320px;padding:28px 24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
+            <div style="font-size:44px;margin-bottom:10px;">🔐</div>
+            <h3 style="font-size:18px;font-weight:800;margin-bottom:6px;">رمز الملفات السري</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">أدخل الرمز للوصول إلى الملفات</p>
+            <input id="_filesPinInput" type="password" inputmode="numeric" maxlength="10"
+                placeholder="••••"
+                style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--border-color);background:var(--input-bg);color:var(--text-color);font-size:22px;text-align:center;letter-spacing:6px;box-sizing:border-box;margin-bottom:8px;"
+                onkeydown="if(event.key==='Enter') _confirmFilesPin('${martyrId}')">
+            <div id="_filesPinError" style="color:#e53e3e;font-size:12px;min-height:18px;margin-bottom:10px;"></div>
+            <div style="display:flex;gap:10px;">
+                <button onclick="document.getElementById('_filesPinModal').style.display='none';"
+                    style="flex:1;padding:12px;border-radius:10px;border:2px solid var(--border-color);background:var(--card-bg);color:var(--text-color);font-size:14px;font-weight:bold;cursor:pointer;">إلغاء</button>
+                <button onclick="_confirmFilesPin('${martyrId}')"
+                    style="flex:1;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;font-size:14px;font-weight:bold;cursor:pointer;">✅ دخول</button>
+            </div>
+        </div>`;
+    modal.style.display = 'flex';
+    setTimeout(() => { const inp = document.getElementById('_filesPinInput'); if(inp) inp.focus(); }, 100);
+}
+
+function _confirmFilesPin(martyrId) {
+    const input = document.getElementById('_filesPinInput');
+    const errEl = document.getElementById('_filesPinError');
+    if (!input) return;
+    if (input.value === filesPin) {
+        document.getElementById('_filesPinModal').style.display = 'none';
+        _openMartyrFilesModalDirect(martyrId);
+    } else {
+        errEl.textContent = '❌ الرمز غير صحيح، حاول مرة أخرى';
+        input.value = '';
+        input.focus();
+    }
+}
+
+function _openMartyrFilesModalDirect(martyrId) {
+    const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+    if (!martyr) return;
+
+    let modal = document.getElementById('martyrFilesModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'martyrFilesModal';
+        modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;';
+        document.body.appendChild(modal);
+    }
+
+    const canDeleteFiles = currentUser && (currentUser.role === 'admin' || hasPermission('delete', 'martyr'));
+    const canAddFiles = currentUser && (currentUser.role === 'admin' || hasPermission('add', 'martyr'));
+    const filesHtml = renderMartyrFilesModal(martyrId, martyr.files || [], canDeleteFiles);
+
+    modal.innerHTML = `
+        <div style="background:var(--card-bg);color:var(--text-color);border-radius:20px;width:100%;max-width:500px;padding:24px;margin:auto;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div>
+                    <div style="font-size:18px;font-weight:800;">📁 ملف الرقم العسكري</div>
+                    <div style="font-size:13px;color:#667eea;font-weight:700;">${martyrId} — ${martyr.name}</div>
+                </div>
+                <button onclick="document.getElementById('martyrFilesModal').style.display='none';"
+                    style="background:var(--border-color);border:none;border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer;color:var(--text-color);">✕</button>
+            </div>
+            <div id="martyrFilesModalContent">${filesHtml}</div>
+            ${canAddFiles ? `
+            <div style="margin-top:16px;border-top:1px solid var(--border-color);padding-top:14px;">
+                <button onclick="addFilesToMartyrModal('${martyrId}')"
+                    style="width:100%;padding:12px;border-radius:12px;border:2px dashed #667eea;background:rgba(102,126,234,0.07);color:#667eea;font-size:14px;font-weight:700;cursor:pointer;">
+                    ➕ إضافة ملف جديد (صورة أو PDF)
+                </button>
+                <div id="martyrModalUploadProgress" style="display:none;text-align:center;padding:10px;font-size:13px;color:#667eea;">⏳ جارٍ الرفع...</div>
+            </div>` : ''}
+        </div>`;
+    modal.style.display = 'flex';
+}
+
+function renderMartyrFilesModal(martyrId, files, canEdit) {
+    if (!files || !files.length) {
+        return `<div style="text-align:center;padding:30px;color:var(--text-secondary);">
+            <div style="font-size:40px;margin-bottom:10px;">📂</div>
+            <div>لا توجد ملفات مرفقة بعد</div>
+        </div>`;
+    }
+    let html = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;">`;
+    files.forEach((f, i) => {
+        if (f.isPdf) {
+            html += `<div style="position:relative;text-align:center;">
+                <a href="${f.url}" target="_blank" style="text-decoration:none;display:block;">
+                    <div style="width:100%;aspect-ratio:1;border-radius:12px;border:2px solid #e53e3e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:28px;background:rgba(229,62,62,0.06);">
+                        📄
+                        <span style="font-size:9px;color:#e53e3e;font-weight:bold;">PDF</span>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-secondary);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.name}</div>
+                </a>
+                <a href="${f.url}" download="${f.name}" style="display:block;margin-top:4px;font-size:10px;background:#e53e3e;color:#fff;border-radius:6px;padding:2px 0;text-decoration:none;">⬇️ تحميل</a>
+                ${canEdit ? `<button onclick="deleteMartyrFileModal('${martyrId}',${i})" style="position:absolute;top:-5px;right:-5px;background:#e53e3e;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;">✕</button>` : ''}
+            </div>`;
+        } else {
+            html += `<div style="position:relative;text-align:center;">
+                <a href="${f.url}" target="_blank" style="text-decoration:none;display:block;">
+                    <img src="${f.thumb || f.url}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:2px solid var(--border-color);">
+                    <div style="font-size:10px;color:var(--text-secondary);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.name}</div>
+                </a>
+                ${canEdit ? `<button onclick="deleteMartyrFileModal('${martyrId}',${i})" style="position:absolute;top:-5px;right:-5px;background:#e53e3e;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;">✕</button>` : ''}
+            </div>`;
+        }
+    });
+    html += '</div>';
+    return html;
+}
+
+async function addFilesToMartyrModal(martyrId) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*,.pdf';
+    input.onchange = async function() {
+        if (!input.files.length) return;
+        const progress = document.getElementById('martyrModalUploadProgress');
+        if (progress) progress.style.display = 'block';
+        const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+        if (!martyr) return;
+        const newFiles = await uploadMartyrFiles(martyrId, Array.from(input.files));
+        if (!newFiles.length) {
+            if (progress) progress.style.display = 'none';
+            return;
+        }
+        martyr.files = [...(martyr.files || []), ...newFiles];
+        await saveMartyrsToFirebase();
+        if (progress) progress.style.display = 'none';
+        showMessage('✅ تم رفع الملفات بنجاح');
+        openMartyrFilesModal(martyrId); // تحديث النافذة
+    };
+    input.click();
+}
+
+async function deleteMartyrFileModal(martyrId, fileIndex) {
+    const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+    if (!martyr || !martyr.files) return;
+    showConfirmModal('هل تريد حذف هذا الملف نهائياً؟', async () => {
+        const file = martyr.files[fileIndex];
+
+        // حذف من Supabase إذا كان PDF
+        if (file && file.isPdf && file.storage === 'supabase' && file.url) {
+            try {
+                const SUPABASE_URL = 'https://ptqjxbjwbdizulbqqqes.supabase.co';
+                const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0cWp4Ymp3YmRpenVsYnFxcWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTExMjYsImV4cCI6MjA5NjUyNzEyNn0.CPdHgEw3tzZFt5cQcc1TGAXOGsXB5-06sZKfruWKsIs';
+                const BUCKET = 'bmb';
+                // استخراج مسار الملف من الرابط
+                const prefix = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/`;
+                const filePath = file.url.replace(prefix, '');
+                await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filePath}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+            } catch(e) {
+                console.error('خطأ حذف Supabase:', e);
+            }
+        }
+
+        martyr.files.splice(fileIndex, 1);
+        await saveMartyrsToFirebase();
+        showMessage('تم حذف الملف');
+        openMartyrFilesModal(martyrId);
+    });
+}
+
+// ========== نهاية نافذة الملفات ==========
+
+window._martyrPendingFiles = [];
+
+function previewMartyrFiles(input) {
+    const preview = document.getElementById('martyrFilesPreview');
+    preview.innerHTML = '';
+    window._martyrPendingFiles = [];
+    const files = Array.from(input.files);
+    if (!files.length) return;
+
+    files.forEach((file, i) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'position:relative;display:inline-block;';
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                item.innerHTML = `
+                    <img src="${e.target.result}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);">
+                    <div style="font-size:10px;text-align:center;color:var(--text-secondary);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>`;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            item.innerHTML = `
+                <div style="width:70px;height:70px;border-radius:8px;border:2px solid var(--border-color);display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--input-bg);">📄</div>
+                <div style="font-size:10px;text-align:center;color:var(--text-secondary);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>`;
+        }
+        preview.appendChild(item);
+        window._martyrPendingFiles.push(file);
+    });
+}
+
+async function uploadMartyrFiles(martyrId, files) {
+    if (!files || !files.length) return [];
+    const IMGBB_API_KEY = 'c279133d64ee94d11687031859269ce4';
+    const SUPABASE_URL = 'https://ptqjxbjwbdizulbqqqes.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0cWp4Ymp3YmRpenVsYnFxcWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTExMjYsImV4cCI6MjA5NjUyNzEyNn0.CPdHgEw3tzZFt5cQcc1TGAXOGsXB5-06sZKfruWKsIs';
+    const BUCKET = 'bmb';
+    const progress = document.getElementById('martyrFilesUploadProgress');
+    if (progress) progress.style.display = 'block';
+    const uploaded = [];
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (progress) progress.textContent = `⏳ جارٍ رفع الملف ${i+1} من ${files.length}...`;
+        try {
+            if (file.type === 'application/pdf') {
+                // رفع PDF الأصلي على Supabase
+                if (progress) progress.textContent = `⏳ جارٍ رفع PDF على Supabase...`;
+                const fileName = `${martyrId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${fileName}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/pdf',
+                            'x-upsert': 'true'
+                        },
+                        body: file
+                    });
+                    const resText = await res.text();
+                    console.log('Supabase response:', res.status, resText);
+                    if (res.ok) {
+                        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${fileName}`;
+                        uploaded.push({
+                            name: file.name,
+                            url: publicUrl,
+                            type: 'pdf',
+                            isPdf: true,
+                            storage: 'supabase'
+                        });
+                        console.log('PDF uploaded OK:', publicUrl);
+                    } else {
+                        showMessage(`❌ فشل رفع PDF (${res.status}): ${resText}`, true);
+                    }
+                } catch(fetchErr) {
+                    console.error('Fetch error:', fetchErr);
+                    showMessage('❌ خطأ في الاتصال بـ Supabase: ' + fetchErr.message, true);
+                }
+            } else {
+                const b64data = await fileToBase64Strip(file);
+                const formData = new FormData();
+                formData.append('key', IMGBB_API_KEY);
+                formData.append('image', b64data);
+                formData.append('name', `Bmb_${martyrId}_${i+1}`);
+                formData.append('album', 'VgS0G7');
+                const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+                const json = await res.json();
+                if (json.success) {
+                    uploaded.push({ name: `${martyrId}_${i+1}_${file.name}`, url: json.data.url, thumb: json.data.thumb?.url || json.data.url, type: 'image', isPdf: false });
+                }
+            }
+        } catch(e) { console.error('خطأ رفع ملف:', e); }
+    }
+    if (progress) progress.style.display = 'none';
+    return uploaded;
+}
+
+// تحويل كل صفحات PDF إلى صور باستخدام PDF.js
+async function pdfToImageBase64(file) {
+    if (!window.pdfjsLib) {
+        await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const totalPages = pdf.numPages;
+    const pages = [];
+
+    for (let p = 1; p <= totalPages; p++) {
+        const page = await pdf.getPage(p);
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width  = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        pages.push(canvas.toDataURL('image/png').split(',')[1]);
+    }
+    return pages; // مصفوفة base64 لكل الصفحات
+}
+
+function fileToBase64Strip(file) {
+    return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+    });
+}
+function fileToBase64(file) {
+    return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+    });
+}
+
+// دالة لإضافة ملفات على شهيد موجود مسبقاً (في صفحة البحث)
+async function addFilesToMartyr(martyrId) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*,.pdf';
+    input.onchange = async function() {
+        if (!input.files.length) return;
+        showMessage('⏳ جارٍ رفع الملفات...');
+        const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+        if (!martyr) return;
+        const newFiles = await uploadMartyrFiles(martyrId, Array.from(input.files));
+        martyr.files = [...(martyr.files || []), ...newFiles];
+        await saveMartyrsToFirebase();
+        showMessage('✅ تم رفع الملفات بنجاح');
+        search(); // تحديث نتائج البحث
+    };
+    input.click();
+}
+
+async function deleteMartyrFile(martyrId, fileIndex) {
+    const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+    if (!martyr || !martyr.files) return;
+    if (!confirm('هل تريد حذف هذا الملف؟')) return;
+    martyr.files.splice(fileIndex, 1);
+    await saveMartyrsToFirebase();
+    showMessage('تم حذف الملف');
+    search();
+}
+
+function renderMartyrFiles(martyrId, files, canEditFiles) {
+    if (!files || !files.length) {
+        return `<div style="text-align:center;padding:12px;color:var(--text-secondary);font-size:13px;">لا توجد ملفات مرفقة</div>`;
+    }
+    let html = '<div style="display:flex;flex-wrap:wrap;gap:10px;padding:4px 0;">';
+    files.forEach((f, i) => {
+        if (f.isPdf) {
+            html += `<div style="position:relative;">
+                <a href="${f.url}" download="${f.name}" target="_blank"
+                   style="display:flex;flex-direction:column;align-items:center;width:80px;text-decoration:none;">
+                    <div style="width:70px;height:70px;border-radius:10px;border:2px solid #e53e3e;display:flex;align-items:center;justify-content:center;font-size:32px;background:rgba(229,62,62,0.08);">📄</div>
+                    <div style="font-size:10px;color:var(--text-secondary);margin-top:4px;text-align:center;word-break:break-all;max-width:80px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${f.name}</div>
+                </a>
+                ${canEditFiles ? `<button onclick="deleteMartyrFile('${martyrId}',${i})" style="position:absolute;top:-6px;right:-6px;background:#e53e3e;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>` : ''}
+            </div>`;
+        } else {
+            html += `<div style="position:relative;">
+                <a href="${f.url}" target="_blank" style="display:flex;flex-direction:column;align-items:center;width:80px;text-decoration:none;">
+                    <img src="${f.thumb || f.url}" style="width:70px;height:70px;object-fit:cover;border-radius:10px;border:2px solid var(--border-color);">
+                    <div style="font-size:10px;color:var(--text-secondary);margin-top:4px;text-align:center;word-break:break-all;max-width:80px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${f.name}</div>
+                </a>
+                ${canEditFiles ? `<button onclick="deleteMartyrFile('${martyrId}',${i})" style="position:absolute;top:-6px;right:-6px;background:#e53e3e;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>` : ''}
+            </div>`;
+        }
+    });
+    html += '</div>';
+    return html;
+}
+
+// ========== نهاية ملفات الشهداء ==========
+
+// ========== دعم زر الرجوع على الهاتف ==========
+
+var _currentAppPage = 'login';
+
+history.replaceState({ appPage: 'base' }, '');
+
+// تتبع الصفحة الحالية
+function _trackNav(page) {
+    _currentAppPage = page;
+    history.pushState({ appPage: page }, '');
+}
+
+// مراقبة القائمة الرئيسية عند تسجيل الدخول
+window.addEventListener('load', function() {
+    var menu = document.getElementById('mainMenu');
+    if (!menu) return;
+    new MutationObserver(function() {
+        if (menu.style.display === 'block' && _currentAppPage === 'login') {
+            _currentAppPage = 'menu';
+            history.replaceState({ appPage: 'base' }, '');
+            history.pushState({ appPage: 'menu' }, '');
+        }
+    }).observe(menu, { attributes: true, attributeFilter: ['style'] });
+});
+
+// اعتراض دوال التنقل بعد تحميل الصفحة كاملاً
+window.addEventListener('load', function() {
+    var navFns = ['showAddMilitary','showAddCivilian','showAddMartyrs',
+                  'showSearch','showReports','showAuditLog','showTrash',
+                  'showUsersManagement','showOnlineUsers'];
+    navFns.forEach(function(fn) {
+        var orig = window[fn];
+        if (typeof orig !== 'function') return;
+        window[fn] = function() {
             orig.apply(this, arguments);
             _currentAppPage = 'other';
             history.pushState({ appPage: 'other' }, '');
+        };
+    });
+
+    var origBack = window.backToMenu;
+    if (typeof origBack === 'function') {
+        window.backToMenu = function() {
+            origBack.apply(this, arguments);
+            _currentAppPage = 'menu';
+            history.pushState({ appPage: 'menu' }, '');
         };
     }
 });
 
 // حدث زر الرجوع
-window.addEventListener('popstate', function(e) {
-    if (!currentUser) return; // لم يسجل دخول بعد
+window.addEventListener('popstate', function() {
+    if (!currentUser) return;
 
     if (_currentAppPage === 'other') {
-        // رجوع من صفحة فرعية → القائمة الرئيسية
-        _origHideAllPages();
+        hideAllPages();
         document.getElementById('mainMenu').style.display = 'block';
         _currentAppPage = 'menu';
         if (typeof startTimers === 'function') startTimers();
-        // أضف حالة للقائمة حتى نتمكن من اكتشاف الرجوع منها
         history.pushState({ appPage: 'menu' }, '');
 
     } else if (_currentAppPage === 'menu') {
-        // رجوع من القائمة الرئيسية → اسأل عن الخروج
-        // أعد الحالة حتى لا تتغير الصفحة
         history.pushState({ appPage: 'menu' }, '');
         _showBackExitDialog();
     }
@@ -9986,58 +10662,27 @@ function _confirmLogout() {
 }
 
 function _showBackExitDialog() {
-    // احذف القديم إن وجد
     var old = document.getElementById('_backExitModal');
     if (old) old.remove();
 
     var modal = document.createElement('div');
     modal.id = '_backExitModal';
-    modal.style.cssText = [
-        'position:fixed',
-        'top:0','left:0','right:0','bottom:0',
-        'z-index:999999',
-        'background:rgba(0,0,0,0.65)',
-        'display:flex',
-        'align-items:center',
-        'justify-content:center',
-        'padding:20px'
-    ].join(';');
-
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:20px;';
     modal.innerHTML =
         '<div style="background:var(--card-bg,#fff);color:var(--text-color,#333);border-radius:20px;padding:30px 24px;width:100%;max-width:300px;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.5);">' +
             '<div style="font-size:52px;margin-bottom:10px;">🚪</div>' +
             '<h3 style="font-size:19px;margin-bottom:8px;font-weight:bold;">تسجيل الخروج</h3>' +
             '<p style="font-size:14px;color:var(--text-secondary,#666);margin-bottom:22px;line-height:1.7;">هل تريد تسجيل الخروج<br>من النظام؟</p>' +
             '<div style="display:flex;gap:10px;">' +
-                '<button id="_exitNo"  style="flex:1;padding:13px 0;border-radius:11px;border:2px solid var(--border-color,#ddd);background:var(--card-bg,#fff);color:var(--text-color,#333);font-size:15px;font-weight:bold;cursor:pointer;">❌ لا</button>' +
+                '<button id="_exitNo" style="flex:1;padding:13px 0;border-radius:11px;border:2px solid var(--border-color,#ddd);background:var(--card-bg,#fff);color:var(--text-color,#333);font-size:15px;font-weight:bold;cursor:pointer;">❌ لا</button>' +
                 '<button id="_exitYes" style="flex:1;padding:13px 0;border-radius:11px;border:none;background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;font-size:15px;font-weight:bold;cursor:pointer;">✅ نعم</button>' +
             '</div>' +
         '</div>';
-
     document.body.appendChild(modal);
 
-    document.getElementById('_exitNo').addEventListener('click', function() {
-        modal.remove();
-    });
-
-    document.getElementById('_exitYes').addEventListener('click', function() {
-        modal.remove();
-        logout();
-    });
+    document.getElementById('_exitNo').addEventListener('click', function() { modal.remove(); });
+    document.getElementById('_exitYes').addEventListener('click', function() { modal.remove(); logout(); });
 }
-
-// تتبع تسجيل الدخول الناجح: عند ظهور mainMenu نضبط الحالة
-(function() {
-    var observer = new MutationObserver(function() {
-        var menu = document.getElementById('mainMenu');
-        if (menu && menu.style.display === 'block' && _currentAppPage !== 'menu' && _currentAppPage !== 'other') {
-            _currentAppPage = 'menu';
-            history.pushState({ appPage: 'menu' }, '');
-        }
-    });
-    var menu = document.getElementById('mainMenu');
-    if (menu) observer.observe(menu, { attributes: true, attributeFilter: ['style'] });
-})();
 
 // ========== نهاية دعم زر الرجوع ==========
    </script>
