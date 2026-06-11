@@ -2224,6 +2224,34 @@
                 .catch(function(err) { console.error('SW error:', err); });
         });
     }
+
+    // PWA Install
+    var _pwaPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        _pwaPrompt = e;
+        var btn = document.getElementById('installPwaBtn');
+        if (btn) btn.style.display = 'inline-block';
+    });
+    window.addEventListener('appinstalled', function() {
+        var btn = document.getElementById('installPwaBtn');
+        if (btn) btn.style.display = 'none';
+        _pwaPrompt = null;
+    });
+    function installPWA() {
+        if (_pwaPrompt) {
+            _pwaPrompt.prompt();
+            _pwaPrompt.userChoice.then(function(result) {
+                if (result.outcome === 'accepted') {
+                    var btn = document.getElementById('installPwaBtn');
+                    if (btn) btn.style.display = 'none';
+                }
+                _pwaPrompt = null;
+            });
+        } else {
+            alert('لتثبيت التطبيق:\nاضغط ⋮ ثم "إضافة إلى الشاشة الرئيسية"');
+        }
+    }
     </script>
     <!-- مكتبة الباركود JsBarcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
@@ -2495,6 +2523,9 @@
                             animation: blinkGreenBlack 1s step-start infinite;
                         }
                     </style>
+                    <button id="installPwaBtn" onclick="installPWA()" style="display:none;margin-top:8px;padding:8px 18px;border-radius:20px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;">
+                        📲 تثبيت التطبيق
+                    </button>
                 </div>
             </div>
             <div class="form-group">
