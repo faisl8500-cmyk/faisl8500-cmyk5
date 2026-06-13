@@ -5671,6 +5671,14 @@ if (!isValidMartyrNationalId(nationalId)) {
 
                     // عرض الملفات الموجودة
                     window._martyrExistingFiles = martyr.files ? [...martyr.files] : [];
+                    if (window._martyrExistingFiles.length === 0) {
+                        recoverMartyrFilesFromSupabase(martyr.id).then(recovered => {
+                            if (recovered.length > 0) {
+                                window._martyrExistingFiles = recovered;
+                                renderExistingMartyrFiles();
+                            }
+                        });
+                    }
                     renderExistingMartyrFiles();
                     
                     hideAllPages();
@@ -10302,6 +10310,23 @@ function _openMartyrFilesModalDirect(martyrId) {
     const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
     if (!martyr) return;
 
+    if (!martyr.files || martyr.files.length === 0) {
+        recoverMartyrFilesFromSupabase(martyrId).then(recovered => {
+            if (recovered.length > 0) {
+                martyr.files = recovered;
+                saveMartyrsToFirebase();
+                _renderMartyrFilesModalContent(martyrId);
+            }
+        });
+    }
+
+    _renderMartyrFilesModalContent(martyrId);
+}
+
+function _renderMartyrFilesModalContent(martyrId) {
+    const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
+    if (!martyr) return;
+
     let modal = document.getElementById('martyrFilesModal');
     if (!modal) {
         modal = document.createElement('div');
@@ -10392,7 +10417,7 @@ async function addFilesToMartyrModal(martyrId) {
         await saveMartyrsToFirebase();
         if (progress) progress.style.display = 'none';
         showMessage('✅ تم رفع الملفات بنجاح');
-        openMartyrFilesModal(martyrId); // تحديث النافذة
+        _renderMartyrFilesModalContent(martyrId); // تحديث النافذة
     };
     input.click();
 }
@@ -10424,7 +10449,7 @@ async function deleteMartyrFileModal(martyrId, fileIndex) {
         martyr.files.splice(fileIndex, 1);
         await saveMartyrsToFirebase();
         showMessage('تم حذف الملف');
-        openMartyrFilesModal(martyrId);
+        _renderMartyrFilesModalContent(martyrId);
     });
 }
 
@@ -10493,6 +10518,36 @@ function previewMartyrFiles(input) {
         preview.appendChild(item);
         window._martyrPendingFiles.push(file);
     });
+}
+
+// استرجاع الملفات المعزولة من Supabase (لإصلاح السجلات القديمة التي فُقد مرجعها)
+async function recoverMartyrFilesFromSupabase(martyrId) {
+    const SUPABASE_URL = 'https://ptqjxbjwbdizulbqqqes.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0cWp4Ymp3YmRpenVsYnFxcWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTExMjYsImV4cCI6MjA5NjUyNzEyNn0.CPdHgEw3tzZFt5cQcc1TGAXOGsXB5-06sZKfruWKsIs';
+    const BUCKET = 'bmb';
+    try {
+        const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prefix: `${martyrId}/`, limit: 100 })
+        });
+        if (!res.ok) return [];
+        const list = await res.json();
+        if (!Array.isArray(list)) return [];
+        return list.filter(item => item.name).map(item => ({
+            name: item.name,
+            url: `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${martyrId}/${item.name}`,
+            type: 'pdf',
+            isPdf: true,
+            storage: 'supabase'
+        }));
+    } catch(e) {
+        console.error('خطأ استرجاع ملفات Supabase:', e);
+        return [];
+    }
 }
 
 async function uploadMartyrFiles(martyrId, files) {
