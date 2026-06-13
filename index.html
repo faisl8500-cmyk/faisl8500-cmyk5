@@ -2216,7 +2216,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فرع المرقب">
-<script>
+    <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/faisl8500-cmyk5/sw.js', { scope: '/faisl8500-cmyk5/' })
@@ -5294,7 +5294,7 @@ function sendRecordToWhatsApp(type, recordId) {
     } else {
         if (record.motherName) message += `👩 اسم الأم: ${record.motherName}\n`;
         if (record.maritalStatus) message += `💍 الحالة الاجتماعية: ${record.maritalStatus}\n`;
-        if (record.phone) message += `📞 الهاتف: ${record.phone}\n`;
+        if (record.phone) message += `?? الهاتف: ${record.phone}\n`;
         if (record.address) message += `🏠 العنوان: ${record.address}\n`;
     }
     
@@ -5930,7 +5930,8 @@ async function updateMartyr() {
         accountNo: document.getElementById('martyrAccountNo').value,
         phone: document.getElementById('martyrPhone').value,
         employmentStatus: document.getElementById('martyrEmploymentStatus').value,
-        salaryType: document.getElementById('martyrSalaryType').value
+        salaryType: document.getElementById('martyrSalaryType').value,
+        files: oldMartyr.files || []
     };
 
     const martyrFieldLabels = {
@@ -10716,40 +10717,6 @@ function _showBackExitDialog() {
 }
 
 // ========== نهاية دعم زر الرجوع ==========
-
    </script>
-   <script>
-// محاولة بديلة لعرض زر التثبيت يدوياً
-window.addEventListener('load', function() {
-    // التحقق من عدم تثبيت التطبيق مسبقاً
-    if (!window.matchMedia('(display-mode: standalone)').matches) {
-        // إنشاء زر تثبيت يدوي
-        var installBtn = document.createElement('button');
-        installBtn.innerHTML = '📲 تثبيت التطبيق';
-        installBtn.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10000;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:12px 25px;border-radius:50px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 5px 20px rgba(0,0,0,0.3);';
-        
-        var deferredPrompt;
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.body.appendChild(installBtn);
-        });
-        
-        installBtn.addEventListener('click', function() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function(result) {
-                    if (result.outcome === 'accepted') {
-                        installBtn.remove();
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                alert('لتثبيت التطبيق:\nاضغط على ⋮ ثم "إضافة إلى الشاشة الرئيسية"');
-            }
-        });
-    }
-});
-</script>
 </body>
 </html>
