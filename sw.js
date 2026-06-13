@@ -1,43 +1,64 @@
 // sw.js - Service Worker لمنظومة فرع المرقب
-const CACHE_NAME = 'far-almorqb-v1';
+const CACHE_NAME = 'far-almorqb-v2.1.1';
 
-// الملفات التي سيتم تخزينها مؤقتاً
+// الملفات الثابتة فقط (لا تتغير كثيراً)
 const urlsToCache = [
-  '/faisl8500-cmyk5/',
-  '/faisl8500-cmyk5/index.html',
   '/faisl8500-cmyk5/manifest.json',
   '/faisl8500-cmyk5/logo.png'
 ];
 
 // تثبيت الـ Service Worker
 self.addEventListener('install', event => {
-  console.log('[SW] Installing...');
+  console.log('[SW] Installing v2.1.1...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[SW] Caching files');
+        console.log('[SW] Caching static files');
         return cache.addAll(urlsToCache);
       })
       .then(() => self.skipWaiting())
   );
 });
 
-// استرجاع الملفات من الكاش أو الشبكة
+// استراتيجية Network First — يجلب دائماً من الشبكة أولاً
+// وإذا فشل يرجع للكاش (للعمل بدون إنترنت)
 self.addEventListener('fetch', event => {
+  // تجاهل طلبات غير GET
+  if (event.request.method !== 'GET') return;
+
+  // تجاهل طلبات Firebase و Supabase و ImgBB (لا تُخزَّن)
+  const url = event.request.url;
+  if (
+    url.includes('firebase') ||
+    url.includes('supabase') ||
+    url.includes('imgbb') ||
+    url.includes('googleapis')
+  ) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        if (response) {
-          return response;
+        // حفظ نسخة جديدة في الكاش
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
         }
-        return fetch(event.request);
+        return response;
+      })
+      .catch(() => {
+        // إذا فشلت الشبكة، ارجع للكاش
+        return caches.match(event.request);
       })
   );
 });
 
-// تنشيط الـ Service Worker وتنظيف الكاش القديم
+// تنشيط الـ Service Worker وحذف الكاش القديم
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating...');
+  console.log('[SW] Activating v2.1.1...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
