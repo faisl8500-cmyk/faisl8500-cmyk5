@@ -2788,6 +2788,7 @@
                         <div style="font-size: 11px; color: #aaa; margin-top: 4px;">يمكن اختيار أكثر من ملف</div>
                     </div>
                     <input type="file" id="martyrFilesInput" multiple accept="image/*,.pdf" style="display:none" onchange="previewMartyrFiles(this)">
+                    <div id="martyrExistingFiles" style="margin-top: 10px;"></div>
                     <div id="martyrFilesPreview" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
                     <div id="martyrFilesUploadProgress" style="display:none; margin-top: 8px; font-size: 13px; color: #667eea;">⏳ جارٍ رفع الملفات...</div>
                 </div>
@@ -5294,7 +5295,7 @@ function sendRecordToWhatsApp(type, recordId) {
     } else {
         if (record.motherName) message += `👩 اسم الأم: ${record.motherName}\n`;
         if (record.maritalStatus) message += `💍 الحالة الاجتماعية: ${record.maritalStatus}\n`;
-        if (record.phone) message += `?? الهاتف: ${record.phone}\n`;
+        if (record.phone) message += `📞 الهاتف: ${record.phone}\n`;
         if (record.address) message += `🏠 العنوان: ${record.address}\n`;
     }
     
@@ -5667,6 +5668,10 @@ if (!isValidMartyrNationalId(nationalId)) {
                     document.getElementById('martyrPhone').value = martyr.phone || '';
                     document.getElementById('martyrEmploymentStatus').value = martyr.employmentStatus || '';
                     document.getElementById('martyrSalaryType').value = martyr.salaryType || '';
+
+                    // عرض الملفات الموجودة
+                    window._martyrExistingFiles = martyr.files ? [...martyr.files] : [];
+                    renderExistingMartyrFiles();
                     
                     hideAllPages();
                     document.getElementById('addMartyrsForm').style.display = 'block';
@@ -5908,6 +5913,11 @@ async function updateMartyr() {
     
     const oldMartyr = { ...martyrs[index] };
 
+    // رفع الملفات الجديدة المضافة (إن وجدت) ودمجها مع الملفات الموجودة
+    const newUploadedFiles = await uploadMartyrFiles(id, window._martyrPendingFiles || []);
+    window._martyrPendingFiles = [];
+    const finalFiles = [...(window._martyrExistingFiles || []), ...newUploadedFiles];
+
     martyrs[index] = {
         id, rank, name, status,
         eventDate: document.getElementById('martyrEventDate').value,
@@ -5931,7 +5941,7 @@ async function updateMartyr() {
         phone: document.getElementById('martyrPhone').value,
         employmentStatus: document.getElementById('martyrEmploymentStatus').value,
         salaryType: document.getElementById('martyrSalaryType').value,
-        files: oldMartyr.files || []
+        files: finalFiles
     };
 
     const martyrFieldLabels = {
@@ -5959,6 +5969,7 @@ async function updateMartyr() {
     editMartyrId = null;
     document.getElementById('submitMartyrBtn').style.display = 'inline-block';
     document.getElementById('updateMartyrBtn').style.display = 'none';
+    clearMartyrForm();
     
     backToMenu();
 }
@@ -8379,6 +8390,9 @@ function clearMartyrForm() {
     const fi = document.getElementById('martyrFilesInput');
     if (fi) fi.value = '';
     window._martyrPendingFiles = [];
+    window._martyrExistingFiles = [];
+    const ef = document.getElementById('martyrExistingFiles');
+    if (ef) ef.innerHTML = '';
 }
 function inquirySearch() {
     const num = document.getElementById('inquiryNumber').value.trim();
@@ -10415,6 +10429,41 @@ async function deleteMartyrFileModal(martyrId, fileIndex) {
 }
 
 // ========== نهاية نافذة الملفات ==========
+
+window._martyrExistingFiles = [];
+
+function renderExistingMartyrFiles() {
+    const container = document.getElementById('martyrExistingFiles');
+    if (!container) return;
+    const files = window._martyrExistingFiles || [];
+    if (!files.length) { container.innerHTML = ''; return; }
+
+    let html = '<div style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;">📁 الملفات الحالية:</div><div style="display:flex;flex-wrap:wrap;gap:8px;">';
+    files.forEach((f, i) => {
+        if (f.isPdf) {
+            html += `<div style="position:relative;text-align:center;">
+                <a href="${f.url}" target="_blank" style="text-decoration:none;display:block;">
+                    <div style="width:70px;height:70px;border-radius:8px;border:2px solid #e53e3e;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(229,62,62,0.06);">📄</div>
+                </a>
+                <button type="button" onclick="removeExistingMartyrFile(${i})" style="position:absolute;top:-6px;right:-6px;background:#e53e3e;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;">✕</button>
+            </div>`;
+        } else {
+            html += `<div style="position:relative;text-align:center;">
+                <a href="${f.url}" target="_blank" style="text-decoration:none;display:block;">
+                    <img src="${f.thumb || f.url}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);">
+                </a>
+                <button type="button" onclick="removeExistingMartyrFile(${i})" style="position:absolute;top:-6px;right:-6px;background:#e53e3e;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;">✕</button>
+            </div>`;
+        }
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function removeExistingMartyrFile(index) {
+    window._martyrExistingFiles.splice(index, 1);
+    renderExistingMartyrFiles();
+}
 
 window._martyrPendingFiles = [];
 
