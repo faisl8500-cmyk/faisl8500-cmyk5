@@ -10404,22 +10404,69 @@ async function addFilesToMartyrModal(martyrId) {
     input.accept = 'image/*,.pdf';
     input.onchange = async function() {
         if (!input.files.length) return;
+        const files = Array.from(input.files);
+
+        // طلب أسماء مخصصة لكل ملف
+        const customLabels = [];
+        for (let i = 0; i < files.length; i++) {
+            const label = prompt(`اسم المستند ${i+1} من ${files.length}:\n(${files[i].name})\nاتركه فارغاً لاستخدام اسم الملف`);
+            customLabels[i] = (label !== null && label.trim()) ? label.trim() : '';
+        }
+
         const progress = document.getElementById('martyrModalUploadProgress');
-        if (progress) progress.style.display = 'block';
+        if (progress) { progress.style.display = 'block'; progress.textContent = '⏳ جارٍ الرفع...'; }
         const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
         if (!martyr) return;
-        const newFiles = await uploadMartyrFiles(martyrId, Array.from(input.files));
-        if (!newFiles.length) {
-            if (progress) progress.style.display = 'none';
-            return;
-        }
+        const newFiles = await uploadMartyrFilesWithLabels(martyrId, files, customLabels);
+        if (!newFiles.length) { if (progress) progress.style.display = 'none'; return; }
         martyr.files = [...(martyr.files || []), ...newFiles];
         await saveMartyrsToFirebase();
         if (progress) progress.style.display = 'none';
         showMessage('✅ تم رفع الملفات بنجاح');
-        _renderMartyrFilesModalContent(martyrId); // تحديث النافذة
+        _renderMartyrFilesModalContent(martyrId);
     };
     input.click();
+}
+
+// رفع مع أسماء مخصصة (مستقلة عن previewMartyrFiles)
+async function uploadMartyrFilesWithLabels(martyrId, files, customLabels) {
+    const IMGBB_API_KEY = 'c279133d64ee94d11687031859269ce4';
+    const SUPABASE_URL = 'https://ptqjxbjwbdizulbqqqes.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0cWp4Ymp3YmRpenVsYnFxcWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTExMjYsImV4cCI6MjA5NjUyNzEyNn0.CPdHgEw3tzZFt5cQcc1TGAXOGsXB5-06sZKfruWKsIs';
+    const BUCKET = 'bmb';
+    const uploaded = [];
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const customLabel = (customLabels && customLabels[i]) ? customLabels[i] : file.name;
+        try {
+            if (file.type === 'application/pdf') {
+                const fileName = `${martyrId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+                const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${fileName}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true' },
+                    body: file
+                });
+                if (res.ok) {
+                    uploaded.push({ name: customLabel, url: `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${fileName}`, type: 'pdf', isPdf: true, storage: 'supabase' });
+                } else {
+                    showMessage(`❌ فشل رفع PDF`, true);
+                }
+            } else {
+                const b64data = await fileToBase64Strip(file);
+                const formData = new FormData();
+                formData.append('key', IMGBB_API_KEY);
+                formData.append('image', b64data);
+                formData.append('name', `Bmb_${martyrId}_${i+1}`);
+                formData.append('album', 'VgS0G7');
+                const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+                const json = await res.json();
+                if (json.success) {
+                    uploaded.push({ name: customLabel, url: json.data.url, thumb: json.data.thumb?.url || json.data.url, type: 'image', isPdf: false, deleteUrl: json.data.delete_url || null });
+                }
+            }
+        } catch(e) { console.error('خطأ رفع:', e); }
+    }
+    return uploaded;
 }
 
 async function deleteMartyrFileModal(martyrId, fileIndex) {
@@ -10501,20 +10548,34 @@ function previewMartyrFiles(input) {
 
     files.forEach((file, i) => {
         const item = document.createElement('div');
-        item.style.cssText = 'position:relative;display:inline-block;';
+        item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;background:var(--input-bg);';
+
+        const uniqueId = `fileLabel_${i}_${Date.now()}`;
+
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 item.innerHTML = `
-                    <img src="${e.target.result}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);">
-                    <div style="font-size:10px;text-align:center;color:var(--text-secondary);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>`;
+                    <img src="${e.target.result}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);flex-shrink:0;">
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:10px;color:var(--text-secondary);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>
+                        <input id="${uniqueId}" type="text" placeholder="اسم المستند (اختياري)" maxlength="60"
+                            style="width:100%;padding:5px 8px;border-radius:6px;border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-color);font-size:12px;box-sizing:border-box;">
+                    </div>`;
             };
             reader.readAsDataURL(file);
         } else {
             item.innerHTML = `
-                <div style="width:70px;height:70px;border-radius:8px;border:2px solid var(--border-color);display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--input-bg);">📄</div>
-                <div style="font-size:10px;text-align:center;color:var(--text-secondary);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>`;
+                <div style="width:50px;height:50px;border-radius:8px;border:2px solid #e53e3e;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(229,62,62,0.06);flex-shrink:0;">📄</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:10px;color:var(--text-secondary);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>
+                    <input id="${uniqueId}" type="text" placeholder="اسم المستند (اختياري)" maxlength="60"
+                        style="width:100%;padding:5px 8px;border-radius:6px;border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-color);font-size:12px;box-sizing:border-box;">
+                </div>`;
         }
+
+        item.dataset.fileIndex = i;
+        item.dataset.labelId = uniqueId;
         preview.appendChild(item);
         window._martyrPendingFiles.push(file);
     });
@@ -10552,6 +10613,19 @@ async function recoverMartyrFilesFromSupabase(martyrId) {
 
 async function uploadMartyrFiles(martyrId, files) {
     if (!files || !files.length) return [];
+
+    // قراءة الأسماء المخصصة من حقول المعاينة
+    const customLabels = [];
+    const preview = document.getElementById('martyrFilesPreview');
+    if (preview) {
+        const items = preview.querySelectorAll('[data-file-index]');
+        items.forEach(item => {
+            const labelId = item.dataset.labelId;
+            const input = document.getElementById(labelId);
+            customLabels[parseInt(item.dataset.fileIndex)] = input ? input.value.trim() : '';
+        });
+    }
+
     const IMGBB_API_KEY = 'c279133d64ee94d11687031859269ce4';
     const SUPABASE_URL = 'https://ptqjxbjwbdizulbqqqes.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0cWp4Ymp3YmRpenVsYnFxcWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTExMjYsImV4cCI6MjA5NjUyNzEyNn0.CPdHgEw3tzZFt5cQcc1TGAXOGsXB5-06sZKfruWKsIs';
@@ -10567,6 +10641,7 @@ async function uploadMartyrFiles(martyrId, files) {
             if (file.type === 'application/pdf') {
                 // رفع PDF الأصلي على Supabase
                 if (progress) progress.textContent = `⏳ جارٍ رفع PDF على Supabase...`;
+                const customLabel = customLabels[i] || file.name;
                 const fileName = `${martyrId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
                 try {
                     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${fileName}`, {
@@ -10583,7 +10658,7 @@ async function uploadMartyrFiles(martyrId, files) {
                     if (res.ok) {
                         const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${fileName}`;
                         uploaded.push({
-                            name: file.name,
+                            name: customLabel,
                             url: publicUrl,
                             type: 'pdf',
                             isPdf: true,
@@ -10598,6 +10673,7 @@ async function uploadMartyrFiles(martyrId, files) {
                     showMessage('❌ خطأ في الاتصال بـ Supabase: ' + fetchErr.message, true);
                 }
             } else {
+                const customLabel = customLabels[i] || `${martyrId}_${i+1}_${file.name}`;
                 const b64data = await fileToBase64Strip(file);
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
@@ -10607,7 +10683,14 @@ async function uploadMartyrFiles(martyrId, files) {
                 const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
                 const json = await res.json();
                 if (json.success) {
-                    uploaded.push({ name: `${martyrId}_${i+1}_${file.name}`, url: json.data.url, thumb: json.data.thumb?.url || json.data.url, type: 'image', isPdf: false });
+                    uploaded.push({
+                        name: customLabel,
+                        url: json.data.url,
+                        thumb: json.data.thumb?.url || json.data.url,
+                        type: 'image',
+                        isPdf: false,
+                        deleteUrl: json.data.delete_url || null
+                    });
                 }
             }
         } catch(e) { console.error('خطأ رفع ملف:', e); }
