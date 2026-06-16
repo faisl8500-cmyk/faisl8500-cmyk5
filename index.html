@@ -2815,6 +2815,23 @@
             <input type="number" id="inquiryNumber" placeholder="أدخل الرقم العسكري أو الوظيفي" style="font-size: 18px; padding: 15px;">
         </div>
         <button class="btn" onclick="inquirySearch()" style="width:100%; padding:15px; font-size:18px;">🔍 بحث</button>
+        <div style="text-align:center; margin: 12px 0; color:#999; font-size:13px;">— أو —</div>
+        <div class="form-group">
+            <label>📷 بحث بالباركود</label>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <button onclick="openCameraScanner('inquiry')" style="flex:1; padding:14px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
+                    📸 فتح الكاميرا
+                </button>
+                <button onclick="document.getElementById('inquiryBarcodeInput').click()" style="flex:1; padding:14px; background:var(--input-bg); color:#667eea; border:2px solid #667eea; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
+                    🖼️ رفع صورة
+                </button>
+            </div>
+            <input type="file" id="inquiryBarcodeInput" accept="image/*" style="display:none;" onchange="readBarcodeFromImageForInquiry(this)">
+            <div id="inquiryBarcodePreview" style="display:none; margin-top:10px; text-align:center;">
+                <img id="inquiryBarcodeImg" style="max-width:100%; border-radius:10px; max-height:200px; object-fit:contain;" />
+                <p id="inquiryBarcodeStatus" style="margin-top:8px; font-weight:bold; color:#667eea;"></p>
+            </div>
+        </div>
         <div id="inquiryResults" class="search-results" style="margin-top:20px;"></div>
     </div>
 </div>
@@ -3163,6 +3180,10 @@
                     <span class="modal-btn-icon">🕊️</span>
                     <span class="modal-btn-text">كشف جميع الشهداء</span>
                 </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showBarcodeNameReport('martyrs');">
+                    <span class="modal-btn-icon">🎫</span>
+                    <span class="modal-btn-text">كشف الشهداء بالباركود (تصاعدي)</span>
+                </button>
                 <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('martyrs_retired');">
                     <span class="modal-btn-icon">🕊️</span>
                     <span class="modal-btn-text">شهداء (المتقاعدين)</span>
@@ -3210,6 +3231,10 @@
                 <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('all_injured');">
                     <span class="modal-btn-icon">🩸</span>
                     <span class="modal-btn-text">كشف جميع الجرحى</span>
+                </button>
+                <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showBarcodeNameReport('injured');">
+                    <span class="modal-btn-icon">🎫</span>
+                    <span class="modal-btn-text">كشف الجرحى بالباركود (تصاعدي)</span>
                 </button>
                 <button class="modal-report-btn injured-style" onclick="closeMartyrsReportsModal(); showMartyrsReport('injured_retired');">
                     <span class="modal-btn-icon">🩸</span>
@@ -6222,6 +6247,12 @@ function showMilitarySummary() {
         function showCivilianFull() { currentReportTitle = 'بيانات الموظفين (كاملة)'; showReportTable(['م', 'الرقم', 'الرتبة', 'الاسم', 'الأم', 'الحالة', 'الدرجة', 'تاريخ الترقية', 'القرار', 'الوطني', 'البطاقة', 'الجواز', 'القيد', 'الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف'], civilians.map((c, i) => [i+1, c.id, c.rank, c.name, c.motherName, c.maritalStatus, c.promotionRank, c.lastPromotionDate, c.decisionInfo, c.nationalId, c.idCardNumber, c.passportNumber, c.recordNo, c.birthDate, c.birthPlace, c.address, c.phone])); }
 
 function showReportTable(headers, rows) {
+    window._isBarcodeCardReport = false;
+    const excelBtnReset = document.querySelector('#reportActions .excel-btn');
+    const waBtnReset = document.querySelector('#reportActions .btn-whatsapp');
+    if (excelBtnReset) excelBtnReset.style.display = '';
+    if (waBtnReset) waBtnReset.style.display = '';
+
     const now = new Date();
     const printDate = now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
@@ -6280,6 +6311,121 @@ JsBarcode(`#${barcodeId}`, barcodeText, {
         }, 200);
     }
 }
+
+// ========== تقرير بطاقات الباركود (اسم + باركود لكل شخص) ==========
+function showBarcodeNameReport(kind) {
+    window._isBarcodeCardReport = true;
+
+    let data = [];
+    let title = '';
+
+    if (kind === 'martyrs') {
+        data = martyrs.filter(m => m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
+        title = 'كشف بأسماء الشهداء بالباركود\nفرع شؤون الشهداء المرقب';
+    } else {
+        data = martyrs.filter(m => m.status === 'جريح حرب');
+        title = 'كشف بأسماء الجرحى بالباركود\nفرع شؤون الشهداء المرقب';
+    }
+
+    // ترتيب تصاعدي حسب الاسم (أبجدياً)
+    const sorted = [...data].sort((a, b) => (a.name || '').localeCompare((b.name || ''), 'ar'));
+
+    currentReportTitle = title;
+    window._barcodeReportData = sorted;
+
+    const now = new Date();
+    const printDate = now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    let html = `<div class="report-title" style="text-align:center; white-space:pre-line; font-size:18px; font-weight:bold; margin-bottom:5px;">${title}</div>`;
+    html += `<div style="text-align:center; font-size:11px; color:#888; margin-bottom:15px;">📅 ${printDate} &nbsp;|&nbsp; 👥 العدد: ${sorted.length}</div>`;
+
+    if (sorted.length === 0) {
+        html += `<div style="text-align:center; padding:40px; color:#e53e3e;">لا توجد بيانات</div>`;
+    } else {
+        html += `<div id="barcodeCardsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px;">`;
+        sorted.forEach((m, i) => {
+            const cardBarcodeId = `bcname_${i}_${Date.now()}`;
+            html += `
+            <div class="barcode-name-card" style="border:2px solid #667eea; border-radius:14px; padding:14px 10px; text-align:center; background:var(--result-card-bg,#f8f9fa);">
+                <div style="font-size:13px; color:#888; margin-bottom:6px;">#${i + 1}</div>
+                <svg id="${cardBarcodeId}" data-barcode-value="${m.id || ''}" style="width:100%; max-width:180px; height:50px;"></svg>
+                <div style="font-size:15px; font-weight:bold; color:#333; margin-top:6px;">${m.name || '-'}</div>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+
+    document.getElementById('reportContent').innerHTML = html;
+    document.getElementById('reportActions').style.display = 'flex';
+    currentReportHtml = html;
+
+    // إخفاء أزرار غير المناسبة لهذا النوع من التقرير (إكسل وواتساب)
+    const excelBtn = document.querySelector('#reportActions .excel-btn');
+    const waBtn = document.querySelector('#reportActions .btn-whatsapp');
+    if (excelBtn) excelBtn.style.display = 'none';
+    if (waBtn) waBtn.style.display = 'none';
+
+    // توليد كل الباركودات بعد رسم الـ DOM
+    setTimeout(() => {
+        document.querySelectorAll('#barcodeCardsGrid svg[data-barcode-value]').forEach(svg => {
+            const val = svg.getAttribute('data-barcode-value');
+            if (!val) return;
+            try {
+                JsBarcode(svg, val, {
+                    format: 'CODE128',
+                    width: 1.5,
+                    height: 45,
+                    fontSize: 10,
+                    textMargin: 2,
+                    margin: 4,
+                    displayValue: false
+                });
+            } catch(e) {
+                console.log('خطأ في توليد الباركود:', e);
+            }
+        });
+        // حفظ نسخة محدّثة فيها الـ SVGs المرسومة فعلياً للطباعة
+        currentReportHtml = document.getElementById('reportContent').innerHTML;
+    }, 250);
+}
+
+function printBarcodeNameReport() {
+    // التأكد من أخذ آخر نسخة من المحتوى (بعد رسم الباركودات)
+    const liveContent = document.getElementById('reportContent').innerHTML;
+    const printUserName = currentUser ? currentUser.name : 'مستخدم';
+    const printDate = new Date().toLocaleString('ar-SA', { numberingSystem: 'latn' });
+
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>${currentReportTitle}</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI', Tahoma, sans-serif; padding:10px; direction:rtl; }
+        .report-title { text-align:center; font-size:18px; font-weight:bold; margin-bottom:5px; white-space:pre-line; }
+        #barcodeCardsGrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px; }
+        .barcode-name-card { border:2px solid #667eea; border-radius:14px; padding:12px 8px; text-align:center; background:#f8f9fa; page-break-inside:avoid; }
+        @page { size: A4; margin: 8mm; }
+        @media print {
+            body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+            svg { display:block !important; visibility:visible !important; }
+        }
+    </style>
+</head>
+<body>
+    ${liveContent}
+    <div style="margin-top:20px; padding-top:10px; border-top:2px solid #667eea; text-align:center; font-size:12px; color:#555;">
+        👤 أُعدّ بواسطة: <strong>${printUserName}</strong> &nbsp;|&nbsp; 📅 ${printDate}
+    </div>
+</body>
+</html>`);
+    win.document.close();
+    setTimeout(() => { win.print(); }, 800);
+}
+// ========== نهاية تقرير بطاقات الباركود ==========
+
 function showMartyrsReport(reportType) {
     const allMartyrs = martyrs.filter(m => m.status === 'شهيد.' || m.status === 'شهيد عمليات' || m.status === 'شهيد واجب');
     const allInjured = martyrs.filter(m => m.status === 'جريح حرب');
@@ -6556,6 +6702,10 @@ function sendReportToWhatsApp() {
     showMessage('✅ تم فتح واتساب لإرسال التقرير', false);
 }
 function printReport() {
+    if (window._isBarcodeCardReport) {
+        printBarcodeNameReport();
+        return;
+    }
     const originalSvg = document.querySelector('#reportContent svg');
     let barcodeHtml = '';
     if (originalSvg) {
@@ -11064,6 +11214,52 @@ function readBarcodeFromImageForSearch(input) {
     reader.readAsDataURL(file);
 }
 
+// قراءة الباركود من صورة في نموذج خدمة الاستعلام
+function readBarcodeFromImageForInquiry(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const preview = document.getElementById('inquiryBarcodePreview');
+    const previewImg = document.getElementById('inquiryBarcodeImg');
+    const status = document.getElementById('inquiryBarcodeStatus');
+    
+    preview.style.display = 'block';
+    status.style.color = '#667eea';
+    status.textContent = '⏳ جاري قراءة الباركود...';
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        
+        const img = new Image();
+        img.onload = function() {
+            if ('BarcodeDetector' in window) {
+                const detector = new BarcodeDetector({ formats: ['code_128', 'code_39', 'ean_13', 'ean_8', 'qr_code', 'data_matrix', 'pdf417', 'aztec', 'code_93'] });
+                detector.detect(img).then(barcodes => {
+                    if (barcodes.length > 0) {
+                        const val = barcodes[0].rawValue;
+                        document.getElementById('inquiryNumber').value = val;
+                        status.style.color = '#38a169';
+                        status.textContent = '✅ تم قراءة الباركود: ' + val;
+                        inquirySearch();
+                    } else {
+                        status.style.color = '#e53e3e';
+                        status.textContent = '❌ لم يتم العثور على باركود في الصورة، تأكد من وضوحها';
+                    }
+                }).catch(() => {
+                    status.style.color = '#e53e3e';
+                    status.textContent = '❌ تعذّر قراءة الباركود، تأكد من وضوح الصورة';
+                });
+            } else {
+                status.style.color = '#d97706';
+                status.textContent = '⚠️ قراءة الباركود غير مدعومة في هذا المتصفح. استخدم Chrome أو Edge.';
+            }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 // فتح مودال الباركود بناءً على الرقم مباشرة
 function openBarcodeModal_byNumber(num) {
     let record = null, type = '', title = '', color = '#667eea';
@@ -11240,6 +11436,17 @@ function onBarcodeDetected(value) {
             if (document.getElementById('barcodePreviewImg')) document.getElementById('barcodePreviewImg').style.display = 'none';
             if (statusEl) { statusEl.style.color = '#38a169'; statusEl.textContent = '✅ تم قراءة الباركود: ' + value; }
             openBarcodeModal_byNumber(value);
+        } else if (_cameraMode === 'inquiry') {
+            document.getElementById('inquiryNumber').value = value;
+            const statusEl = document.getElementById('inquiryBarcodeStatus');
+            const preview = document.getElementById('inquiryBarcodePreview');
+            if (statusEl) {
+                preview.style.display = 'block';
+                document.getElementById('inquiryBarcodeImg').style.display = 'none';
+                statusEl.style.color = '#38a169';
+                statusEl.textContent = '✅ تم قراءة الباركود: ' + value;
+            }
+            inquirySearch();
         }
     }, 800);
 }
