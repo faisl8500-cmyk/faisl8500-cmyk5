@@ -1,5 +1,5 @@
 // sw.js - Service Worker لمنظومة فرع المرقب
-const CACHE_NAME = 'far-almorqb-v2.1.1';
+const CACHE_NAME = 'far-almorqb-v2.1.2';
 
 // الملفات الثابتة فقط (لا تتغير كثيراً)
 const urlsToCache = [
@@ -9,7 +9,7 @@ const urlsToCache = [
 
 // تثبيت الـ Service Worker
 self.addEventListener('install', event => {
-  console.log('[SW] Installing v2.1.1...');
+  console.log('[SW] Installing v2.1.2...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -58,7 +58,7 @@ self.addEventListener('fetch', event => {
 
 // تنشيط الـ Service Worker وحذف الكاش القديم
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating v2.1.1...');
+  console.log('[SW] Activating v2.1.2...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
