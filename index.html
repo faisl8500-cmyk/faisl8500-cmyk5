@@ -2835,9 +2835,26 @@
             <div class="search-method">
                 <label><input type="radio" name="searchMethod" value="number" checked> بحث بالرقم</label>
                 <label><input type="radio" name="searchMethod" value="name"> بحث بالاسم</label>
+                <label><input type="radio" name="searchMethod" value="barcode"> 📷 بحث بالباركود</label>
             </div>
             <div class="form-group" id="searchNumberDiv"><label>🔎 رقم البحث</label><input type="number" id="searchNumber"></div>
             <div class="form-group" id="searchNameDiv" style="display:none;"><label>🔎 اسم البحث</label><input type="text" id="searchName"></div>
+            <div class="form-group" id="searchBarcodeDiv" style="display:none;">
+                <label>📷 قراءة الباركود</label>
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <button onclick="openCameraScanner('search')" style="flex:1; padding:14px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
+                        📸 فتح الكاميرا
+                    </button>
+                    <button onclick="document.getElementById('searchBarcodeInput').click()" style="flex:1; padding:14px; background:var(--input-bg); color:#667eea; border:2px solid #667eea; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
+                        🖼️ رفع صورة
+                    </button>
+                </div>
+                <input type="file" id="searchBarcodeInput" accept="image/*" style="display:none;" onchange="readBarcodeFromImageForSearch(this)">
+                <div id="searchBarcodePreview" style="display:none; margin-top:10px; text-align:center;">
+                    <img id="searchBarcodeImg" style="max-width:100%; border-radius:10px; max-height:200px; object-fit:contain;" />
+                    <p id="searchBarcodeStatus" style="margin-top:8px; font-weight:bold; color:#667eea;"></p>
+                </div>
+            </div>
             <button class="btn" onclick="search()">🔍 بحث</button>
             <div id="searchResults" class="search-results"></div>
         </div>
@@ -3016,14 +3033,31 @@
 </div>
     
     <div id="barcodePrintModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
-        <div style="background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; text-align: center; direction: rtl;">
+        <div style="background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; text-align: center; direction: rtl; max-height: 90vh; overflow-y: auto;">
             <h3 style="color: #333; margin-bottom: 10px;">🎫 بطاقة تعريفية</h3>
             <p style="color: #666; margin-bottom: 5px; font-size: 12px;">إدارة شؤون الشهداء - فرع المرقب</p>
             <div style="background: #f8f9fa; border-radius: 15px; padding: 20px; margin: 15px 0;">
                 <div id="barcodePrintContent">
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <!-- قسم قراءة الباركود من صورة -->
+            <div style="border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 5px;">
+                <p style="font-size: 13px; color: #555; margin-bottom: 10px; font-weight: bold;">📷 قراءة الباركود</p>
+                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                    <button onclick="openCameraScanner('modal')" style="flex:1; padding:10px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:10px; cursor:pointer; font-size:13px; font-weight:bold;">
+                        📸 فتح الكاميرا
+                    </button>
+                    <button onclick="document.getElementById('barcodeImageUpload').click()" style="flex:1; padding:10px; background:#f0f4ff; color:#667eea; border:2px solid #667eea; border-radius:10px; cursor:pointer; font-size:13px; font-weight:bold;">
+                        🖼️ رفع صورة
+                    </button>
+                </div>
+                <input type="file" id="barcodeImageUpload" accept="image/*" style="display:none;" onchange="readBarcodeFromImage(this)">
+                <div id="barcodeImagePreview" style="display:none; margin-top:10px;">
+                    <img id="barcodePreviewImg" style="max-width:100%; border-radius:8px; max-height:150px; object-fit:contain;" />
+                    <p id="barcodeReadStatus" style="margin-top:8px; font-size:13px; font-weight:bold;"></p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
                 <button onclick="printBarcodeCard()" style="background: #667eea; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold;">🖨️ طباعة</button>
                 <button onclick="closeBarcodeModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px;">إغلاق</button>
             </div>
@@ -5081,6 +5115,12 @@ function showConfirmModal(message, onConfirm, onCancel = null) {
             radio.addEventListener('change', function() {
                 document.getElementById('searchNumberDiv').style.display = this.value === 'number' ? 'block' : 'none';
                 document.getElementById('searchNameDiv').style.display = this.value === 'name' ? 'block' : 'none';
+                document.getElementById('searchBarcodeDiv').style.display = this.value === 'barcode' ? 'block' : 'none';
+                // إعادة تعيين حقل الباركود عند التبديل
+                if (this.value !== 'barcode') {
+                    document.getElementById('searchBarcodeInput').value = '';
+                    document.getElementById('searchBarcodePreview').style.display = 'none';
+                }
             });
         });
 
@@ -5105,6 +5145,22 @@ function search() {
         if (type === 'military') { const r = militaries.find(m => m.id.toString() === num); if (r) results = [r]; }
         else if (type === 'civilian') { const r = civilians.find(c => c.id.toString() === num); if (r) results = [r]; }
         else { const r = martyrs.find(m => m.id.toString() === num); if (r) results = [r]; }
+    } else if (method === 'barcode') {
+        // البحث عن طريق الرقم المقروء من الباركود
+        const barcodeNum = window._lastScannedBarcodeNumber;
+        if (!barcodeNum) { showMessage('يرجى تحميل صورة تحتوي على باركود أولاً', true); return; }
+        const num = barcodeNum.toString().trim();
+        // البحث في جميع الأنواع إذا كان نوع البحث محدداً
+        if (type === 'military') { const r = militaries.find(m => m.id.toString() === num); if (r) results = [r]; }
+        else if (type === 'civilian') { const r = civilians.find(c => c.id.toString() === num); if (r) results = [r]; }
+        else { const r = martyrs.find(m => m.id.toString() === num); if (r) results = [r]; }
+        // إذا لم يوجد في النوع المحدد، ابحث في الكل
+        if (results.length === 0) {
+            let found = militaries.find(m => m.id.toString() === num);
+            if (found) { results = [found]; }
+            if (!found) { found = civilians.find(c => c.id.toString() === num); if (found) results = [found]; }
+            if (!found) { found = martyrs.find(m => m.id.toString() === num); if (found) results = [found]; }
+        }
     } else {
         const name = document.getElementById('searchName').value.trim().toLowerCase();
         if (!name) { showMessage('أدخل اسم البحث', true); return; }
@@ -10904,6 +10960,346 @@ function _showBackExitDialog() {
 }
 
 // ========== نهاية دعم زر الرجوع ==========
+
+// ========== قراءة الباركود من صورة ==========
+
+// قراءة الباركود من صورة في مودال الباركود
+function readBarcodeFromImage(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const preview = document.getElementById('barcodeImagePreview');
+    const previewImg = document.getElementById('barcodePreviewImg');
+    const status = document.getElementById('barcodeReadStatus');
+    
+    preview.style.display = 'block';
+    status.style.color = '#667eea';
+    status.textContent = '⏳ جاري قراءة الباركود...';
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // محاولة قراءة الباركود باستخدام BarcodeDetector إذا كان مدعوماً
+            if ('BarcodeDetector' in window) {
+                const detector = new BarcodeDetector({ formats: ['code_128', 'code_39', 'ean_13', 'ean_8', 'qr_code', 'data_matrix', 'pdf417', 'aztec', 'code_93'] });
+                detector.detect(img).then(barcodes => {
+                    if (barcodes.length > 0) {
+                        const val = barcodes[0].rawValue;
+                        status.style.color = '#38a169';
+                        status.textContent = '✅ تم قراءة الباركود: ' + val;
+                        // عرض بيانات الشخص تلقائياً
+                        openBarcodeModal_byNumber(val);
+                    } else {
+                        status.style.color = '#e53e3e';
+                        status.textContent = '❌ لم يتم العثور على باركود في الصورة';
+                    }
+                }).catch(() => {
+                    status.style.color = '#e53e3e';
+                    status.textContent = '❌ تعذّر قراءة الباركود، تأكد من وضوح الصورة';
+                });
+            } else {
+                // Fallback: زxing-js أو رسالة للمستخدم
+                status.style.color = '#d97706';
+                status.textContent = '⚠️ قراءة الباركود غير مدعومة في هذا المتصفح. استخدم Chrome أو Edge الأحدث.';
+            }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// قراءة الباركود من صورة في صفحة البحث
+function readBarcodeFromImageForSearch(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const preview = document.getElementById('searchBarcodePreview');
+    const previewImg = document.getElementById('searchBarcodeImg');
+    const status = document.getElementById('searchBarcodeStatus');
+    
+    preview.style.display = 'block';
+    status.style.color = '#667eea';
+    status.textContent = '⏳ جاري قراءة الباركود...';
+    window._lastScannedBarcodeNumber = null;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        
+        const img = new Image();
+        img.onload = function() {
+            if ('BarcodeDetector' in window) {
+                const detector = new BarcodeDetector({ formats: ['code_128', 'code_39', 'ean_13', 'ean_8', 'qr_code', 'data_matrix', 'pdf417', 'aztec', 'code_93'] });
+                detector.detect(img).then(barcodes => {
+                    if (barcodes.length > 0) {
+                        const val = barcodes[0].rawValue;
+                        window._lastScannedBarcodeNumber = val;
+                        status.style.color = '#38a169';
+                        status.textContent = '✅ تم قراءة الباركود: ' + val + ' — اضغط بحث للمتابعة';
+                    } else {
+                        status.style.color = '#e53e3e';
+                        status.textContent = '❌ لم يتم العثور على باركود في الصورة، تأكد من وضوحها';
+                    }
+                }).catch(() => {
+                    status.style.color = '#e53e3e';
+                    status.textContent = '❌ تعذّر قراءة الباركود، تأكد من وضوح الصورة';
+                });
+            } else {
+                status.style.color = '#d97706';
+                status.textContent = '⚠️ قراءة الباركود غير مدعومة في هذا المتصفح. استخدم Chrome أو Edge.';
+            }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// فتح مودال الباركود بناءً على الرقم مباشرة
+function openBarcodeModal_byNumber(num) {
+    let record = null, type = '', title = '', color = '#667eea';
+    
+    record = militaries.find(m => m.id.toString() === num.toString());
+    if (record) { type = 'military'; title = '🎖️ عسكري'; color = '#2c3e50'; }
+    
+    if (!record) {
+        record = civilians.find(c => c.id.toString() === num.toString());
+        if (record) { type = 'civilian'; title = '👨‍💼 موظف'; color = '#1e3c72'; }
+    }
+    if (!record) {
+        record = martyrs.find(m => m.id.toString() === num.toString());
+        if (record) { type = 'martyr'; title = '🕊️ شهيد/جريح'; color = '#800000'; }
+    }
+    
+    if (!record) {
+        document.getElementById('barcodeReadStatus').style.color = '#e53e3e';
+        document.getElementById('barcodeReadStatus').textContent = '❌ لم يُعثر على سجل بالرقم: ' + num;
+        return;
+    }
+    
+    const barcodeId = 'barcode_scan_' + Date.now();
+    const recordName = record.name || 'غير معروف';
+    const recordRank = record.rank || '';
+    const recordStatus = record.status || '';
+    
+    document.getElementById('barcodePrintContent').innerHTML = `
+        <div style="text-align: center;">
+            <svg id="${barcodeId}" style="width: 200px; height: 60px;"></svg>
+            <p style="font-size: 14px; font-weight: bold; margin-top: 5px; color: ${color};">${num}</p>
+            <p style="font-size: 16px; font-weight: bold; color: #333;">${recordName}</p>
+            <p style="font-size: 12px; color: #666;">${recordRank}${recordStatus ? ' - ' + recordStatus : ''}</p>
+        </div>`;
+    
+    setTimeout(() => {
+        try {
+            JsBarcode('#' + barcodeId, num, {
+                format: 'CODE128', width: 2, height: 50,
+                fontSize: 12, textMargin: 5, margin: 10, displayValue: false
+            });
+        } catch(e) {}
+    }, 300);
+}
+
+// ========== نهاية قراءة الباركود من صورة ==========
+
+// ========== كاميرا الباركود ==========
+let _cameraStream = null;
+let _cameraMode = 'search'; // 'search' أو 'modal'
+let _cameraFacingMode = 'environment'; // الكاميرا الخلفية افتراضياً
+let _scanInterval = null;
+
+async function openCameraScanner(mode) {
+    _cameraMode = mode;
+    const modal = document.getElementById('cameraScannerModal');
+    modal.style.display = 'flex';
+    document.getElementById('cameraResult').style.display = 'none';
+    document.getElementById('cameraStatus').textContent = '🔍 جاري تشغيل الكاميرا...';
+    document.getElementById('cameraStatus').style.color = '#ccc';
+    await startCamera();
+}
+
+async function startCamera() {
+    // إيقاف أي بث سابق
+    if (_cameraStream) {
+        _cameraStream.getTracks().forEach(t => t.stop());
+        _cameraStream = null;
+    }
+    if (_scanInterval) { clearInterval(_scanInterval); _scanInterval = null; }
+
+    const video = document.getElementById('cameraVideo');
+    try {
+        _cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: _cameraFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+        video.srcObject = _cameraStream;
+        video.onloadedmetadata = () => {
+            video.play();
+            document.getElementById('cameraStatus').textContent = '🔍 وجّه الكاميرا نحو الباركود...';
+            // بدء المسح التلقائي كل 600ms
+            startAutoScan();
+        };
+    } catch(err) {
+        document.getElementById('cameraStatus').textContent = '❌ تعذّر الوصول للكاميرا. تأكد من منح الإذن.';
+        document.getElementById('cameraStatus').style.color = '#e53e3e';
+        console.error('Camera error:', err);
+    }
+}
+
+function startAutoScan() {
+    if (_scanInterval) clearInterval(_scanInterval);
+    if (!('BarcodeDetector' in window)) {
+        document.getElementById('cameraStatus').textContent = '⚠️ المسح التلقائي غير مدعوم، استخدم زر "التقاط"';
+        return;
+    }
+    const detector = new BarcodeDetector({ formats: ['code_128','code_39','ean_13','ean_8','qr_code','data_matrix','pdf417','code_93','aztec'] });
+    const video = document.getElementById('cameraVideo');
+    _scanInterval = setInterval(async () => {
+        if (!video.videoWidth) return;
+        try {
+            const barcodes = await detector.detect(video);
+            if (barcodes.length > 0) {
+                onBarcodeDetected(barcodes[0].rawValue);
+            }
+        } catch(e) {}
+    }, 600);
+}
+
+function captureAndScan() {
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('cameraCanvas');
+    if (!video.videoWidth) {
+        document.getElementById('cameraStatus').textContent = '⚠️ الكاميرا لم تبدأ بعد';
+        return;
+    }
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+
+    if ('BarcodeDetector' in window) {
+        const detector = new BarcodeDetector({ formats: ['code_128','code_39','ean_13','ean_8','qr_code','data_matrix','pdf417','code_93','aztec'] });
+        const img = new Image();
+        img.onload = () => {
+            detector.detect(img).then(barcodes => {
+                if (barcodes.length > 0) {
+                    onBarcodeDetected(barcodes[0].rawValue);
+                } else {
+                    document.getElementById('cameraStatus').textContent = '❌ لم يُعثر على باركود، أعد المحاولة';
+                    document.getElementById('cameraStatus').style.color = '#e53e3e';
+                }
+            }).catch(() => {
+                document.getElementById('cameraStatus').textContent = '❌ تعذرت القراءة، حاول مرة أخرى';
+                document.getElementById('cameraStatus').style.color = '#e53e3e';
+            });
+        };
+        img.src = canvas.toDataURL();
+    } else {
+        document.getElementById('cameraStatus').textContent = '⚠️ المتصفح لا يدعم قراءة الباركود تلقائياً';
+        document.getElementById('cameraStatus').style.color = '#d97706';
+    }
+}
+
+function onBarcodeDetected(value) {
+    // إيقاف المسح التلقائي
+    if (_scanInterval) { clearInterval(_scanInterval); _scanInterval = null; }
+
+    // إظهار النتيجة
+    document.getElementById('cameraResult').style.display = 'block';
+    document.getElementById('cameraResultValue').textContent = value;
+    document.getElementById('cameraStatus').textContent = '✅ تم قراءة الباركود بنجاح!';
+    document.getElementById('cameraStatus').style.color = '#48bb78';
+
+    // اهتزاز قصير إذا كان مدعوماً
+    if (navigator.vibrate) navigator.vibrate(100);
+
+    // تطبيق النتيجة حسب الوضع بعد لحظة
+    setTimeout(() => {
+        closeCameraScanner();
+        if (_cameraMode === 'search') {
+            window._lastScannedBarcodeNumber = value;
+            const statusEl = document.getElementById('searchBarcodeStatus');
+            const preview = document.getElementById('searchBarcodePreview');
+            if (statusEl) {
+                preview.style.display = 'block';
+                document.getElementById('searchBarcodeImg').style.display = 'none';
+                statusEl.style.color = '#38a169';
+                statusEl.textContent = '✅ تم قراءة الباركود: ' + value + ' — اضغط بحث للمتابعة';
+            }
+        } else if (_cameraMode === 'modal') {
+            const statusEl = document.getElementById('barcodeReadStatus');
+            const preview = document.getElementById('barcodeImagePreview');
+            if (preview) preview.style.display = 'block';
+            if (document.getElementById('barcodePreviewImg')) document.getElementById('barcodePreviewImg').style.display = 'none';
+            if (statusEl) { statusEl.style.color = '#38a169'; statusEl.textContent = '✅ تم قراءة الباركود: ' + value; }
+            openBarcodeModal_byNumber(value);
+        }
+    }, 800);
+}
+
+function switchCamera() {
+    _cameraFacingMode = _cameraFacingMode === 'environment' ? 'user' : 'environment';
+    document.getElementById('cameraStatus').textContent = '🔄 جاري تبديل الكاميرا...';
+    document.getElementById('cameraStatus').style.color = '#ccc';
+    startCamera();
+}
+
+function closeCameraScanner() {
+    if (_scanInterval) { clearInterval(_scanInterval); _scanInterval = null; }
+    if (_cameraStream) { _cameraStream.getTracks().forEach(t => t.stop()); _cameraStream = null; }
+    const video = document.getElementById('cameraVideo');
+    if (video) { video.srcObject = null; }
+    document.getElementById('cameraScannerModal').style.display = 'none';
+    document.getElementById('cameraResult').style.display = 'none';
+}
+// ========== نهاية كاميرا الباركود ==========
    </script>
+
+<!-- ========== مودال الكاميرا لقراءة الباركود ========== -->
+<div id="cameraScannerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:99999; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+    <div style="width:100%; max-width:420px; direction:rtl;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="color:#fff; font-size:18px; margin:0;">📸 مسح الباركود بالكاميرا</h3>
+            <button onclick="closeCameraScanner()" style="background:#e53e3e; color:white; border:none; border-radius:50%; width:36px; height:36px; font-size:18px; cursor:pointer; line-height:1;">✕</button>
+        </div>
+        <div style="position:relative; width:100%; border-radius:16px; overflow:hidden; background:#000;">
+            <video id="cameraVideo" autoplay playsinline muted style="width:100%; display:block; max-height:60vh; object-fit:cover;"></video>
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+                <div style="width:65%; height:38%; border:3px solid #667eea; border-radius:12px; box-shadow:0 0 0 2000px rgba(0,0,0,0.35); position:relative;">
+                    <div style="position:absolute; top:-3px; right:-3px; width:22px; height:22px; border-top:4px solid #fff; border-right:4px solid #fff; border-radius:0 6px 0 0;"></div>
+                    <div style="position:absolute; top:-3px; left:-3px; width:22px; height:22px; border-top:4px solid #fff; border-left:4px solid #fff; border-radius:6px 0 0 0;"></div>
+                    <div style="position:absolute; bottom:-3px; right:-3px; width:22px; height:22px; border-bottom:4px solid #fff; border-right:4px solid #fff; border-radius:0 0 6px 0;"></div>
+                    <div style="position:absolute; bottom:-3px; left:-3px; width:22px; height:22px; border-bottom:4px solid #fff; border-left:4px solid #fff; border-radius:0 0 0 6px;"></div>
+                    <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #667eea, #fff, #667eea, transparent); animation:scanAnim 1.8s linear infinite;"></div>
+                </div>
+            </div>
+            <canvas id="cameraCanvas" style="display:none;"></canvas>
+        </div>
+        <p id="cameraStatus" style="color:#ccc; text-align:center; margin:12px 0 8px; font-size:14px;">🔍 وجّه الكاميرا نحو الباركود...</p>
+        <div style="display:flex; gap:10px; margin-top:4px;">
+            <button onclick="switchCamera()" style="flex:1; padding:12px; background:#2d3748; color:#fff; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold;">🔄 تبديل الكاميرا</button>
+            <button onclick="captureAndScan()" style="flex:1; padding:12px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold;">📷 التقاط</button>
+        </div>
+        <div id="cameraResult" style="display:none; margin-top:12px; padding:14px; background:#1a2e1a; border-radius:12px; border:2px solid #48bb78; text-align:center;">
+            <p style="color:#48bb78; font-size:14px; font-weight:bold; margin:0 0 4px;">✅ تم قراءة الباركود</p>
+            <p id="cameraResultValue" style="color:#fff; font-size:22px; font-weight:bold; margin:0;"></p>
+        </div>
+    </div>
+</div>
+<style>
+@keyframes scanAnim {
+    0%   { top: 4%; }
+    50%  { top: 88%; }
+    100% { top: 4%; }
+}
+</style>
+
 </body>
 </html>
