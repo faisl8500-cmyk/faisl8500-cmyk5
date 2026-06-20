@@ -2255,6 +2255,11 @@
     </script>
     <!-- مكتبة الباركود JsBarcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <!-- مكتبة الكيو آر كود QRCode.js -->
+    <script type="module">
+        import QRCode from "https://esm.sh/qrcode@1.5.4";
+        window.QRCode = QRCode;
+    </script>
     <!-- مكتبة قراءة Excel SheetJS -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
@@ -2513,7 +2518,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
                     <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px;">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.2</span></p>
+                    <p style="font-size: 10px;">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.3</span></p>
                     <style>
                         @keyframes blinkGreenBlack {
                             0%,49%  { color: #00cc44; text-shadow: 0 0 8px #00cc44; }
@@ -2537,6 +2542,9 @@
                 <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="new-password">
             </div>
             <button class="btn-login" onclick="login()">تسجيل الدخول</button>
+            <button type="button" onclick="openCameraScanner('login')" style="width:100%;margin-top:10px;padding:12px;border:2px solid #667eea;background:#f0f4ff;color:#667eea;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">
+                📱 تسجيل الدخول بالكيو آر
+            </button>
             <div class="error-message" id="errorMessage"></div>
             <div class="warning-message" id="warningMessage"></div>
             <div class="info-box">
@@ -2559,7 +2567,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.1.2
+    📌 الإصدار 2.1.3
 </div>
             </div>
             <div class="user-bar">
@@ -2594,6 +2602,7 @@
              <button class="menu-btn" id="exportExcelBtn" onclick="showExportExcelModal()" style="background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;">📊 تصدير Excel</button> 
                 <button class="menu-btn search" onclick="showSearch()">🔍 بحث</button>
                 <button class="menu-btn reports" onclick="showReports()">💼 التقارير</button>
+                <button class="menu-btn" id="myPasswordBtn" onclick="showMyChangePasswordModal()" style="background:linear-gradient(135deg,#d69e2e,#b7791f);color:white;">🔑 تغيير كلمة المرور</button>
                 <button class="menu-btn users" id="usersBtn" onclick="showUsersManagement()" style="display:none;">🚻 إدارة المستخدمين</button>
                 <button class="menu-btn online-users" id="onlineUsersBtn" onclick="showOnlineUsers()" style="display:none;">🟢 المستخدمين المتصلين</button>
                 <button class="menu-btn audit" id="auditBtn" onclick="showAuditLog()" style="display:none;">📋 سجل التغييرات</button>
@@ -2802,7 +2811,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.2</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.3</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -3082,6 +3091,57 @@
     </div>
 
     <div id="barcodePrintCard" style="display: none;"></div>
+
+    <!-- مودال كيو آر تسجيل دخول المستخدم -->
+    <div id="userQRModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 380px; text-align: center; direction: rtl; max-height: 90vh; overflow-y: auto;">
+            <h3 style="color: #333; margin-bottom: 5px;">📱 كيو آر تسجيل الدخول</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 12px;">امسح هذا الرمز من زر "تسجيل الدخول بالكيو آر" في صفحة الدخول لملء بيانات الحساب تلقائياً</p>
+            <div style="background: #f8f9fa; border-radius: 15px; padding: 20px; margin: 15px 0;">
+                <div id="userQRContent"></div>
+            </div>
+            <p style="font-size: 11px; color: #b91c1c; margin-bottom: 10px;">⚠️ يحتوي هذا الرمز على كلمة المرور، احتفظ به بشكل آمن ولا تشاركه مع أحد.</p>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                <button onclick="printUserQRCard()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">🖨️ طباعة</button>
+                <button onclick="downloadUserQRCard()" style="background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">💾 حفظ</button>
+                <button onclick="closeUserQRModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- مودال تغيير كلمة المرور -->
+    <div id="changePasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 380px; direction: rtl; max-height: 90vh; overflow-y: auto;">
+            <h3 style="color: #333; margin-bottom: 5px; text-align:center;">🔑 تغيير كلمة المرور</h3>
+            <p id="changePasswordUserLabel" style="color: #666; font-size: 13px; margin-bottom: 18px; text-align:center;"></p>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; color:#333;">🔒 كلمة المرور الحالية</label>
+                <input type="password" id="cpOldPassword" autocomplete="off" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; font-size:14px; box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; color:#333;">🆕 كلمة المرور الجديدة</label>
+                <input type="password" id="cpNewPassword" autocomplete="off" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; font-size:14px; box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; color:#333;">✅ تأكيد كلمة المرور الجديدة</label>
+                <input type="password" id="cpConfirmPassword" autocomplete="off" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; font-size:14px; box-sizing:border-box;">
+            </div>
+
+            <p id="changePasswordError" style="display:none; color:#e53e3e; font-size:12px; font-weight:bold; margin-bottom:12px; text-align:center;"></p>
+
+            <div id="changePasswordSuccessBox" style="display:none; background:#f0fff4; border:1px solid #48bb78; border-radius:10px; padding:14px; margin-bottom:14px; text-align:center;">
+                <p style="color:#2f855a; font-size:13px; font-weight:bold; margin-bottom:10px;">✅ تم تغيير كلمة المرور بنجاح</p>
+                <button onclick="generateQRAfterPasswordChange()" style="background:#2d3748; color:white; border:none; padding:9px 18px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:bold;">📱 توليد بطاقة كيو آر جديدة</button>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="cpSaveBtn" onclick="confirmChangePassword()" style="background: #667eea; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">💾 حفظ</button>
+                <button onclick="closeChangePasswordModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 14px;">إغلاق</button>
+            </div>
+        </div>
+    </div>
 
 
 <div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:3000; justify-content:center; align-items:center; overflow-y:auto;">
@@ -4657,6 +4717,8 @@ function displayUsersList() {
             <td>${new Date(user.createdAt).toLocaleDateString('ar-SA')}</td>
             <td>
                 <button class="btn btn-edit" onclick="editUser('${user.id}')" title="تعديل الصلاحية">✏️</button>
+                <button class="btn" onclick="showChangePasswordModal('${user.id}')" title="تغيير كلمة المرور" style="background:#d69e2e; color:#fff;">🔑</button>
+                <button class="btn" onclick="showUserQRCode('${user.id}')" title="كيو آر تسجيل الدخول" style="background:#2d3748; color:#fff;">📱</button>
                 ${isLocked && user.role !== 'admin' && !isBlockedUser ? `<button class="btn btn-unlock" onclick="unlockUserFromList('${user.username}')" title="فك التجميد">🔓</button>` : ''}
                 ${user.username !== 'فيصل' ? `
                     ${isBlockedUser ? 
@@ -4668,6 +4730,253 @@ function displayUsersList() {
             </tr>`;
     });
     tbody.innerHTML = html;
+}
+
+// ========== كيو آر تسجيل دخول المستخدم ==========
+let _currentUserQRInfo = null;
+
+function showUserQRCode(userId) {
+    const user = users.find(u => u.id === userId);
+    if (!user) { showMessage('لم يتم العثور على المستخدم', true); return; }
+
+    const qrPayload = 'LOGIN_QR:' + JSON.stringify({ u: user.username, p: user.password });
+    _currentUserQRInfo = { username: user.username, role: getRoleName(user.role), qrUrl: null };
+
+    document.getElementById('userQRContent').innerHTML = '<p style="color:#999;font-size:13px;">⏳ جارٍ توليد الرمز...</p>';
+    document.getElementById('userQRModal').style.display = 'flex';
+    document.getElementById('userQRModal').onclick = function(e) {
+        if (e.target === this) closeUserQRModal();
+    };
+
+    if (typeof QRCode === 'undefined') {
+        document.getElementById('userQRContent').innerHTML = '<p style="color:#e53e3e;font-size:13px;">تعذر تحميل مكتبة الكيو آر، تحقق من الاتصال بالإنترنت</p>';
+        return;
+    }
+
+    QRCode.toDataURL(qrPayload, { width: 220, margin: 1, errorCorrectionLevel: 'M' }, function(err, url) {
+        if (err) {
+            document.getElementById('userQRContent').innerHTML = '<p style="color:#e53e3e;font-size:13px;">حدث خطأ أثناء توليد الكيو آر</p>';
+            return;
+        }
+        _currentUserQRInfo.qrUrl = url;
+        document.getElementById('userQRContent').innerHTML = `
+            <img src="${url}" style="width:220px;height:220px;display:block;margin:0 auto;" alt="QR">
+            <p style="font-size:16px;font-weight:bold;color:#333;margin-top:12px;">${user.username}</p>
+            <p style="font-size:12px;color:#667eea;font-weight:bold;">${getRoleName(user.role)}</p>
+        `;
+    });
+}
+
+function closeUserQRModal() {
+    document.getElementById('userQRModal').style.display = 'none';
+}
+
+function printUserQRCard() {
+    if (!_currentUserQRInfo || !_currentUserQRInfo.qrUrl) {
+        showMessage('انتظر حتى يتم توليد الكيو آر', true);
+        return;
+    }
+    const { username, role, qrUrl } = _currentUserQRInfo;
+    const printDate = new Date().toLocaleDateString('ar-SA');
+
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <!DOCTYPE html>
+        <html dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>بطاقة دخول - ${username}</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                @page { size: A5; margin: 8mm; }
+                body { font-family:'Segoe UI', Tahoma, sans-serif; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+                .card { width: 280px; border: 2px solid #667eea; border-radius: 18px; overflow: hidden; text-align: center; }
+                .card-header { background: linear-gradient(135deg,#667eea,#764ba2); color: white; padding: 14px 10px; }
+                .card-header h2 { font-size: 16px; margin-bottom: 4px; }
+                .card-header p { font-size: 10px; opacity: 0.9; }
+                .card-body { padding: 18px 14px; }
+                .card-body img { width: 180px; height: 180px; }
+                .username { font-size: 18px; font-weight: bold; color: #333; margin-top: 10px; }
+                .role { font-size: 12px; color: #667eea; font-weight: bold; margin-top: 4px; }
+                .footer { font-size: 9px; color: #999; padding: 8px; border-top: 1px dashed #ddd; }
+                @media print {
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <div class="card-header">
+                    <h2>🔐 بطاقة الدخول للنظام</h2>
+                    <p>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب - فرع المرقب</p>
+                </div>
+                <div class="card-body">
+                    <img src="${qrUrl}" alt="QR">
+                    <div class="username">${username}</div>
+                    <div class="role">${role}</div>
+                </div>
+                <div class="footer">امسح الرمز من صفحة تسجيل الدخول &nbsp;|&nbsp; ${printDate}</div>
+            </div>
+        </body>
+        </html>
+    `);
+    win.document.close();
+    setTimeout(() => { win.print(); }, 600);
+}
+
+function downloadUserQRCard() {
+    if (!_currentUserQRInfo || !_currentUserQRInfo.qrUrl) {
+        showMessage('انتظر حتى يتم توليد الكيو آر', true);
+        return;
+    }
+    const { username, role, qrUrl } = _currentUserQRInfo;
+
+    const cardWidth = 320;
+    const cardHeight = 440;
+    const canvas = document.createElement('canvas');
+    canvas.width = cardWidth;
+    canvas.height = cardHeight;
+    const ctx = canvas.getContext('2d');
+    try { ctx.direction = 'rtl'; } catch(e) {}
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, cardWidth, cardHeight);
+
+    const grad = ctx.createLinearGradient(0, 0, cardWidth, 0);
+    grad.addColorStop(0, '#667eea');
+    grad.addColorStop(1, '#764ba2');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, cardWidth, 80);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 17px Tahoma';
+    ctx.fillText('🔐 بطاقة الدخول للنظام', cardWidth / 2, 35);
+    ctx.font = '10px Tahoma';
+    ctx.fillText('إدارة شؤون الشهداء - فرع المرقب', cardWidth / 2, 58);
+
+    ctx.strokeStyle = '#667eea';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(2, 2, cardWidth - 4, cardHeight - 4);
+
+    const qrImg = new Image();
+    qrImg.onload = function() {
+        const qrSize = 220;
+        const qrX = (cardWidth - qrSize) / 2;
+        ctx.drawImage(qrImg, qrX, 100, qrSize, qrSize);
+
+        ctx.fillStyle = '#333333';
+        ctx.font = 'bold 18px Tahoma';
+        ctx.fillText(username, cardWidth / 2, 350);
+
+        ctx.fillStyle = '#667eea';
+        ctx.font = 'bold 13px Tahoma';
+        ctx.fillText(role, cardWidth / 2, 375);
+
+        ctx.fillStyle = '#999999';
+        ctx.font = '10px Tahoma';
+        ctx.fillText('امسح الرمز من صفحة تسجيل الدخول', cardWidth / 2, 410);
+
+        const link = document.createElement('a');
+        link.download = 'QR_' + username + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    };
+    qrImg.src = qrUrl;
+}
+// ========== نهاية كيو آر تسجيل دخول المستخدم ==========
+
+// ========== تغيير كلمة المرور ==========
+let _changePasswordUserId = null;
+
+function showChangePasswordModal(userId) {
+    const user = users.find(u => u.id === userId);
+    if (!user) { showMessage('لم يتم العثور على المستخدم', true); return; }
+
+    _changePasswordUserId = userId;
+    document.getElementById('changePasswordUserLabel').textContent = `المستخدم: ${user.username}`;
+    document.getElementById('cpOldPassword').value = '';
+    document.getElementById('cpNewPassword').value = '';
+    document.getElementById('cpConfirmPassword').value = '';
+    document.getElementById('changePasswordError').style.display = 'none';
+    document.getElementById('changePasswordSuccessBox').style.display = 'none';
+    document.getElementById('cpSaveBtn').style.display = 'inline-block';
+    ['cpOldPassword', 'cpNewPassword', 'cpConfirmPassword'].forEach(id => {
+        document.getElementById(id).disabled = false;
+    });
+
+    const modal = document.getElementById('changePasswordModal');
+    modal.style.display = 'flex';
+    modal.onclick = function(e) { if (e.target === modal) closeChangePasswordModal(); };
+}
+
+function closeChangePasswordModal() {
+    document.getElementById('changePasswordModal').style.display = 'none';
+    _changePasswordUserId = null;
+}
+
+async function confirmChangePassword() {
+    const user = users.find(u => u.id === _changePasswordUserId);
+    if (!user) { showMessage('لم يتم العثور على المستخدم', true); return; }
+
+    const oldPass = document.getElementById('cpOldPassword').value;
+    const newPass = document.getElementById('cpNewPassword').value;
+    const confirmPass = document.getElementById('cpConfirmPassword').value;
+    const errEl = document.getElementById('changePasswordError');
+    errEl.style.display = 'none';
+
+    if (!oldPass || !newPass || !confirmPass) {
+        errEl.textContent = '⚠️ يجب تعبئة جميع الحقول';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (oldPass !== user.password) {
+        errEl.textContent = '❌ كلمة المرور الحالية غير صحيحة';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (newPass !== confirmPass) {
+        errEl.textContent = '❌ كلمة المرور الجديدة وتأكيدها غير متطابقتين';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (newPass === oldPass) {
+        errEl.textContent = '⚠️ يجب أن تكون كلمة المرور الجديدة مختلفة عن الحالية';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    user.password = newPass;
+    await saveUsersToFirebase();
+    displayUsersList();
+    await addAuditLog('تغيير كلمة المرور', 'user', user.id, user.username, `تم تغيير كلمة المرور بواسطة ${currentUser.name}`);
+
+    document.getElementById('cpOldPassword').value = '';
+    document.getElementById('cpNewPassword').value = '';
+    document.getElementById('cpConfirmPassword').value = '';
+    ['cpOldPassword', 'cpNewPassword', 'cpConfirmPassword'].forEach(id => {
+        document.getElementById(id).disabled = true;
+    });
+    document.getElementById('cpSaveBtn').style.display = 'none';
+    document.getElementById('changePasswordSuccessBox').style.display = 'block';
+    showMessage('✅ تم تغيير كلمة المرور بنجاح');
+}
+
+function generateQRAfterPasswordChange() {
+    if (!_changePasswordUserId) return;
+    const userId = _changePasswordUserId;
+    closeChangePasswordModal();
+    showUserQRCode(userId);
+}
+// ========== نهاية تغيير كلمة المرور ==========
+
+// تغيير كلمة المرور الخاصة بالمستخدم المتصل حالياً (متاح للجميع من القائمة الرئيسية)
+function showMyChangePasswordModal() {
+    if (!currentUser || !currentUser.id) {
+        showMessage('تعذر تحديد المستخدم الحالي', true);
+        return;
+    }
+    showChangePasswordModal(currentUser.id);
 }
 
 async function blockUserFromList(username) {
@@ -6183,7 +6492,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.2</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.3</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -6203,7 +6512,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.1.2</p>' +
+   '<p>فرع المرقب - الإصدار 2.1.3</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -6256,21 +6565,22 @@ function showReportTable(headers, rows) {
     const now = new Date();
     const printDate = now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
-    let firstId = '';
-    let lastId = '';
+    // أول وآخر اسم في التقرير (عمود "الاسم" هو دائماً الفهرس رقم 3 في الصفوف)
+    let firstName = '';
+    let lastName = '';
     if (rows.length > 0) {
-        firstId = rows[0][1] || '';
-        lastId = rows[rows.length - 1][1] || '';
+        firstName = (rows[0][3] || '').toString().replace(/<[^>]*>/g, '').trim();
+        lastName = (rows[rows.length - 1][3] || '').toString().replace(/<[^>]*>/g, '').trim();
     }
     
-    const barcodeId = 'barcode_' + Date.now();
+    const qrId = 'qrcode_' + Date.now();
     
     let html = `<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
     <div style="text-align: center; flex-grow: 1;"></div>
-    <div style="text-align: left; direction: ltr; min-width: 120px; flex-shrink: 0;">
+    <div style="text-align: left; direction: ltr; min-width: 80px; flex-shrink: 0;">
         <span style="font-size: 9px; color: #555; font-weight: bold;">📅 ${printDate}</span>
         ${rows.length > 0 ? `<div style="margin-top: 5px;">
-            <svg id="${barcodeId}" style="width: 100px; height: 35px;"></svg>
+            <div id="${qrId}" style="width: 70px; height: 70px;"></div>
         </div>` : ''}
     </div>
 </div>`;
@@ -6292,21 +6602,28 @@ function showReportTable(headers, rows) {
     document.getElementById('reportActions').style.display = 'flex';
     currentReportHtml = html;
     
-    if (rows.length > 0 && firstId && lastId) {
+    if (rows.length > 0 && firstName && lastName) {
         setTimeout(() => {
             try {
-                const barcodeText = `${firstId}-${lastId}`;
-JsBarcode(`#${barcodeId}`, barcodeText, {
-    format: 'CODE128',
-    width: 1,
-    height: 30,
-    fontSize: 8,
-    textMargin: 2,
-    margin: 2,
-    displayValue: false
-});
+                const qrContainer = document.getElementById(qrId);
+                const qrText = `${firstName} - ${lastName}`;
+                QRCode.toDataURL(qrText, {
+                    width: 70,
+                    margin: 1,
+                    errorCorrectionLevel: 'M'
+                }, function(err, url) {
+                    if (err) {
+                        console.log('خطأ في توليد الكيو آر كود:', err);
+                        return;
+                    }
+                    if (qrContainer) {
+                        qrContainer.innerHTML = `<img src="${url}" style="width:70px;height:70px;display:block;" alt="QR">`;
+                    }
+                    // تحديث النسخة المخزّنة من التقرير لتشمل الكيو آر كود المرسوم فعلياً
+                    currentReportHtml = document.getElementById('reportContent').innerHTML;
+                });
             } catch(e) {
-                console.log('خطأ في توليد الباركود:', e);
+                console.log('خطأ في توليد الكيو آر كود:', e);
             }
         }, 200);
     }
@@ -6706,15 +7023,10 @@ function printReport() {
         printBarcodeNameReport();
         return;
     }
-    const originalSvg = document.querySelector('#reportContent svg');
-    let barcodeHtml = '';
-    if (originalSvg) {
-        const svgClone = originalSvg.cloneNode(true);
-        svgClone.setAttribute('width', '100px');
-        svgClone.setAttribute('height', '35px');
-        svgClone.style.display = 'block';
-        svgClone.style.visibility = 'visible';
-        barcodeHtml = svgClone.outerHTML;
+    const originalQr = document.querySelector('#reportContent [id^="qrcode_"]');
+    let qrHtml = '';
+    if (originalQr && originalQr.innerHTML.trim()) {
+        qrHtml = originalQr.outerHTML;
     }
     
     var firstName = '';
@@ -6743,8 +7055,8 @@ function printReport() {
     footerText += '</div>';
 
     let reportHtml = currentReportHtml;
-    if (barcodeHtml) {
-        reportHtml = reportHtml.replace(/<svg[^>]*>[\s\S]*?<\/svg>/, barcodeHtml);
+    if (qrHtml) {
+        reportHtml = reportHtml.replace(/<div id="qrcode_[^"]*"[^>]*>[\s\S]*?<\/div>/, qrHtml);
     }
     
     const win = window.open('', '_blank');
@@ -6809,7 +7121,7 @@ function printReport() {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            svg {
+            svg, img {
                 display: block !important;
                 visibility: visible !important;
             }
@@ -11407,9 +11719,9 @@ function onBarcodeDetected(value) {
     // إيقاف المسح التلقائي
     if (_scanInterval) { clearInterval(_scanInterval); _scanInterval = null; }
 
-    // إظهار النتيجة
+    // إظهار النتيجة (إخفاء محتوى كيو آر الدخول لأنه يحتوي على كلمة المرور)
     document.getElementById('cameraResult').style.display = 'block';
-    document.getElementById('cameraResultValue').textContent = value;
+    document.getElementById('cameraResultValue').textContent = value.startsWith('LOGIN_QR:') ? '•••• بيانات دخول' : value;
     document.getElementById('cameraStatus').textContent = '✅ تم قراءة الباركود بنجاح!';
     document.getElementById('cameraStatus').style.color = '#48bb78';
 
@@ -11447,6 +11759,24 @@ function onBarcodeDetected(value) {
                 statusEl.textContent = '✅ تم قراءة الباركود: ' + value;
             }
             inquirySearch();
+        } else if (_cameraMode === 'login') {
+            let parsed = null;
+            try {
+                if (value.indexOf('LOGIN_QR:') === 0) {
+                    parsed = JSON.parse(value.substring('LOGIN_QR:'.length));
+                } else {
+                    parsed = JSON.parse(value);
+                }
+            } catch(e) { parsed = null; }
+
+            if (parsed && parsed.u) {
+                document.getElementById('username').value = parsed.u;
+                document.getElementById('password').value = parsed.p || '';
+                showMessage('✅ تم التعرف على بيانات الحساب، جارٍ تسجيل الدخول...');
+                setTimeout(() => { login(); }, 400);
+            } else {
+                showMessage('❌ هذا الرمز ليس كيو آر دخول صالح', true);
+            }
         }
     }, 800);
 }
