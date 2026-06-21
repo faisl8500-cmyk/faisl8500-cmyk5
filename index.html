@@ -7,6 +7,9 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* ========== متغيرات الألوان (الوضع الفاتح الافتراضي) ========== */
@@ -2209,6 +2212,257 @@
     margin-left: 5px;
     vertical-align: middle;
 }
+
+/* ============================================================
+   إعادة تصميم شاشة تسجيل الدخول — هوية بصرية مستقلة
+   حبر داكن + نحاس ذهبي: بوابة سجلّ رسمي، لا ترتبط بوضع ليلي/نهاري
+   ============================================================ */
+#loginPage {
+    --lg-ink-900: #0b1320;
+    --lg-ink-800: #142235;
+    --lg-ink-700: #25395a;
+    --lg-parchment: #f4ead9;
+    --lg-parchment-dim: #b6ab95;
+    --lg-brass: #c9a13b;
+    --lg-brass-bright: #ecc873;
+    --lg-laurel: #4a6b54;
+
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 40px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    background:
+        radial-gradient(circle at 50% 14%, rgba(201,161,59,0.16), transparent 42%),
+        radial-gradient(circle at 88% 90%, rgba(74,107,84,0.22), transparent 50%),
+        linear-gradient(160deg, var(--lg-ink-900), var(--lg-ink-800) 55%, #0c1726 100%);
+    z-index: 50;
+}
+
+@media (max-height: 700px) {
+    #loginPage { align-items: flex-start; padding-top: 28px; }
+}
+
+#loginPage .login-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(180deg, rgba(20,34,53,0.94), rgba(11,19,32,0.97));
+    border: 1px solid var(--lg-ink-700);
+    border-radius: 18px;
+    padding: 38px 32px 30px;
+    box-shadow:
+        0 30px 60px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(201,161,59,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    animation: loginCardRise 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+
+@keyframes loginCardRise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#loginPage .login-header { margin-bottom: 24px; text-align: center; }
+
+#loginPage .login-emblem {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loginPage .login-emblem::before {
+    content: "";
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,161,59,0.35), transparent 70%);
+    animation: emblemGlow 3.2s ease-in-out infinite;
+}
+
+@keyframes emblemGlow {
+    0%, 100% { opacity: 0.5; transform: scale(0.95); }
+    50%      { opacity: 1;   transform: scale(1.05); }
+}
+
+#loginPage .login-logo {
+    position: relative;
+    width: 84px;
+    height: 84px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--lg-brass);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    background: var(--lg-ink-800);
+}
+
+#loginPage .login-header .program-name {
+    display: block;
+    font-family: 'Amiri', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--lg-parchment);
+    line-height: 1.7;
+    margin: 0 0 14px;
+    padding: 0;
+    border: none;
+    animation: none;
+    background: none;
+}
+
+#loginPage .login-status-indicator {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    font-family: 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 14px;
+}
+#loginPage .login-status-online { color: #8fd9a8; border-color: rgba(143,217,168,0.3); background: rgba(143,217,168,0.08); }
+#loginPage .login-status-offline { color: #e89a9a; border-color: rgba(232,154,154,0.3); background: rgba(232,154,154,0.08); }
+#loginPage .login-status-online::before { background: #8fd9a8; }
+#loginPage .login-status-offline::before { background: #e89a9a; }
+
+#loginPage .login-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0 16px;
+}
+#loginPage .login-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lg-brass) 50%, transparent);
+    opacity: 0.55;
+}
+#loginPage .login-divider-diamond {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: var(--lg-brass);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px rgba(201,161,59,0.6);
+}
+
+#loginPage .login-header h1 {
+    font-family: 'Amiri', serif;
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--lg-parchment);
+    margin-bottom: 8px;
+}
+
+#loginPage .login-header p {
+    font-family: 'Cairo', sans-serif;
+    font-size: 12.5px;
+    color: var(--lg-parchment-dim);
+    line-height: 1.6;
+}
+
+#loginPage .login-meta {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+#loginPage .login-meta p { font-family: 'Cairo', sans-serif; }
+#loginPage .login-meta-author { font-size: 11.5px; color: var(--lg-brass-bright); margin-bottom: 3px; }
+#loginPage .login-meta-version { font-size: 10px; color: var(--lg-parchment-dim); }
+
+#loginPage .form-group label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--lg-parchment-dim);
+    margin-bottom: 7px;
+}
+
+#loginPage .form-group input {
+    font-family: 'Cairo', sans-serif;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--lg-ink-700);
+    color: var(--lg-parchment);
+    border-radius: 10px;
+    padding: 11px 14px;
+}
+#loginPage .form-group input::placeholder { color: rgba(244,234,217,0.35); }
+#loginPage .form-group input:focus {
+    border-color: var(--lg-brass);
+    background: rgba(201,161,59,0.07);
+    box-shadow: 0 0 0 3px rgba(201,161,59,0.16);
+}
+
+#loginPage .btn-login {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, var(--lg-brass), #a9822c);
+    color: #1a1305;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(201,161,59,0.25);
+}
+#loginPage .btn-login:hover {
+    background: linear-gradient(135deg, var(--lg-brass-bright), var(--lg-brass));
+    box-shadow: 0 12px 28px rgba(201,161,59,0.35);
+    transform: translateY(-2px);
+}
+
+#loginPage .login-qr-btn {
+    font-family: 'Cairo', sans-serif;
+    width: 100%;
+    margin-top: 10px;
+    padding: 11px;
+    border: 1.5px solid var(--lg-ink-700);
+    background: rgba(255,255,255,0.03);
+    color: var(--lg-parchment-dim);
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+#loginPage .login-qr-btn:hover {
+    border-color: var(--lg-brass);
+    color: var(--lg-brass-bright);
+    background: rgba(201,161,59,0.07);
+}
+
+#loginPage .error-message,
+#loginPage .warning-message {
+    font-family: 'Cairo', sans-serif;
+    border-radius: 10px;
+}
+
+#loginPage .login-install-btn {
+    font-family: 'Cairo', sans-serif;
+    margin-top: 10px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--lg-brass);
+    background: rgba(201,161,59,0.1);
+    color: var(--lg-brass-bright);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+#loginPage .login-install-btn:hover { background: rgba(201,161,59,0.2); }
+
+@media (prefers-reduced-motion: reduce) {
+    #loginPage .login-card, #loginPage .login-emblem::before { animation: none !important; }
+}
+
+@media (max-width: 420px) {
+    #loginPage .login-card { padding: 30px 22px 24px; border-radius: 16px; }
+    #loginPage .login-header h1 { font-size: 22px; }
+}
 .private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#ffff00;padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.2);border:none;color:#ffff00;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.4);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
 </style>
     <link rel="manifest" href="manifest.json">
@@ -2511,24 +2765,31 @@
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <div class="login-header">
-            <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 200px; margin-bottom: 15px; border-radius: 10px;">
+            <div class="login-emblem">
+                <img src="logo.png" alt="شعار فرع المرقب" class="login-logo">
+            </div>
                 <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
            <div id="loginStatusIndicator" class="login-status-indicator login-status-online">متصل بالإنترنت</div>
+               <div class="login-divider" aria-hidden="true">
+                   <span class="login-divider-line"></span>
+                   <span class="login-divider-diamond"></span>
+                   <span class="login-divider-line"></span>
+               </div>
                <h1>🔐 تسجيل الدخول</h1>
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
-                <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--border-color);">
-                    <p style="font-size: 12px; color: #667eea;">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p style="font-size: 10px;">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.3</span></p>
+                <div class="login-meta">
+                    <p class="login-meta-author">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
+                    <p class="login-meta-version">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.4</span></p>
                     <style>
                         @keyframes blinkGreenBlack {
-                            0%,49%  { color: #00cc44; text-shadow: 0 0 8px #00cc44; }
-                            50%,100%{ color: #000000; text-shadow: none; }
+                            0%,49%  { color: #ecc873; text-shadow: 0 0 8px rgba(236,200,115,0.55); }
+                            50%,100%{ color: #b6ab95; text-shadow: none; }
                         }
                         #versionBlink {
                             animation: blinkGreenBlack 1s step-start infinite;
                         }
                     </style>
-                    <button id="installPwaBtn" onclick="installPWA()" style="display:none;margin-top:8px;padding:8px 18px;border-radius:20px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:12px;font-weight:bold;cursor:pointer;">
+                    <button id="installPwaBtn" onclick="installPWA()" class="login-install-btn" style="display:none;">
                         📲 تثبيت التطبيق
                     </button>
                 </div>
@@ -2542,7 +2803,7 @@
                 <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="new-password">
             </div>
             <button class="btn-login" onclick="login()">تسجيل الدخول</button>
-            <button type="button" onclick="openCameraScanner('login')" style="width:100%;margin-top:10px;padding:12px;border:2px solid #667eea;background:#f0f4ff;color:#667eea;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">
+            <button type="button" onclick="openCameraScanner('login')" class="login-qr-btn">
                 📱 تسجيل الدخول بالكيو آر
             </button>
             <div class="error-message" id="errorMessage"></div>
@@ -2567,7 +2828,7 @@
                     👨‍💼برمجة* المقدم / فيصل البريدان
                 </div>
 <div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.1.3
+    📌 الإصدار 2.1.4
 </div>
             </div>
             <div class="user-bar">
@@ -2811,7 +3072,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.3</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.4</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -2915,6 +3176,10 @@
                     <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:10px;">
                         <input type="checkbox" id="newCanViewFiles" style="width:18px;height:18px;cursor:pointer;">
                         <label for="newCanViewFiles" style="cursor:pointer;font-weight:600;">📁 صلاحية فتح ملفات الشهداء والجرحى</label>
+                    </div>
+                    <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:10px;">
+                        <input type="checkbox" id="newCanImportExport" style="width:18px;height:18px;cursor:pointer;">
+                        <label for="newCanImportExport" style="cursor:pointer;font-weight:600;">📥📤 صلاحية استيراد وتصدير Excel</label>
                     </div>
                 </div>
             </div>
@@ -3159,6 +3424,10 @@
     <div style="padding:12px;background:var(--user-bar-bg);border-radius:10px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
         <input type="checkbox" id="editCanViewFiles" style="width:18px;height:18px;cursor:pointer;">
         <label for="editCanViewFiles" style="cursor:pointer;font-weight:600;font-size:14px;">📁 صلاحية فتح ملفات الشهداء والجرحى</label>
+    </div>
+    <div style="padding:12px;background:var(--user-bar-bg);border-radius:10px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+        <input type="checkbox" id="editCanImportExport" style="width:18px;height:18px;cursor:pointer;">
+        <label for="editCanImportExport" style="cursor:pointer;font-weight:600;font-size:14px;">📥📤 صلاحية استيراد وتصدير Excel</label>
     </div>
     
     <div style="display:flex; gap:10px; position:sticky; bottom:0; background:var(--card-bg); padding-top:8px;">
@@ -3407,9 +3676,9 @@
         }
 
 function showExportExcelModal() {
-    // ✅ التحقق من صلاحية المدير فقط
-    if (!currentUser || currentUser.role !== 'admin') {
-        showMessage('❌ هذه الخاصية متاحة للمدير فقط', true);
+    // ✅ التحقق من صلاحية الاستيراد والتصدير
+    if (!hasPermission('importExport')) {
+        showMessage('❌ ليس لديك صلاحية التصدير', true);
         return;
     }
     document.getElementById('exportExcelModal').style.display = 'flex';
@@ -3421,8 +3690,8 @@ function closeExportExcelModal() {
 }
 
 function exportToExcelData(type) {
-    if (!currentUser || currentUser.role !== 'admin') {
-        showMessage('❌ هذه الخاصية متاحة للمدير فقط', true);
+    if (!hasPermission('importExport')) {
+        showMessage('❌ ليس لديك صلاحية التصدير', true);
         closeExportExcelModal();
         return;
     }
@@ -4101,6 +4370,12 @@ function getRoleDesc(role) {
         return currentUser.canViewFiles === true;
     }
 
+    // صلاحية استيراد وتصدير Excel (صلاحية مستقلة لا ترتبط بصلاحية الإضافة)
+    if (permission === 'importExport') {
+        if (currentUser.role === 'admin') return true;
+        return currentUser.canImportExport === true;
+    }
+
     if (permission === 'view') {
         const viewRoles = ['admin', 'modifier', 'adder', 'deleter', 'editor', 'viewer'];
         return viewRoles.includes(currentUser.role);
@@ -4428,7 +4703,7 @@ async function login() {
         updateLoadingStatus('جارٍ تسجيل الدخول...', 80);
         
         resetLoginAttempts(username);
-        currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null, canViewFiles: user.canViewFiles === true };
+        currentUser = { name: user.username, role: user.role, id: user.id, permissions: user.permissions || null, canViewFiles: user.canViewFiles === true, canImportExport: user.canImportExport === true };
         loginTime = Date.now();
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         localStorage.setItem('loginTime', loginTime);
@@ -4604,7 +4879,9 @@ async function showMainMenu() {
     document.getElementById('exportBtn').style.display = isAdminUser ? 'inline-block' : 'none';
     document.getElementById('importArea').style.display = isAdminUser ? 'block' : 'none';
     document.getElementById('deviceLogBtn').style.display = isAdminUser ? 'inline-block' : 'none';
-    document.getElementById('exportExcelBtn').style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
+    const canImportExportFiles = hasPermission('importExport');
+    document.getElementById('importExcelBtn').style.display = canImportExportFiles ? 'inline-block' : 'none';
+    document.getElementById('exportExcelBtn').style.display = canImportExportFiles ? 'inline-block' : 'none';
     setTimeout(() => {
         displayMemoryStats();
     }, 300);
@@ -5061,6 +5338,7 @@ async function addUser() {
     const password = document.getElementById('newPassword').value;
     const role = document.getElementById('newRole').value;
     const canViewFiles = document.getElementById('newCanViewFiles').checked;
+    const canImportExport = document.getElementById('newCanImportExport').checked;
     if (!username || !password || !role) { showMessage('جميع الحقول مطلوبة', true); return; }
     if (users.some(u => u.username === username)) { showMessage('❌ اسم المستخدم "' + username + '" موجود مسبقاً، اختر اسماً آخر', true); return; }
     
@@ -5073,7 +5351,8 @@ async function addUser() {
             status: 'active',
             createdAt: new Date().toISOString(),
             permissions: null,
-            canViewFiles
+            canViewFiles,
+            canImportExport
         };
         
         openSubPermissionsForAdd(role);
@@ -5088,12 +5367,14 @@ async function addUser() {
         status: 'active',
         createdAt: new Date().toISOString(),
         permissions: null,
-        canViewFiles
+        canViewFiles,
+        canImportExport
     });
     await saveUsersToFirebase();
     displayUsersList();
     ['newUsername', 'newPassword', 'newRole'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('newCanViewFiles').checked = false;
+    document.getElementById('newCanImportExport').checked = false;
     showMessage('تم إضافة المستخدم بنجاح');
 }
 
@@ -5206,6 +5487,10 @@ function editUser(userId) {
     // ضبط قيمة صلاحية الملفات
     const cb = document.getElementById('editCanViewFiles');
     if (cb) cb.checked = user.canViewFiles === true;
+
+    // ضبط قيمة صلاحية استيراد وتصدير Excel
+    const cbie = document.getElementById('editCanImportExport');
+    if (cbie) cbie.checked = user.canImportExport === true;
 }
 function toggleSubPermissions(role, hasSub, userId) {
     const subDiv = document.getElementById('subPermissionsDiv');
@@ -5339,6 +5624,7 @@ async function confirmEditUser() {
         
         pendingUserData.permissions = permissions;
         pendingUserData.canViewFiles = document.getElementById('editCanViewFiles').checked;
+        pendingUserData.canImportExport = document.getElementById('editCanImportExport').checked;
         if (users.some(u => u.username === pendingUserData.username)) {
             showMessage('❌ اسم المستخدم موجود مسبقاً، اختر اسماً آخر', true);
             return;
@@ -5402,6 +5688,7 @@ async function confirmEditUser() {
     user.role = newRole;
     user.permissions = permissions;
     user.canViewFiles = document.getElementById('editCanViewFiles').checked;
+    user.canImportExport = document.getElementById('editCanImportExport').checked;
     user.status = 'active';
     await saveUsersToFirebase();
     displayUsersList();
@@ -6491,8 +6778,8 @@ function exportAuditLogToPDF() {
     '<div class="header">' +
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
-    '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.3</p>' +
+    '<p>?? تاريخ التصدير: ' + currentDate + '</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.4</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -6512,7 +6799,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.1.3</p>' +
+   '<p>فرع المرقب - الإصدار 2.1.4</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -9066,7 +9353,10 @@ document.addEventListener('keydown', function(e) {
             loginTime = parseInt(localStorage.getItem('loginTime') || '0');
             // تحديث canViewFiles من قاعدة البيانات في حالة تغيّرت الصلاحيات
             const freshUser = users.find(u => u.id === currentUser.id);
-            if (freshUser) currentUser.canViewFiles = freshUser.canViewFiles === true;
+            if (freshUser) {
+                currentUser.canViewFiles = freshUser.canViewFiles === true;
+                currentUser.canImportExport = freshUser.canImportExport === true;
+            }
             showMainMenu();
         }
         
@@ -9451,7 +9741,7 @@ async function submitBlockUser() {
 // ================== استيراد Excel ==================
 
 function showImportExcel() {
-    if (!hasPermission('add', 'military') && !hasPermission('add', 'civilian') && !hasPermission('add', 'martyr')) {
+    if (!hasPermission('importExport')) {
         showMessage('❌ ليس لديك صلاحية الاستيراد', true); return;
     }
     document.getElementById('importExcelOverlay')?.remove();
@@ -10922,7 +11212,16 @@ async function addFilesToMartyrModal(martyrId) {
     input.accept = 'image/*,.pdf';
     input.onchange = async function() {
         if (!input.files.length) return;
-        const files = Array.from(input.files);
+        const rawFiles = Array.from(input.files);
+
+        const progress = document.getElementById('martyrModalUploadProgress');
+        if (progress) { progress.style.display = 'block'; progress.textContent = '⏳ جارٍ تجهيز الصور...'; }
+
+        // ضغط الصور الكبيرة قبل الرفع (تبقى ملفات PDF كما هي)
+        const files = [];
+        for (const f of rawFiles) {
+            files.push(await compressImageFile(f));
+        }
 
         // طلب أسماء مخصصة لكل ملف
         const customLabels = [];
@@ -10931,7 +11230,6 @@ async function addFilesToMartyrModal(martyrId) {
             customLabels[i] = (label !== null && label.trim()) ? label.trim() : '';
         }
 
-        const progress = document.getElementById('martyrModalUploadProgress');
         if (progress) { progress.style.display = 'block'; progress.textContent = '⏳ جارٍ الرفع...'; }
         const martyr = martyrs.find(m => m.id.toString() === martyrId.toString());
         if (!martyr) return;
@@ -11057,12 +11355,22 @@ function removeExistingMartyrFile(index) {
 
 window._martyrPendingFiles = [];
 
-function previewMartyrFiles(input) {
+async function previewMartyrFiles(input) {
     const preview = document.getElementById('martyrFilesPreview');
     preview.innerHTML = '';
     window._martyrPendingFiles = [];
-    const files = Array.from(input.files);
-    if (!files.length) return;
+    const rawFiles = Array.from(input.files);
+    if (!rawFiles.length) return;
+
+    preview.innerHTML = '<div style="font-size:12px;color:var(--text-secondary);padding:8px;">⏳ جارٍ تجهيز الصور...</div>';
+
+    // ضغط الصور الكبيرة تلقائياً قبل المعاينة والرفع (تبقى ملفات PDF كما هي)
+    const files = [];
+    for (const f of rawFiles) {
+        files.push(await compressImageFile(f));
+    }
+
+    preview.innerHTML = '';
 
     files.forEach((file, i) => {
         const item = document.createElement('div');
@@ -11246,6 +11554,64 @@ async function pdfToImageBase64(file) {
         pages.push(canvas.toDataURL('image/png').split(',')[1]);
     }
     return pages; // مصفوفة base64 لكل الصفحات
+}
+
+// ضغط الصورة قبل الرفع (يقلل حجم صور الكاميرا عالية الدقة بشكل كبير دون فقدان وضوح يُذكر)
+// يحاول عدة مستويات ضغط تدريجياً حتى يصل لحجم مناسب للرفع، ويعيد الملف الأصلي إن فشل أو إن لم يكن صورة
+function compressImageFile(file) {
+    return new Promise((resolve) => {
+        if (!file || !file.type || !file.type.startsWith('image/')) { resolve(file); return; }
+        // الصور الصغيرة أصلاً لا تحتاج ضغط
+        if (file.size <= 700 * 1024) { resolve(file); return; }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const attempts = [
+                    { maxDim: 1920, quality: 0.78 },
+                    { maxDim: 1600, quality: 0.65 },
+                    { maxDim: 1280, quality: 0.55 },
+                    { maxDim: 1000, quality: 0.5 }
+                ];
+
+                function tryCompress(idx) {
+                    if (idx >= attempts.length) { resolve(file); return; }
+                    const { maxDim, quality } = attempts[idx];
+                    let width = img.naturalWidth || img.width;
+                    let height = img.naturalHeight || img.height;
+                    if (!width || !height) { resolve(file); return; }
+                    if (width > maxDim || height > maxDim) {
+                        const ratio = Math.min(maxDim / width, maxDim / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob(function(blob) {
+                        if (!blob) { resolve(file); return; }
+                        if (blob.size < 3 * 1024 * 1024 || idx === attempts.length - 1) {
+                            if (blob.size >= file.size) { resolve(file); return; }
+                            const newName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+                            resolve(new File([blob], newName, { type: 'image/jpeg', lastModified: Date.now() }));
+                        } else {
+                            tryCompress(idx + 1);
+                        }
+                    }, 'image/jpeg', quality);
+                }
+                tryCompress(0);
+            };
+            img.onerror = function() { resolve(file); };
+            img.src = e.target.result;
+        };
+        reader.onerror = function() { resolve(file); };
+        reader.readAsDataURL(file);
+    });
 }
 
 function fileToBase64Strip(file) {
