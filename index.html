@@ -3279,40 +3279,65 @@
     </div>
 <div id="inquiryPage" class="search-container" style="display:none;">
     <div class="search-card">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
-            <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.6</div>
-        </div>
-        <div class="form-header">
-            <h1>🔍 خدمة الاستعلام</h1>
-            <div>
+
+        <!-- رأس الشاشة -->
+        <div class="search-header-bar">
+            <h1 style="font-family:'Amiri',serif;font-size:22px;color:#f4ead9;margin:0;position:relative;">
+                🔍 <span style="color:#c9a13b;">خدمة الاستعلام</span>
+            </h1>
+            <div class="search-header-actions">
                 <button class="btn btn-back" onclick="_confirmLogout()">🚪 تسجيل خروج</button>
             </div>
         </div>
-        <div class="form-group">
-            <label>🔎 بحث بالرقم العسكري أو الوظيفي</label>
-            <input type="number" id="inquiryNumber" placeholder="أدخل الرقم العسكري أو الوظيفي" style="font-size: 18px; padding: 15px;">
+
+        <!-- شريط اسم الجهة -->
+        <div style="padding:10px 28px;background:rgba(201,161,59,0.06);border-bottom:1px solid rgba(201,161,59,0.12);text-align:center;">
+            <img src="logo.png" alt="شعار" style="width:46px;height:46px;object-fit:cover;border-radius:50%;border:2px solid #c9a13b;vertical-align:middle;margin-left:10px;">
+            <span style="font-family:'Amiri',serif;font-size:13.5px;color:#b6ab95;vertical-align:middle;">
+                إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب
+            </span>
         </div>
-        <button class="btn" onclick="inquirySearch()" style="width:100%; padding:15px; font-size:18px;">🔍 بحث</button>
-        <div style="text-align:center; margin: 12px 0; color:#999; font-size:13px;">— أو —</div>
-        <div class="form-group">
-            <label>📷 بحث بالباركود</label>
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <button onclick="openCameraScanner('inquiry')" style="flex:1; padding:14px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
-                    📸 فتح الكاميرا
-                </button>
-                <button onclick="document.getElementById('inquiryBarcodeInput').click()" style="flex:1; padding:14px; background:var(--input-bg); color:#667eea; border:2px solid #667eea; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
-                    🖼️ رفع صورة
-                </button>
+
+        <div class="search-body">
+
+            <!-- حقل البحث بالرقم -->
+            <div class="form-group">
+                <label>🔢 الرقم العسكري أو الوظيفي</label>
+                <input type="number" id="inquiryNumber" placeholder="أدخل الرقم العسكري أو الوظيفي" style="font-size:17px;padding:14px;">
             </div>
-            <input type="file" id="inquiryBarcodeInput" accept="image/*" style="display:none;" onchange="readBarcodeFromImageForInquiry(this)">
-            <div id="inquiryBarcodePreview" style="display:none; margin-top:10px; text-align:center;">
-                <img id="inquiryBarcodeImg" style="max-width:100%; border-radius:10px; max-height:200px; object-fit:contain;" />
-                <p id="inquiryBarcodeStatus" style="margin-top:8px; font-weight:bold; color:#667eea;"></p>
+
+            <!-- زر البحث -->
+            <button class="btn-search-main" onclick="inquirySearch()">🔍 بحث الآن</button>
+
+            <!-- فاصل -->
+            <div style="text-align:center;margin:18px 0;display:flex;align-items:center;gap:12px;">
+                <span style="flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-color));"></span>
+                <span style="font-family:'Cairo',sans-serif;color:var(--text-secondary);font-size:13px;">أو</span>
+                <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--border-color),transparent);"></span>
             </div>
+
+            <!-- بحث بالباركود -->
+            <div class="form-group">
+                <label>📷 بحث بالباركود</label>
+                <div style="display:flex;gap:10px;margin-bottom:10px;">
+                    <button onclick="openCameraScanner('inquiry')" style="flex:1;padding:14px;background:linear-gradient(135deg,#142235,#25395a);color:#ecc873;border:1.5px solid rgba(201,161,59,0.4);border-radius:12px;cursor:pointer;font-size:14px;font-weight:bold;font-family:'Cairo',sans-serif;">
+                        📸 فتح الكاميرا
+                    </button>
+                    <button onclick="document.getElementById('inquiryBarcodeInput').click()" style="flex:1;padding:14px;background:var(--input-bg);color:var(--text-secondary);border:1.5px solid var(--border-color);border-radius:12px;cursor:pointer;font-size:14px;font-weight:bold;font-family:'Cairo',sans-serif;">
+                        🖼️ رفع صورة
+                    </button>
+                </div>
+                <input type="file" id="inquiryBarcodeInput" accept="image/*" style="display:none;" onchange="readBarcodeFromImageForInquiry(this)">
+                <div id="inquiryBarcodePreview" style="display:none;margin-top:10px;text-align:center;">
+                    <img id="inquiryBarcodeImg" style="max-width:100%;border-radius:10px;max-height:200px;object-fit:contain;" />
+                    <p id="inquiryBarcodeStatus" style="margin-top:8px;font-weight:bold;color:#0ecfb0;font-family:'Cairo',sans-serif;"></p>
+                </div>
+            </div>
+
+            <!-- نتائج البحث -->
+            <div id="inquiryResults" class="search-results" style="margin-top:10px;"></div>
+
         </div>
-        <div id="inquiryResults" class="search-results" style="margin-top:20px;"></div>
     </div>
 </div>
     <div id="searchPage" class="search-container">
