@@ -261,44 +261,71 @@
 
         /* الواجهة الرئيسية */
         .main-menu {
-            max-width: 800px;
-            margin: 80px auto;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 28px 16px 50px;
             display: none;
         }
 
+        /* ===== رأس الشاشة الرئيسية ===== */
         .menu-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
             text-align: center;
         }
 
         .program-header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: var(--header-bg);
-            border-radius: 15px;
-            color: var(--header-text);
+            margin-bottom: 22px;
+            padding: 22px 24px 18px;
+            background: linear-gradient(135deg, #142235 0%, #0b1320 100%);
+            border-radius: 18px;
+            color: #f4ead9;
+            border: 1px solid rgba(201,161,59,0.18);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.04);
+            position: relative;
+            overflow: hidden;
         }
-
+        .program-header::before {
+            content: "";
+            position: absolute;
+            top: -60px; left: 50%;
+            transform: translateX(-50%);
+            width: 320px; height: 120px;
+            background: radial-gradient(ellipse, rgba(201,161,59,0.18), transparent 70%);
+            pointer-events: none;
+        }
         .program-header .program-name {
-            font-size: 14px;
-            line-height: 1.6;
+            font-family: 'Amiri', serif;
+            font-size: 15.5px;
+            line-height: 1.75;
+            color: #f4ead9;
+            position: relative;
+        }
+        .program-header .program-name-sub {
+            font-family: 'Cairo', sans-serif;
+            font-size: 11px;
+            color: #c9a13b;
+            margin-top: 6px;
+            position: relative;
         }
 
+        /* ===== شريط المستخدم ===== */
         .user-bar {
             background: var(--user-bar-bg);
-            border-radius: 15px;
-            padding: 15px 25px;
-            margin-bottom: 30px;
+            border-radius: 14px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
+            border: 1px solid var(--border-color);
         }
+
 /* ========== الساعة الرقمية ========== */
 .digital-clock {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -317,11 +344,7 @@
     direction: ltr;
     animation: clockPulse 2s infinite;
 }
-
-.digital-clock .clock-icon {
-    font-size: 18px;
-}
-
+.digital-clock .clock-icon { font-size: 18px; }
 .digital-clock .clock-date {
     font-size: 10px;
     color: #aaa;
@@ -330,7 +353,6 @@
     padding-right: 8px;
     margin-right: 4px;
 }
-
 @keyframes clockPulse {
     0%, 100% { border-color: rgba(0, 255, 204, 0.3); }
     50% { border-color: rgba(0, 255, 204, 0.7); }
@@ -338,200 +360,146 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
         }
-
         .user-name {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            color: #c9a13b;
+            font-size: 17px;
         }
-
         .user-role {
-            background: #667eea;
-            color: white;
-            padding: 5px 12px;
+            background: linear-gradient(135deg, #142235, #25395a);
+            color: #ecc873;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11.5px;
+            font-family: 'Cairo', sans-serif;
+            border: 1px solid rgba(201,161,59,0.3);
         }
-
         .online-indicator {
-            background: #48bb78;
-            color: white;
+            background: #1a3a28;
+            color: #8fd9a8;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11px;
+            border: 1px solid rgba(143,217,168,0.25);
             display: inline-flex;
             align-items: center;
             gap: 5px;
             transition: all 0.3s ease;
         }
-
         .online-indicator::before {
             content: "";
-            width: 8px;
-            height: 8px;
-            background: white;
+            width: 7px; height: 7px;
+            background: #8fd9a8;
             border-radius: 50%;
             display: inline-block;
             animation: pulse 1.5s infinite;
         }
-
         .online-indicator.offline {
-            background: #e53e3e;
+            background: #3a1a1a;
+            color: #e89a9a;
+            border-color: rgba(232,154,154,0.25);
         }
-
-        .online-indicator.offline::before {
-            animation: none;
-            background: #ffcccc;
-        }
+        .online-indicator.offline::before { animation: none; background: #e89a9a; }
 
         @keyframes pulse {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(0.8);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            0%   { opacity: 1; transform: scale(1); }
+            50%  { opacity: 0.5; transform: scale(0.75); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .btn-logout {
-            background: #e53e3e;
+            background: linear-gradient(135deg, #7b1f1f, #c53030);
             color: white;
             border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
+            padding: 8px 18px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.25s;
         }
-
-        .btn-logout:hover {
-            background: #c53030;
-        }
+        .btn-logout:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
         .btn-refresh {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
+            background: linear-gradient(135deg, #0d4035, #11998e);
             color: white;
             border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
+            padding: 8px 18px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
-            margin-right: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.25s;
+            margin-right: 8px;
         }
-
-        .btn-refresh:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
-        }
-
-        .btn-refresh:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-refresh:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        .btn-refresh:disabled { opacity: 0.55; cursor: not-allowed; transform: none; filter: none; }
 
         .refresh-spinner {
             display: inline-block;
-            width: 16px;
-            height: 16px;
+            width: 14px; height: 14px;
             border: 2px solid white;
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin-left: 8px;
+            margin-left: 6px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
+        /* ===== شبكة الأزرار ===== */
         .menu-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
         }
 
         .menu-btn {
-            flex: 1;
-            min-width: 160px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 18px 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14.5px;
+            font-weight: 700;
             border: none;
-            border-radius: 15px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: 0.3s;
             color: white;
+            transition: transform 0.22s, box-shadow 0.22s, filter 0.22s;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.2px;
         }
-
-        .menu-btn.add-military {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+        .menu-btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 55%);
+            pointer-events: none;
         }
-
-        .menu-btn.add-civilian {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-        }
-
-        .menu-btn.add-martyrs {
-            background: linear-gradient(135deg, #800000, #cc0000);
-        }
-
-        .menu-btn.search {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
-        }
-
-        .menu-btn.reports {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-        }
-
-        .menu-btn.users {
-            background: linear-gradient(135deg, #8e44ad, #9b59b6);
-        }
-
-        .menu-btn.online-users {
-            background: linear-gradient(135deg, #00b4db, #0083b0);
-        }
-
-        .menu-btn.audit {
-            background: linear-gradient(135deg, #16a085, #1abc9c);
-        }
-
-        .menu-btn.trash {
-            background: linear-gradient(135deg, #c0392b, #e74c3c);
-        }
-
-        .menu-btn.export {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-        }
-
-        .menu-btn.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .menu-btn.disabled:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
         .menu-btn:hover:not(.disabled) {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
+            filter: brightness(1.12);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.28);
+        }
+        .menu-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+        .menu-btn.disabled:hover { transform: none; box-shadow: none; filter: none; }
+
+        .menu-btn.add-military  { background: linear-gradient(135deg, #1c3a5a, #2980b9); }
+        .menu-btn.add-civilian  { background: linear-gradient(135deg, #1a2f5a, #2251a3); }
+        .menu-btn.add-martyrs   { background: linear-gradient(135deg, #5a0b0b, #b71c1c); }
+        .menu-btn.search        { background: linear-gradient(135deg, #0d4a3e, #0e8a74); }
+        .menu-btn.reports       { background: linear-gradient(135deg, #6b3b00, #c47f10); }
+        .menu-btn.users         { background: linear-gradient(135deg, #3b1060, #7b2fbe); }
+        .menu-btn.online-users  { background: linear-gradient(135deg, #004a6b, #0078a8); }
+        .menu-btn.audit         { background: linear-gradient(135deg, #0a3d35, #12806e); }
+        .menu-btn.trash         { background: linear-gradient(135deg, #5a1010, #c0392b); }
+        .menu-btn.export        { background: linear-gradient(135deg, #1e2a38, #34495e); }
         }
 
         /* نماذج الإضافة */
@@ -890,86 +858,219 @@
 
         /* صفحة البحث */
         .search-container {
-            max-width: 1000px;
-            margin: 20px auto;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 16px 50px;
             display: none;
         }
 
         .search-card {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding: 0;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
+        /* رأس شاشة البحث */
+        .search-header-bar {
+            background: linear-gradient(135deg, #142235 0%, #0b1320 100%);
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid rgba(201,161,59,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .search-header-bar::before {
+            content: "";
+            position: absolute;
+            top: -40px; left: 50%;
+            transform: translateX(-50%);
+            width: 300px; height: 100px;
+            background: radial-gradient(ellipse, rgba(201,161,59,0.14), transparent 70%);
+            pointer-events: none;
+        }
+        .search-header-bar h1 {
+            font-family: 'Amiri', serif;
+            font-size: 22px;
+            color: #f4ead9;
+            margin: 0;
+            position: relative;
+        }
+        .search-header-bar h1 span {
+            color: #c9a13b;
+        }
+        .search-header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        /* جسم البحث */
+        .search-body {
+            padding: 28px;
+        }
+
+        /* أزرار نوع البحث (تبديل) */
         .search-type {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 22px;
             flex-wrap: wrap;
         }
-
         .search-type label {
+            flex: 1;
+            min-width: 130px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             cursor: pointer;
+            padding: 11px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--user-bar-bg);
+            font-family: 'Cairo', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.22s;
+            user-select: none;
         }
+        .search-type label:has(input:checked) {
+            border-color: #c9a13b;
+            background: rgba(201,161,59,0.1);
+            color: #c9a13b;
+            box-shadow: 0 0 0 3px rgba(201,161,59,0.12);
+        }
+        .search-type label input[type="radio"] { display: none; }
 
+        /* طريقة البحث */
         .search-method {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: var(--user-bar-bg);
-            border-radius: 10px;
+            gap: 10px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
         }
-
         .search-method label {
+            flex: 1;
+            min-width: 120px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--user-bar-bg);
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.22s;
+            user-select: none;
+        }
+        .search-method label:has(input:checked) {
+            border-color: #0e8a74;
+            background: rgba(14,138,116,0.1);
+            color: #0ecfb0;
+            box-shadow: 0 0 0 3px rgba(14,138,116,0.1);
+        }
+        .search-method label input[type="radio"] { display: none; }
+
+        /* زر البحث الرئيسي */
+        .btn-search-main {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #0d4a3e, #0e8a74);
+            color: white;
+            margin-top: 4px;
+            box-shadow: 0 8px 20px rgba(14,138,116,0.25);
+            transition: all 0.22s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-search-main::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,rgba(255,255,255,0.1),transparent);
+            pointer-events: none;
+        }
+        .btn-search-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(14,138,116,0.35);
+            filter: brightness(1.1);
         }
 
+        /* نتائج البحث */
         .search-results {
-            margin-top: 30px;
+            margin-top: 28px;
             display: none;
         }
 
         .result-card {
             background: var(--result-card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 16px;
             border-right: 4px solid var(--result-card-border);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.13);
         }
 
         .result-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
+            font-family: 'Cairo', sans-serif;
+            color: #c9a13b;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            gap: 14px;
         }
 
         .result-item {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .result-label {
-            font-weight: bold;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
             color: var(--text-secondary);
             min-width: 100px;
+            font-size: 13px;
         }
 
         .result-value {
+            font-family: 'Cairo', sans-serif;
             color: var(--text-color);
+            font-size: 13px;
+        }
         }
 
         .result-actions {
@@ -1145,68 +1246,140 @@
         /* صفحة التقارير */
         .reports-container {
             max-width: 100%;
-            margin: 20px auto;
+            margin: 0 auto;
+            padding: 28px 16px 50px;
             display: none;
         }
 
         .reports-card {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding: 0;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
-        .reports-buttons {
+        /* رأس شاشة التقارير */
+        .reports-header-bar {
+            background: linear-gradient(135deg, #142235 0%, #0b1320 100%);
+            padding: 20px 28px;
             display: flex;
-            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
-            margin-bottom: 30px;
+            gap: 12px;
+            border-bottom: 1px solid rgba(201,161,59,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .reports-header-bar::before {
+            content: "";
+            position: absolute;
+            top: -40px; left: 50%;
+            transform: translateX(-50%);
+            width: 400px; height: 100px;
+            background: radial-gradient(ellipse, rgba(201,161,59,0.14), transparent 70%);
+            pointer-events: none;
+        }
+        .reports-header-bar h1 {
+            font-family: 'Amiri', serif;
+            font-size: 22px;
+            color: #f4ead9;
+            margin: 0;
+            position: relative;
+        }
+        .reports-header-bar h1 span { color: #c9a13b; }
+        .reports-header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        /* شريط اسم الجهة فوق أزرار التقارير */
+        .reports-subheader {
+            padding: 12px 28px;
+            background: rgba(201,161,59,0.06);
+            border-bottom: 1px solid rgba(201,161,59,0.12);
+            text-align: center;
+        }
+        .reports-subheader p {
+            font-family: 'Amiri', serif;
+            font-size: 14px;
+            color: #b6ab95;
+            margin: 0;
+        }
+
+        /* جسم التقارير */
+        .reports-body {
+            padding: 28px;
+        }
+
+        /* شبكة أزرار التقارير الرئيسية */
+        .reports-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
         }
 
         .report-btn {
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 24px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
             border: none;
-            border-radius: 10px;
+            border-radius: 16px;
             cursor: pointer;
             color: white;
+            text-align: center;
+            transition: transform 0.22s, box-shadow 0.22s, filter 0.22s;
+            position: relative;
+            overflow: hidden;
         }
-
-        .report-btn.military-summary {
-            background: #3498db;
+        .report-btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 55%);
+            pointer-events: none;
         }
-
-        .report-btn.military-full {
-            background: #2c3e50;
-        }
-
-        .report-btn.civilian-summary {
-            background: #2a5298;
-        }
-
-        .report-btn.civilian-full {
-            background: #1e3c72;
-        }
-
         .report-btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
+            transform: translateY(-4px);
+            filter: brightness(1.1);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.28);
+        }
+        .report-btn .report-btn-icon {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 10px;
         }
 
+        .report-btn.branch-btn {
+            background: linear-gradient(135deg, #1c3a5a, #2980b9);
+        }
+        .report-btn.martyrs-btn {
+            background: linear-gradient(135deg, #5a0b0b, #b71c1c);
+        }
+
+        /* منطقة محتوى التقرير */
         .report-content {
-            margin-top: 30px;
+            margin-top: 0;
             padding: 20px;
             background: var(--user-bar-bg);
             border-radius: 15px;
             overflow-x: auto;
+            border: 1px solid var(--border-color);
         }
 
         .report-title {
             text-align: center;
-            font-size: 24px;
+            font-family: 'Amiri', serif;
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             color: var(--text-color);
         }
 
@@ -1220,29 +1393,74 @@
             min-width: 1300px;
         }
 
-    .report-table th {
-    background: var(--table-th-bg);
-    color: var(--table-th-text);
-    padding: 4px 3px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid var(--border-color);
-    white-space: nowrap;
-    font-size: 10px;
-}
+        .report-table th {
+            background: linear-gradient(135deg, #142235, #1e3a5a);
+            color: #ecc873;
+            padding: 5px 4px;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            border: 1px solid rgba(201,161,59,0.2);
+            white-space: nowrap;
+            font-size: 10px;
+        }
 
         .report-table td {
-    padding: 4px 3px;
-    text-align: center;
-    border: 1px solid var(--table-td-border);
-    white-space: nowrap;
-    font-size: 10px;
-    color: var(--text-color);
-}
+            padding: 4px 3px;
+            text-align: center;
+            border: 1px solid var(--table-td-border);
+            white-space: nowrap;
+            font-size: 10px;
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-color);
+        }
+
+        .report-table tr:nth-child(even) {
+            background: rgba(201,161,59,0.03);
+        }
 
         .report-table tr:hover {
-            background: var(--user-bar-bg);
+            background: rgba(201,161,59,0.07);
         }
+
+        /* أزرار الإجراءات (طباعة / excel / واتساب) */
+        .report-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+            padding: 16px 20px;
+            background: var(--user-bar-bg);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+        .print-btn {
+            background: linear-gradient(135deg, #142235, #25395a) !important;
+            color: #ecc873 !important;
+            border: 1px solid rgba(201,161,59,0.35) !important;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+        }
+        .print-btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        .excel-btn {
+            background: linear-gradient(135deg, #0d4a3e, #0e8a74) !important;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+        }
+        .excel-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #1a3d24, #25a244) !important;
+            color: white !important;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.22s;
+        }
+        .btn-whatsapp:hover { filter: brightness(1.15); transform: translateY(-2px); }
 
         .import-area {
             margin-top: 20px;
@@ -1253,8 +1471,8 @@
         }
 
         .file-input-label {
-            background: #667eea;
-            color: white;
+            background: linear-gradient(135deg,#c9a13b,#a9822c);
+            color: #1a1305;
             padding: 8px 20px;
             border-radius: 8px;
             cursor: pointer;
@@ -1345,7 +1563,7 @@
     /* ... */
 }
             .reports-card {
-                padding: 15px;
+                padding: 0;
             }
             .users-table {
                 font-size: 12px;
@@ -2041,7 +2259,7 @@
     }
     .reports-card {
         box-shadow: none;
-        padding: 2px;
+        padding: 0;
     }
     .report-table {
         font-size: 7px;
@@ -2779,7 +2997,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div class="login-meta">
                     <p class="login-meta-author">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p class="login-meta-version">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.4</span></p>
+                    <p class="login-meta-version">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.6</span></p>
                     <style>
                         @keyframes blinkGreenBlack {
                             0%,49%  { color: #ecc873; text-shadow: 0 0 8px rgba(236,200,115,0.55); }
@@ -2809,12 +3027,8 @@
             <div class="error-message" id="errorMessage"></div>
             <div class="warning-message" id="warningMessage"></div>
             <div class="info-box">
-                <h4>📋 معلومات الدخول:</h4>
-                <p>• الاسم: <strong>فيصل</strong> | كلمة المرور: <strong>192021</strong> (مدير - لا يجمد)</p>
-                <p>• الاسم: <strong>الفرع</strong> | كلمة المرور: <strong>1</strong> (مشاهد)</p>
-                <p>• الاسم: <strong>كاتب</strong> | كلمة المرور: <strong>123</strong> (كاتب)</p>
-                <p>⚠️ بعد 3 محاولات خاطئة، يتم تجميد الحساب مؤقتاً (30 دقيقة)</p>
-                <p>☁️ البيانات متزامنة سحابياً - تظهر على جميع الأجهزة</p>
+                <p>⚠️ بعد 3 محاولات خاطئة يتم تجميد الحساب مؤقتاً (30 دقيقة)</p>
+                <p>☁️ البيانات متزامنة سحابياً — تظهر على جميع الأجهزة</p>
                 <p>🔄 يتم تحديث البيانات تلقائياً كل 30 ثانية</p>
             </div>
         </div>
@@ -2823,13 +3037,9 @@
     <div id="mainMenu" class="main-menu">
         <div class="menu-card">
             <div class="program-header">
-                <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-                <div style="margin-top: 8px; font-size: 11px; opacity: 0.9;">
-                    👨‍💼برمجة* المقدم / فيصل البريدان
-                </div>
-<div style="margin-top: 3px; font-size: 9px; opacity: 0.7;">
-    📌 الإصدار 2.1.4
-</div>
+                <img src="logo.png" alt="شعار" style="width:62px;height:62px;object-fit:cover;border-radius:50%;border:2px solid #c9a13b;box-shadow:0 4px 14px rgba(0,0,0,0.4);margin-bottom:10px;">
+                <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب</div>
+                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.1.6</div>
             </div>
             <div class="user-bar">
                 <div class="user-info">
@@ -2905,7 +3115,7 @@
         </div>
     </div>
 
-    <div id="addMilitaryForm" class="form-container">
+    <div id="addMilitaryForm" class="form-container" style="display:none;">
         <div class="form-card">
             <div class="form-header">
                 <h1 id="militaryFormTitle">➕ إضافة عسكري جديد</h1>
@@ -2943,7 +3153,7 @@
         </div>
     </div>
 
-    <div id="addCivilianForm" class="form-container">
+    <div id="addCivilianForm" class="form-container" style="display:none;">
         <div class="form-card">
             <div class="form-header">
                 <h1 id="civilianFormTitle">➕ إضافة موظف جديد</h1>
@@ -2981,7 +3191,7 @@
         </div>
     </div>
 
-    <div id="addMartyrsForm" class="form-container">
+    <div id="addMartyrsForm" class="form-container" style="display:none;">
         <div class="form-card">
             <div class="form-header">
                 <h1>🕊️ إضافة شهيد / جريح / أسير / مفقود</h1>
@@ -3072,7 +3282,7 @@
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="logo.png" alt="شعار فرع المرقب" style="max-width: 150px; margin-bottom: 10px; border-radius: 10px;">
             <div style="font-size: 14px; color: #667eea; margin-bottom: 5px;">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.4</div>
+<div style="font-size: 11px; color: #888;">👨‍💼 برمجة: المقدم / فيصل البريدان | 📌 الإصدار 2.1.6</div>
         </div>
         <div class="form-header">
             <h1>🔍 خدمة الاستعلام</h1>
@@ -3107,43 +3317,75 @@
 </div>
     <div id="searchPage" class="search-container">
         <div class="search-card">
-            <div class="form-header">
-                <h1>🔍 البحث</h1>
-                <div>
+
+            <!-- رأس الشاشة -->
+            <div class="search-header-bar">
+                <h1>🔍 <span>البحث</span> في السجلات</h1>
+                <div class="search-header-actions">
                     <button class="btn btn-user-info" onclick="showUserInfo()">👤 معلومات المستخدم المتصل</button>
                     <button class="btn btn-back" onclick="backToMenu()">🔙 رجوع للقائمة</button>
                 </div>
             </div>
-            <div class="search-type">
-                <label><input type="radio" name="searchType" value="military" checked> عسكري</label>
-                <label><input type="radio" name="searchType" value="civilian"> موظف</label>
-                <label><input type="radio" name="searchType" value="martyr"> 🕊️ شهيد/جريح/أسير/مفقود</label>
-            </div>
-            <div class="search-method">
-                <label><input type="radio" name="searchMethod" value="number" checked> بحث بالرقم</label>
-                <label><input type="radio" name="searchMethod" value="name"> بحث بالاسم</label>
-                <label><input type="radio" name="searchMethod" value="barcode"> 📷 بحث بالباركود</label>
-            </div>
-            <div class="form-group" id="searchNumberDiv"><label>🔎 رقم البحث</label><input type="number" id="searchNumber"></div>
-            <div class="form-group" id="searchNameDiv" style="display:none;"><label>🔎 اسم البحث</label><input type="text" id="searchName"></div>
-            <div class="form-group" id="searchBarcodeDiv" style="display:none;">
-                <label>📷 قراءة الباركود</label>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <button onclick="openCameraScanner('search')" style="flex:1; padding:14px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
-                        📸 فتح الكاميرا
-                    </button>
-                    <button onclick="document.getElementById('searchBarcodeInput').click()" style="flex:1; padding:14px; background:var(--input-bg); color:#667eea; border:2px solid #667eea; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold;">
-                        🖼️ رفع صورة
-                    </button>
+
+            <div class="search-body">
+
+                <!-- نوع السجل -->
+                <div style="margin-bottom:10px;">
+                    <p style="font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">📂 نوع السجل</p>
+                    <div class="search-type">
+                        <label><input type="radio" name="searchType" value="military" checked> 🎖️ عسكري</label>
+                        <label><input type="radio" name="searchType" value="civilian"> 👨‍💼 موظف</label>
+                        <label><input type="radio" name="searchType" value="martyr"> 🕊️ شهيد / جريح / أسير / مفقود</label>
+                    </div>
                 </div>
-                <input type="file" id="searchBarcodeInput" accept="image/*" style="display:none;" onchange="readBarcodeFromImageForSearch(this)">
-                <div id="searchBarcodePreview" style="display:none; margin-top:10px; text-align:center;">
-                    <img id="searchBarcodeImg" style="max-width:100%; border-radius:10px; max-height:200px; object-fit:contain;" />
-                    <p id="searchBarcodeStatus" style="margin-top:8px; font-weight:bold; color:#667eea;"></p>
+
+                <!-- طريقة البحث -->
+                <div style="margin-bottom:10px;">
+                    <p style="font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">🔎 طريقة البحث</p>
+                    <div class="search-method">
+                        <label><input type="radio" name="searchMethod" value="number" checked> 🔢 بحث بالرقم</label>
+                        <label><input type="radio" name="searchMethod" value="name"> ✍️ بحث بالاسم</label>
+                        <label><input type="radio" name="searchMethod" value="barcode"> 📷 بحث بالباركود</label>
+                    </div>
                 </div>
+
+                <!-- حقل البحث بالرقم -->
+                <div class="form-group" id="searchNumberDiv">
+                    <label>🔢 أدخل الرقم</label>
+                    <input type="number" id="searchNumber" placeholder="مثال: 1023">
+                </div>
+
+                <!-- حقل البحث بالاسم -->
+                <div class="form-group" id="searchNameDiv" style="display:none;">
+                    <label>✍️ أدخل الاسم أو جزء منه</label>
+                    <input type="text" id="searchName" placeholder="مثال: محمد علي">
+                </div>
+
+                <!-- حقل البحث بالباركود -->
+                <div class="form-group" id="searchBarcodeDiv" style="display:none;">
+                    <label>📷 قراءة الباركود</label>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <button onclick="openCameraScanner('search')" style="flex:1; padding:14px; background:linear-gradient(135deg,#142235,#25395a); color:#ecc873; border:1.5px solid rgba(201,161,59,0.4); border-radius:12px; cursor:pointer; font-size:14px; font-weight:bold; font-family:'Cairo',sans-serif;">
+                            📸 فتح الكاميرا
+                        </button>
+                        <button onclick="document.getElementById('searchBarcodeInput').click()" style="flex:1; padding:14px; background:var(--input-bg); color:var(--text-secondary); border:1.5px solid var(--border-color); border-radius:12px; cursor:pointer; font-size:14px; font-weight:bold; font-family:'Cairo',sans-serif;">
+                            🖼️ رفع صورة
+                        </button>
+                    </div>
+                    <input type="file" id="searchBarcodeInput" accept="image/*" style="display:none;" onchange="readBarcodeFromImageForSearch(this)">
+                    <div id="searchBarcodePreview" style="display:none; margin-top:10px; text-align:center;">
+                        <img id="searchBarcodeImg" style="max-width:100%; border-radius:10px; max-height:200px; object-fit:contain;" />
+                        <p id="searchBarcodeStatus" style="margin-top:8px; font-weight:bold; color:#0ecfb0; font-family:'Cairo',sans-serif;"></p>
+                    </div>
+                </div>
+
+                <!-- زر البحث -->
+                <button class="btn-search-main" onclick="search()">🔍 بحث الآن</button>
+
+                <!-- نتائج البحث -->
+                <div id="searchResults" class="search-results"></div>
+
             </div>
-            <button class="btn" onclick="search()">🔍 بحث</button>
-            <div id="searchResults" class="search-results"></div>
         </div>
     </div>
 
@@ -3254,34 +3496,48 @@
 
     <div id="reportsPage" class="reports-container">
         <div class="reports-card">
-            <div class="program-header" style="margin-bottom: 20px; padding: 12px;"><div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div></div>
-            <div class="form-header">
-                <h1>💼 التقارير</h1>
-                <div>
+
+            <!-- رأس الشاشة -->
+            <div class="reports-header-bar">
+                <h1>💼 <span>التقارير</span></h1>
+                <div class="reports-header-actions">
                     <button class="btn btn-user-info" onclick="showUserInfo()">👤 معلومات المستخدم المتصل</button>
                     <button class="btn btn-back" onclick="backToMenu()">🔙 رجوع</button>
                 </div>
             </div>
-<div class="reports-buttons" style="justify-content: center; gap: 30px;">
-    <button class="report-btn main-report-btn branch-btn" onclick="openBranchReportsModal()">
-        <span style="font-size: 28px; display: block; margin-bottom: 8px;">🗂️ </span>
-        تقارير قوة فرع المرقب
-    </button>
-    
-    <button class="report-btn main-report-btn martyrs-btn" onclick="openMartyrsReportsModal()">
-        <span style="font-size: 28px; display: block; margin-bottom: 8px;">🕊️</span>
-        تقارير الشهداء والجرحى
-    </button>
-</div>
+
+            <!-- شريط اسم الجهة -->
+            <div class="reports-subheader">
+                <p>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب</p>
             </div>
-            
-            <div id="reportContent" class="report-content"><div class="report-title">📊 اختر تقريراً من الأزرار أعلاه</div></div>
-            <div class="report-actions" id="reportActions" style="display: none;">
-                <button class="btn print-btn" onclick="printReport()">🖨️ تحويل إلى PDF / طباعة</button>
-                <button class="btn excel-btn" onclick="exportToExcel()">📊 تصدير إلى Excel</button>
-        <button class="btn-whatsapp" onclick="sendReportToWhatsApp()">📱 إرسال إلى واتساب</button>
-           </div>
-          </div>
+
+            <div class="reports-body">
+
+                <!-- أزرار التقارير الرئيسية -->
+                <div class="reports-buttons">
+                    <button class="report-btn branch-btn" onclick="openBranchReportsModal()">
+                        <span class="report-btn-icon">🗂️</span>
+                        تقارير قوة فرع المرقب
+                    </button>
+                    <button class="report-btn martyrs-btn" onclick="openMartyrsReportsModal()">
+                        <span class="report-btn-icon">🕊️</span>
+                        تقارير الشهداء والجرحى
+                    </button>
+                </div>
+
+                <!-- منطقة عرض التقرير -->
+                <div id="reportContent" class="report-content">
+                    <div class="report-title" style="color:var(--text-secondary);font-size:17px;">📊 اختر تقريراً من الأزرار أعلاه</div>
+                </div>
+
+                <!-- أزرار الإجراءات -->
+                <div class="report-actions" id="reportActions" style="display:none;">
+                    <button class="btn print-btn" onclick="printReport()">🖨️ تحويل إلى PDF / طباعة</button>
+                    <button class="btn excel-btn" onclick="exportToExcel()">📊 تصدير إلى Excel</button>
+                    <button class="btn-whatsapp" onclick="sendReportToWhatsApp()">📱 إرسال إلى واتساب</button>
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -4827,6 +5083,14 @@ function stopDigitalClock() {
     }
 }
 async function showMainMenu() {
+    // إخفاء نماذج الإضافة دائماً عند العودة للشاشة الرئيسية
+    ['addMilitaryForm','addCivilianForm','addMartyrsForm',
+     'searchPage','reportsPage','usersPage','auditPage','trashPage','onlineUsersPage'
+    ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
     await loadInitialData();
     
     if (currentUser.role === 'inquirer') {
@@ -6778,8 +7042,8 @@ function exportAuditLogToPDF() {
     '<div class="header">' +
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
-    '<p>?? تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.4</p>' +
+    '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.6</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -6799,7 +7063,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.1.4</p>' +
+   '<p>فرع المرقب - الإصدار 2.1.6</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
