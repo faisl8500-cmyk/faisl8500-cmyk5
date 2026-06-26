@@ -10407,9 +10407,13 @@ async function showDeviceLogs() {
             const color = typeColor(log.deviceType);
             const photoCell = log.photo
                 ? `<td style="padding:6px;text-align:center;">
-                       <img src="${log.photo}" style="width:60px;height:45px;object-fit:cover;border-radius:8px;border:2px solid #667eea;cursor:pointer;"
+                       <img src="${log.photo}" style="width:60px;height:45px;object-fit:cover;border-radius:8px;border:2px solid #667eea;cursor:pointer;display:block;margin:0 auto 5px;"
                             onclick="this.style.transform=this.style.transform?'':'scale(3.5)';this.style.zIndex=this.style.zIndex?'':'999';this.style.position=this.style.position?'':'relative';"
                             title="اضغط لتكبير الصورة">
+                       <a href="${log.photo}" download="دخول_${(log.username||'مجهول').replace(/\s/g,'_')}_${new Date(log.timestamp).toLocaleDateString('ar-SA').replace(/\//g,'-')}.jpg"
+                          style="display:inline-block;padding:3px 10px;background:linear-gradient(135deg,#142235,#25395a);color:#ecc873;border-radius:6px;font-size:11px;font-weight:bold;text-decoration:none;border:1px solid rgba(201,161,59,0.35);">
+                           💾 تحميل
+                       </a>
                    </td>`
                 : `<td style="padding:6px;text-align:center;color:#aaa;font-size:12px;">لا توجد</td>`;
             return `
