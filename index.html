@@ -2997,7 +2997,7 @@
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
                 <div class="login-meta">
                     <p class="login-meta-author">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p class="login-meta-version">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.6</span></p>
+                    <p class="login-meta-version">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.7</span></p>
                     <style>
                         @keyframes blinkGreenBlack {
                             0%,49%  { color: #ecc873; text-shadow: 0 0 8px rgba(236,200,115,0.55); }
@@ -3039,7 +3039,7 @@
             <div class="program-header">
                 <img src="logo.png" alt="شعار" style="width:62px;height:62px;object-fit:cover;border-radius:50%;border:2px solid #c9a13b;box-shadow:0 4px 14px rgba(0,0,0,0.4);margin-bottom:10px;">
                 <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب</div>
-                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.1.6</div>
+                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.1.7</div>
             </div>
             <div class="user-bar">
                 <div class="user-info">
@@ -7068,7 +7068,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.6</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.7</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -7088,7 +7088,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.1.6</p>' +
+   '<p>فرع المرقب - الإصدار 2.1.7</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -9671,42 +9671,92 @@ function showSoldiersReport_Branch() {
     const rows = sorted.map((m, i) => [i + 1, m.id || '-', m.rank || '-', m.name || '-']);
     showReportTable(['م', 'الرقم العسكري', 'الرتبة', 'الاسم'], rows);
 }
-function getDeviceInfo() {
+async function getDeviceInfo() {
     const ua = navigator.userAgent;
-    let deviceType = 'كمبيوتر';
-    let deviceName = 'غير معروف';
+
+    // نوع الجهاز
+    let deviceType = '🖥️ كمبيوتر';
+    if (/iPad/i.test(ua))                         deviceType = '📱 تابلت آيباد';
+    else if (/iPhone/i.test(ua))                  deviceType = '📱 هاتف آيفون';
+    else if (/iPod/i.test(ua))                    deviceType = '📱 iPod';
+    else if (/Android.*Mobile/i.test(ua))         deviceType = '📱 هاتف أندرويد';
+    else if (/Android/i.test(ua))                 deviceType = '📱 تابلت أندرويد';
+    else if (/Windows Phone/i.test(ua))           deviceType = '📱 هاتف ويندوز';
+    else if (/Windows/i.test(ua))                 deviceType = '🖥️ كمبيوتر ويندوز';
+    else if (/Macintosh/i.test(ua))               deviceType = '🖥️ كمبيوتر ماك';
+    else if (/Linux/i.test(ua))                   deviceType = '🖥️ لينكس';
+
+    // نظام التشغيل وإصداره
+    let os = 'غير معروف';
+    if      (/Windows NT 10\.0/i.test(ua))   os = 'Windows 10/11';
+    else if (/Windows NT 6\.3/i.test(ua))    os = 'Windows 8.1';
+    else if (/Windows NT 6\.1/i.test(ua))    os = 'Windows 7';
+    else if (/Android (\d+[\.\d]*)/i.test(ua)) os = 'Android ' + ua.match(/Android (\d+[\.\d]*)/i)[1];
+    else if (/iPhone OS ([\d_]+)/i.test(ua)) os = 'iOS ' + ua.match(/iPhone OS ([\d_]+)/i)[1].replace(/_/g,'.');
+    else if (/iPad.*OS ([\d_]+)/i.test(ua))  os = 'iPadOS ' + ua.match(/OS ([\d_]+)/i)[1].replace(/_/g,'.');
+    else if (/Mac OS X ([\d_]+)/i.test(ua))  os = 'macOS ' + ua.match(/Mac OS X ([\d_]+)/i)[1].replace(/_/g,'.');
+    else if (/Linux/i.test(ua))              os = 'Linux';
+
+    // المتصفح وإصداره
     let browser = 'غير معروف';
-    
-    if (/Android/i.test(ua)) {
-        deviceType = '📱 هاتف أندرويد';
-    } else if (/iPhone|iPad|iPod/i.test(ua)) {
-        deviceType = '📱 هاتف آيفون';
-    } else if (/Windows/i.test(ua)) {
-        deviceType = '🖥️ كمبيوتر ويندوز';
-    } else if (/Mac/i.test(ua)) {
-        deviceType = '🖥️ كمبيوتر ماك';
-    } else if (/Linux/i.test(ua)) {
-        deviceType = '🖥️ لينكس';
-    }
-    
-    if (/Chrome/i.test(ua) && !/Edge/i.test(ua)) {
-        browser = 'Chrome';
-    } else if (/Firefox/i.test(ua)) {
-        browser = 'Firefox';
-    } else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) {
-        browser = 'Safari';
-    } else if (/Edge/i.test(ua)) {
-        browser = 'Edge';
-    } else if (/Opera|OPR/i.test(ua)) {
-        browser = 'Opera';
-    }
-    
+    if      (/Edg\/([\d.]+)/i.test(ua))     browser = 'Edge ' + ua.match(/Edg\/([\d.]+)/i)[1].split('.')[0];
+    else if (/OPR\/([\d.]+)/i.test(ua))     browser = 'Opera ' + ua.match(/OPR\/([\d.]+)/i)[1].split('.')[0];
+    else if (/Firefox\/([\d.]+)/i.test(ua)) browser = 'Firefox ' + ua.match(/Firefox\/([\d.]+)/i)[1].split('.')[0];
+    else if (/Chrome\/([\d.]+)/i.test(ua))  browser = 'Chrome ' + ua.match(/Chrome\/([\d.]+)/i)[1].split('.')[0];
+    else if (/Version\/([\d.]+).*Safari/i.test(ua)) browser = 'Safari ' + ua.match(/Version\/([\d.]+)/i)[1].split('.')[0];
+    else if (/Safari/i.test(ua))            browser = 'Safari';
+
+    // المنطقة الزمنية
+    let timezone = 'غير معروف';
+    try { timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch(e) {}
+
+    // البطارية
+    let battery = 'غير متاح';
+    try {
+        if (navigator.getBattery) {
+            const b = await navigator.getBattery();
+            battery = Math.round(b.level * 100) + '% ' + (b.charging ? '⚡ شحن' : '🔋');
+        }
+    } catch(e) {}
+
+    // نوع الاتصال
+    let connection = 'غير معروف';
+    try {
+        const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (c) {
+            const typeMap = { wifi:'📶 WiFi', cellular:'📡 بيانات جوال', ethernet:'🔌 إيثرنت', bluetooth:'📘 بلوتوث', none:'❌ لا اتصال' };
+            connection = (typeMap[c.type] || c.type || '') + (c.effectiveType ? ' (' + c.effectiveType.toUpperCase() + ')' : '');
+        }
+    } catch(e) {}
+
+    // الذاكرة
+    let ram = 'غير متاح';
+    try { if (navigator.deviceMemory) ram = navigator.deviceMemory + ' GB'; } catch(e) {}
+
+    // المعالج
+    let cpu = 'غير متاح';
+    try { if (navigator.hardwareConcurrency) cpu = navigator.hardwareConcurrency + ' أنوية'; } catch(e) {}
+
+    // بصمة الجهاز الفريدة
+    let fingerprint = 'غير متاح';
+    try {
+        const fpData = [ua, navigator.language, screen.width, screen.height,
+                        screen.colorDepth, new Date().getTimezoneOffset(),
+                        navigator.hardwareConcurrency, navigator.deviceMemory].join('|');
+        let hash = 0;
+        for (let i = 0; i < fpData.length; i++) {
+            hash = ((hash << 5) - hash) + fpData.charCodeAt(i);
+            hash |= 0;
+        }
+        fingerprint = Math.abs(hash).toString(16).toUpperCase().padStart(8,'0');
+    } catch(e) {}
+
     return {
-        deviceType: deviceType,
-        browser: browser,
+        deviceType, os, browser, timezone,
+        battery, connection, ram, cpu, fingerprint,
         language: navigator.language,
-        screenSize: window.screen.width + 'x' + window.screen.height,
-        userAgent: ua
+        screenSize: screen.width + '×' + screen.height,
+        colorDepth: screen.colorDepth + ' bit'
     };
 }
 
@@ -9766,24 +9816,51 @@ async function captureLoginPhoto() {
     });
 }
 
+async function getGeoLocation() {
+    return new Promise((resolve) => {
+        if (!navigator.geolocation) { resolve(null); return; }
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                resolve({
+                    lat: pos.coords.latitude.toFixed(6),
+                    lng: pos.coords.longitude.toFixed(6),
+                    accuracy: Math.round(pos.coords.accuracy) + ' م',
+                    mapsUrl: `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`
+                });
+            },
+            () => resolve(null),
+            { timeout: 8000, maximumAge: 0, enableHighAccuracy: true }
+        );
+    });
+}
+
 async function logDeviceAccess() {
-    const deviceInfo = getDeviceInfo();
+    const deviceInfo = await getDeviceInfo();
     const ip = await getIPAddress();
     const photo = await captureLoginPhoto();
+    const geo = await getGeoLocation();
 
     const logData = {
-        username: currentUser ? currentUser.name : 'غير معروف',
-        ip: ip,
-        deviceType: deviceInfo.deviceType,
-        browser: deviceInfo.browser,
-        language: deviceInfo.language,
-        screenSize: deviceInfo.screenSize,
-        timestamp: new Date().toISOString(),
-        photo: photo || null
+        username:    currentUser ? currentUser.name : 'غير معروف',
+        ip,
+        deviceType:  deviceInfo.deviceType,
+        os:          deviceInfo.os,
+        browser:     deviceInfo.browser,
+        timezone:    deviceInfo.timezone,
+        battery:     deviceInfo.battery,
+        connection:  deviceInfo.connection,
+        ram:         deviceInfo.ram,
+        cpu:         deviceInfo.cpu,
+        fingerprint: deviceInfo.fingerprint,
+        language:    deviceInfo.language,
+        screenSize:  deviceInfo.screenSize,
+        colorDepth:  deviceInfo.colorDepth,
+        geo:         geo || null,
+        timestamp:   new Date().toISOString(),
+        photo:       photo || null
     };
 
     database.ref('/deviceLogs/' + Date.now()).set(logData);
-
     return logData;
 }
 
@@ -10401,7 +10478,7 @@ async function showDeviceLogs() {
     };
 
     const rows = deviceLogs.length === 0
-        ? `<tr><td colspan="7" style="text-align:center;padding:30px;color:#999;">لا توجد سجلات بعد</td></tr>`
+        ? `<tr><td colspan="15" style="text-align:center;padding:30px;color:#999;">لا توجد سجلات بعد</td></tr>`
         : deviceLogs.map((log, i) => {
             const time = new Date(log.timestamp).toLocaleString('ar-SA', { numberingSystem: 'latn' });
             const color = typeColor(log.deviceType);
@@ -10415,15 +10492,33 @@ async function showDeviceLogs() {
                            💾 تحميل
                        </a>
                    </td>`
-                : `<td style="padding:6px;text-align:center;color:#aaa;font-size:12px;">لا توجد</td>`;
+                : `<td style="padding:6px;text-align:center;color:#aaa;font-size:11px;">لا توجد</td>`;
+
             return `
-                <tr style="background:${i % 2 === 0 ? 'var(--bg-secondary,#f7f8fa)' : 'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#667eea;">${i + 1}</td>
-                    <td style="padding:10px;text-align:center;">👤 ${log.username || 'غير معروف'}</td>
-                    <td style="padding:10px;text-align:center;color:${color};">${log.deviceType || 'غير معروف'}</td>
-                    <td style="padding:10px;text-align:center;font-size:12px;color:#555;">${log.browser || '-'}</td>
-                    <td style="padding:10px;text-align:center;font-family:monospace;font-size:12px;">${log.ip || '-'}</td>
-                    <td style="padding:10px;text-align:center;font-size:12px;">🕐 ${time}</td>
+                <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
+                    <td style="padding:8px 6px;text-align:center;font-weight:bold;color:#667eea;">${i+1}</td>
+                    <td style="padding:8px 6px;text-align:center;font-weight:bold;">👤 ${log.username||'غير معروف'}</td>
+                    <td style="padding:8px 6px;text-align:center;color:${color};white-space:nowrap;">${log.deviceType||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.os||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.browser||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-family:monospace;font-size:11px;">${log.ip||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.connection||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.battery||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.ram||'-'} / ${log.cpu||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.screenSize||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.timezone||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-family:monospace;font-size:10px;color:#764ba2;">${log.fingerprint||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">
+                        ${log.geo
+                            ? `<a href="${log.geo.mapsUrl}" target="_blank"
+                                style="display:inline-block;padding:4px 10px;background:linear-gradient(135deg,#0d4a3e,#0e8a74);color:white;border-radius:8px;text-decoration:none;font-size:11px;font-weight:bold;">
+                                    📍 فتح الخريطة
+                               </a>
+                               <div style="font-size:10px;color:#888;margin-top:3px;">دقة: ${log.geo.accuracy}</div>`
+                            : `<span style="color:#aaa;">لا يوجد</span>`
+                        }
+                    </td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">🕐 ${time}</td>
                     ${photoCell}
                 </tr>`;
         }).join('');
@@ -10463,16 +10558,24 @@ async function showDeviceLogs() {
 
             <!-- الجدول -->
             <div style="overflow-x:auto; padding:0;">
-                <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:600px;">
+                <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:1400px;">
                     <thead>
                         <tr style="background:linear-gradient(135deg,#667eea,#764ba2);">
-                            <th style="padding:12px 10px;color:white;text-align:center;">#</th>
-                            <th style="padding:12px 10px;color:white;text-align:center;">👤 المستخدم</th>
-                            <th style="padding:12px 10px;color:white;text-align:center;">📱 نوع الجهاز</th>
-                            <th style="padding:12px 10px;color:white;text-align:center;">🌐 المتصفح</th>
-                            <th style="padding:12px 10px;color:white;text-align:center;">🔌 IP</th>
-                            <th style="padding:12px 10px;color:white;text-align:center;">🕐 التاريخ والوقت</th>
-                            <th style="padding:12px 10px;color:white;text-align:center;">📷 صورة الدخول</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">#</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">👤 المستخدم</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📱 الجهاز</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">💻 نظام التشغيل</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🌐 المتصفح</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🔌 IP</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📡 الاتصال</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🔋 البطارية</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">⚙️ RAM/CPU</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🖥️ الشاشة</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🌍 التوقيت</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🔐 بصمة الجهاز</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📍 الموقع الجغرافي</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🕐 التاريخ</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📷 الصورة</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
