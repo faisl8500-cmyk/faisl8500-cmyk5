@@ -3021,6 +3021,9 @@
                 <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="new-password">
             </div>
             <button class="btn-login" onclick="login()">تسجيل الدخول</button>
+            <button type="button" id="biometricBtn" onclick="loginWithBiometric()" class="login-qr-btn" style="display:none;">
+                👆 تسجيل الدخول بالبصمة
+            </button>
             <button type="button" onclick="openCameraScanner('login')" class="login-qr-btn">
                 📱 تسجيل الدخول بالكيو آر
             </button>
@@ -4917,6 +4920,164 @@ function showTrash() {
     refreshAllData();
 }
 
+// ===== تسجيل الدخول بالبصمة (WebAuthn) =====
+
+// تحقق من دعم الجهاز للبصمة وأظهر الزر إن كان مدعوماً
+(async function checkBiometricSupport() {
+    try {
+        if (!window.PublicKeyCredential) return;
+        const supported = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        if (supported) {
+            const btn = document.getElementById('biometricBtn');
+            if (btn) btn.style.display = 'block';
+        }
+    } catch(e) {}
+})();
+
+// تشفير ArrayBuffer إلى Base64
+function bufToB64(buf) {
+    return btoa(String.fromCharCode(...new Uint8Array(buf)));
+}
+function b64ToBuf(b64) {
+    return Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
+}
+
+// تسجيل البصمة لأول مرة (يُستدعى بعد الدخول بكلمة المرور)
+async function registerBiometric(userId, username) {
+    if (!window.PublicKeyCredential) return false;
+    try {
+        const challenge = crypto.getRandomValues(new Uint8Array(32));
+        const credential = await navigator.credentials.create({
+            publicKey: {
+                challenge,
+                rp: { name: 'فرع المرقب', id: location.hostname },
+                user: {
+                    id: new TextEncoder().encode(userId),
+                    name: username,
+                    displayName: username
+                },
+                pubKeyCredParams: [
+                    { type: 'public-key', alg: -7 },
+                    { type: 'public-key', alg: -257 }
+                ],
+                authenticatorSelection: {
+                    authenticatorAttachment: 'platform',
+                    userVerification: 'required'
+                },
+                timeout: 60000,
+                attestation: 'none'
+            }
+        });
+
+        // حفظ بيانات البصمة في localStorage مرتبطة بالمستخدم
+        const credData = {
+            credId: bufToB64(credential.rawId),
+            userId,
+            username
+        };
+        localStorage.setItem('biometric_cred_' + userId, JSON.stringify(credData));
+        localStorage.setItem('biometric_last_user', userId);
+        return true;
+    } catch(e) {
+        console.log('خطأ في تسجيل البصمة:', e);
+        return false;
+    }
+}
+
+// تسجيل الدخول بالبصمة
+async function loginWithBiometric() {
+    if (!window.PublicKeyCredential) {
+        showMessage('جهازك لا يدعم تسجيل الدخول بالبصمة', true);
+        return;
+    }
+
+    // ابحث عن بيانات بصمة محفوظة
+    const lastUserId = localStorage.getItem('biometric_last_user');
+    if (!lastUserId) {
+        showMessage('⚠️ لم يتم تسجيل بصمة بعد. ادخل بكلمة المرور أولاً ثم فعّل البصمة من إعداداتك.', true);
+        return;
+    }
+
+    const credData = JSON.parse(localStorage.getItem('biometric_cred_' + lastUserId) || 'null');
+    if (!credData) {
+        showMessage('⚠️ لم يتم العثور على بيانات البصمة. ادخل بكلمة المرور أولاً.', true);
+        return;
+    }
+
+    try {
+        const challenge = crypto.getRandomValues(new Uint8Array(32));
+        const assertion = await navigator.credentials.get({
+            publicKey: {
+                challenge,
+                allowCredentials: [{
+                    type: 'public-key',
+                    id: b64ToBuf(credData.credId),
+                    transports: ['internal']
+                }],
+                userVerification: 'required',
+                timeout: 60000
+            }
+        });
+
+        if (!assertion) { showMessage('❌ فشل التحقق من البصمة', true); return; }
+
+        // التحقق من المستخدم وتسجيل دخوله
+        showLoadingOverlay('جارٍ الاتصال بقاعدة البيانات...', 20);
+        try {
+            const snap = await database.ref('/users').once('value');
+            users = Object.values(snap.val() || {});
+        } catch(e) {}
+
+        const user = users.find(u => u.id === credData.userId);
+        if (!user) {
+            hideLoadingOverlay();
+            showMessage('❌ لم يتم العثور على الحساب المرتبط بهذه البصمة', true);
+            return;
+        }
+
+        // إكمال تسجيل الدخول
+        document.getElementById('username').value = user.username;
+        document.getElementById('password').value = user.password;
+        hideLoadingOverlay();
+        await login();
+
+    } catch(e) {
+        if (e.name === 'NotAllowedError') {
+            showMessage('❌ تم إلغاء التحقق من البصمة', true);
+        } else {
+            showMessage('❌ فشل تسجيل الدخول بالبصمة', true);
+        }
+    }
+}
+
+// عرض مودال تفعيل البصمة بعد الدخول بكلمة المرور
+async function promptBiometricRegistration(userId, username) {
+    if (!window.PublicKeyCredential) return;
+    const supported = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (!supported) return;
+
+    // لا تسأل مرة أخرى إن كانت مسجلة مسبقاً
+    if (localStorage.getItem('biometric_cred_' + userId)) return;
+    // لا تسأل إن رفض المستخدم من قبل
+    if (localStorage.getItem('biometric_declined_' + userId)) return;
+
+    setTimeout(() => {
+        showConfirmModal(
+            '👆 هل تريد تفعيل الدخول بالبصمة لهذا الجهاز؟\nبعد التفعيل لن تحتاج لكلمة المرور في المرات القادمة.',
+            async () => {
+                const ok = await registerBiometric(userId, username);
+                if (ok) showMessage('✅ تم تفعيل الدخول بالبصمة بنجاح');
+                else showMessage('❌ تعذر تفعيل البصمة على هذا الجهاز', true);
+            },
+            () => {
+                localStorage.setItem('biometric_declined_' + userId, '1');
+            }
+        );
+    }, 1500);
+}
+
+// ===== نهاية دوال البصمة =====
+
 async function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
@@ -5023,6 +5184,8 @@ async function login() {
         setTimeout(() => {
             hideLoadingOverlay();
             showMainMenu();
+            // اقتراح تفعيل البصمة إن لم تكن مفعلة
+            promptBiometricRegistration(user.id, user.username);
         }, 600);
         
     } else if (user && user.status !== 'active') {
