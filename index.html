@@ -4953,8 +4953,8 @@ async function registerBiometric(userId, username) {
                 rp: { name: 'فرع المرقب', id: location.hostname },
                 user: {
                     id: new TextEncoder().encode(userId),
-                    name: username,
-                    displayName: username
+                    name: 'user_' + userId,
+                    displayName: 'مستخدم النظام'
                 },
                 pubKeyCredParams: [
                     { type: 'public-key', alg: -7 },
