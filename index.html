@@ -2681,7 +2681,7 @@
     #loginPage .login-card { padding: 30px 22px 24px; border-radius: 16px; }
     #loginPage .login-header h1 { font-size: 22px; }
 }
-.private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#1a1a1a;text-shadow:0 1px 1px rgba(255,255,255,0.3);padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.25);border:none;color:#1a1a1a;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.45);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
+.private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#ffff00;padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.2);border:none;color:#ffff00;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.4);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
 </style>
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -8179,6 +8179,7 @@ if (nationalId !== '') {
 
 let chatMessages = [];
 let privateChats = {};
+let loadedPrivateChatKeys = new Set();
 let unreadCount = 0;
 let chatOpen = false;
 let chatListenerActive = false;
@@ -8372,6 +8373,7 @@ async function loadPrivateChatMessages(username) {
         messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
         
         privateChats[chatKey] = messages;
+        loadedPrivateChatKeys.add(chatKey);
         
         displayChatMessages();
         scrollChatToBottom();
@@ -8438,7 +8440,7 @@ function displayChatMessages() {
         const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
         
         // ✅ الكود الجديد: تحميل الرسائل إذا كانت غير محملة
-        if (!privateChats[chatKey] || privateChats[chatKey].length === 0) {
+        if (!loadedPrivateChatKeys.has(chatKey)) {
             loadPrivateChatMessages(currentPrivateChatUser);
             return;
         }
@@ -9726,7 +9728,7 @@ function inquirySearch() {
             '<div class="result-item"><span class="result-label">رقم الهاتف:</span><span class="result-value">' + (result.phone || '-') + '</span></div>' +
         '</div></div>';
     } else if (type === 'civilian') {
-        html = '<div class="result-card"><h3>👨‍💼 بيانات الموظف</h3><div class="result-grid">' +
+        html = '<div class="result-card"><h3>??‍💼 بيانات الموظف</h3><div class="result-grid">' +
             '<div class="result-item"><span class="result-label">الرقم الوظيفي:</span><span class="result-value">' + (result.id || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">الرتبة:</span><span class="result-value">' + (result.rank || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">الاسم الكامل:</span><span class="result-value">' + (result.name || '-') + '</span></div>' +
