@@ -8433,8 +8433,16 @@ function displayChatMessages() {
             </div>`;
         });
         messagesDiv.innerHTML = html;
+        
     } else if (currentChatType === 'private' && currentPrivateChatUser) {
         const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
+        
+        // ✅ الكود الجديد: تحميل الرسائل إذا كانت غير محملة
+        if (!privateChats[chatKey] || privateChats[chatKey].length === 0) {
+            loadPrivateChatMessages(currentPrivateChatUser);
+            return;
+        }
+        
         const messages = privateChats[chatKey] || [];
         
         if (messages.length === 0) {
@@ -8448,7 +8456,6 @@ function displayChatMessages() {
             const isAdmin = currentUser && currentUser.role === 'admin';
             const canDelete = isOwn || isAdmin;
             const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
-            const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
             html += `
             <div class="chat-message ${isOwn ? 'own' : 'other'}" id="msg-${msg.id}">
                 ${canDelete ? `<button class="msg-delete-btn" onclick="deleteMessage('${msg.id}', 'private', '${chatKey}')" title="حذف الرسالة">🗑</button>` : ''}
@@ -8820,7 +8827,7 @@ async function clearChat() {
         showMessage('❌ يجب تسجيل الدخول أولاً', true);
         return;
     }
-    
+
     if (currentChatType === 'private') {
         if (currentUser.role !== 'admin') {
             showMessage('❌ فقط المدير يمكنه مسح المحادثة الخاصة', true);
@@ -8830,10 +8837,16 @@ async function clearChat() {
             showMessage('❌ اختر مستخدم أولاً', true);
             return;
         }
-        
+
+        const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
+        const msgs = privateChats[chatKey] || [];
+        if (msgs.length === 0) {
+            showMessage('💬 لا توجد رسائل في هذه المحادثة', true);
+            return;
+        }
+
         showConfirmModal(`⚠️ هل أنت متأكد من مسح المحادثة الخاصة مع "${currentPrivateChatUser}"؟`, async function(confirmed) {
             if (confirmed) {
-                const chatKey = getPrivateChatKey(currentUser.name, currentPrivateChatUser);
                 privateChats[chatKey] = [];
                 await database.ref(`/privateChats/${chatKey}`).remove();
                 displayChatMessages();
@@ -11076,16 +11089,22 @@ function showInjuredOfficersRetirementReport() {
     });
 
     document.addEventListener('selectstart', function(e) {
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return true;
         e.preventDefault();
         return false;
     });
 
     document.addEventListener('copy', function(e) {
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return true;
         e.preventDefault();
         return false;
     });
 
     document.addEventListener('cut', function(e) {
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return true;
         e.preventDefault();
         return false;
     });
@@ -11435,48 +11454,88 @@ let globalPrivateListenerRef = null;
 function startGlobalPrivateListener() {
     if (!currentUser) return;
 
-    // إيقاف أي مستمع سابق
+    // إيقاف المستمع القديم إن وجد
     if (globalPrivateListenerRef) {
-        globalPrivateListenerRef.off('child_added');
+        globalPrivateListenerRef.off();
         globalPrivateListenerRef = null;
     }
 
-    // نستمع على كل chatKey يبدأ برسائل جديدة فقط لهذا المستخدم
-    // نستخدم child_added على مسار privateChats لكل محادثة تخص المستخدم الحالي
     const myName = currentUser.name;
-    const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+    globalPrivateListenerRef = database.ref('/privateChats');
 
-    // نجمع أولاً المحادثات الموجودة حتى لا تظهر إشعارات قديمة
-    database.ref('/privateChats').once('value', (snap) => {
-        const allChats = snap.val() || {};
+    // مستمع واحد على المسار الرئيسي
+    globalPrivateListenerRef.on('child_changed', (chatSnap) => {
+        const chatKey = chatSnap.key;
+        const parts = chatKey.split('_');
 
-        for (const [chatKey, messages] of Object.entries(allChats)) {
-            if (!messages) continue;
-            // تحقق دقيق: المحادثة يجب أن تحتوي اسم المستخدم كجزء منفصل
-            const parts = chatKey.split('_');
-            if (!parts.includes(myName)) continue;
+        // تأكد أن المستخدم الحالي طرف في هذه المحادثة
+        if (!parts.includes(myName)) return;
 
-            const msgList = Object.values(messages);
-            if (msgList.length === 0) continue;
-            msgList.sort((a, b) => a.id - b.id);
-            const lastMsg = msgList[msgList.length - 1];
+        const otherUser = parts.find(u => u !== myName);
+        if (!otherUser) return;
 
-            // حفظ آخر رسالة موجودة حتى لا تُعاد معالجتها
-            if (!lastSeen[chatKey] || lastMsg.id > lastSeen[chatKey]) {
-                // فقط للرسائل التي أرسلها الطرف الآخر
-                if (lastMsg.username !== myName) {
-                    // لا نحدّث lastSeen هنا — نتركه للمستخدم حتى يفتح المحادثة
-                }
-                // نحفظ الـ id كحد أدنى لتجنب إعادة إشعارات الرسائل القديمة
-                if (!lastSeen[chatKey]) {
-                    lastSeen[chatKey] = lastMsg.id;
-                }
+        const messages = chatSnap.val();
+        if (!messages) return;
+
+        const msgList = Object.values(messages);
+        msgList.sort((a, b) => a.id - b.id);
+        privateChats[chatKey] = msgList;
+
+        // تحقق من وجود رسائل جديدة من الطرف الآخر
+        const lastSeen = JSON.parse(localStorage.getItem('lastSeenMessages') || '{}');
+        const lastSeenId = lastSeen[chatKey] || 0;
+
+        const newMessages = msgList.filter(m => 
+            m.username !== myName && m.id > lastSeenId
+        );
+
+        if (newMessages.length > 0) {
+            const lastMsg = newMessages[newMessages.length - 1];
+            const chatAlreadyOpen = chatOpen &&
+                currentChatType === 'private' &&
+                currentPrivateChatUser === otherUser;
+
+            if (!chatAlreadyOpen) {
+                showPrivateMessageNotification(otherUser, lastMsg.text || '📎 ملف');
+                unreadCount++;
+                updateUnreadBadge();
+                playNotificationSound();
+            }
+
+            // تحديث آخر رسالة مقروءة تلقائياً إذا كانت المحادثة مفتوحة
+            if (chatAlreadyOpen) {
+                markChatAsRead(chatKey, lastMsg.id);
             }
         }
-        localStorage.setItem('lastSeenMessages', JSON.stringify(lastSeen));
 
-        // الآن نضع المستمعين على كل محادثة تخص هذا المستخدم
-        attachPrivateListeners(myName);
+        // تحديث واجهة المحادثة إذا كانت مفتوحة
+        if (currentChatType === 'private' && currentPrivateChatUser === otherUser) {
+            displayChatMessages();
+            scrollChatToBottom();
+        }
+    });
+
+    // إضافة مستمع للرسائل الجديدة (child_added) أيضاً لضمان عدم تفويت أي رسالة
+    globalPrivateListenerRef.on('child_added', (chatSnap) => {
+        const chatKey = chatSnap.key;
+        const parts = chatKey.split('_');
+        if (!parts.includes(myName)) return;
+
+        const otherUser = parts.find(u => u !== myName);
+        if (!otherUser) return;
+
+        const messages = chatSnap.val();
+        if (!messages) return;
+
+        const msgList = Object.values(messages);
+        msgList.sort((a, b) => a.id - b.id);
+        privateChats[chatKey] = msgList;
+
+        // تحديث واجهة المحادثة إذا كانت مفتوحة
+        if (currentChatType === 'private' && currentPrivateChatUser === otherUser) {
+            displayChatMessages();
+            scrollChatToBottom();
+        }
     });
 }
 
