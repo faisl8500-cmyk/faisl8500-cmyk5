@@ -1423,6 +1423,99 @@
             background: rgba(201,161,59,0.07);
         }
 
+        .col-filter-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 9px;
+            line-height: 1;
+            margin-inline-start: 4px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            vertical-align: middle;
+        }
+        .col-filter-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .col-filter-btn.filter-active {
+            background: #ecc873;
+            color: #142235;
+        }
+        .col-filter-panel {
+            position: fixed;
+            z-index: 5000;
+            background: var(--card-bg, #fff);
+            color: var(--text-color, #222);
+            border: 1px solid rgba(201,161,59,0.35);
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            padding: 8px;
+            width: 230px;
+            max-height: 340px;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+            font-size: 12px;
+        }
+        .col-filter-panel input[type="text"] {
+            width: 100%;
+            padding: 5px 7px;
+            margin-bottom: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 12px;
+        }
+        .col-filter-list {
+            overflow-y: auto;
+            max-height: 170px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 4px 6px;
+            margin-bottom: 6px;
+        }
+        .col-filter-list label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 0;
+            cursor: pointer;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .col-filter-select-all {
+            background: #142235;
+            color: #ecc873;
+            border: none;
+            border-radius: 4px;
+            padding: 5px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .col-filter-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .col-filter-actions button {
+            flex: 1;
+            padding: 6px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .col-filter-apply { background:#0e8a74; color:#fff; }
+        .col-filter-clear-btn { background:#e2e8f0; color:#333; }
+        .clear-filters-btn {
+            background: linear-gradient(135deg, #8a4a0d, #a2612a) !important;
+            color: #fff !important;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+        }
+        .clear-filters-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
+
         /* أزرار الإجراءات (طباعة / excel / واتساب) */
         .report-actions {
             display: flex;
@@ -3207,7 +3300,7 @@
             <div class="form-grid">
                 <div class="form-group"><label>الرقم العسكري <span class="required">*</span></label><input type="number" id="martyrId"><div class="error-message" id="martyrIdError"></div></div>
                 <div class="form-group"><label>الرتبة <span class="required">*</span></label>
-                    <select id="martyrRank">
+                    <select id="martyrRank" onchange="updateMartyrPromotionSchedule()">
                         <option value="">اختر الرتبة</option>
                         <option value="جندي">جندي</option><option value="جندي أول">جندي أول</option><option value="نائب عريف">نائب عريف</option><option value="عريف">عريف</option><option value="رع س">رع س</option><option value="رع و">رع و</option><option value="ملازم تان">ملازم تان</option><option value="ملازم أول">ملازم أول</option><option value="نقيب">نقيب</option><option value="رائد">رائد</option><option value="مقدم">مقدم</option><option value="عقيد">عقيد</option><option value="عميد">عميد</option><option value="لواء">لواء</option><option value="ملازم تان شرف">ملازم تان شرف</option><option value="ملازم أول شرف">ملازم أول شرف</option><option value="نقيب شرف">نقيب شرف</option><option value="رائد شرف">رائد شرف</option><option value="مقدم شرف">مقدم شرف</option><option value="عقيد شرف">عقيد شرف</option><option value="عميد شرف">عميد شرف</option><option value="موظف">موظف</option>
                     </select>
@@ -3231,13 +3324,17 @@
             <h3>📈 بيانات الترقية</h3>
             <div class="form-grid">
                 <div class="form-group"><label>الرتبة الحالية</label>
-                    <select id="martyrPromotionRank">
+                    <select id="martyrPromotionRank" onchange="updateMartyrPromotionSchedule()">
                         <option value="">اختر الرتبة/الدرجة</option>
                         <option value="جندي">جندي</option><option value="جندي أول">جندي أول</option><option value="نائب عريف">نائب عريف</option><option value="عريف">عريف</option><option value="رع س">رع س</option><option value="رع و">رع و</option><option value="رع و السابعة">رع و السابعة</option><option value="رع و الثامنة">رع و الثامنة</option><option value="رع و التاسعة">رع و التاسعة</option><option value="رع و العاشرة">رع و العاشرة</option><option value="رع و الحادية عشر">رع و الحادية عشر</option><option value="رع و الثانية عشر">رع و الثانية عشر</option><option value="رع و الثالثة عشر">رع و الثالثة عشر</option><option value="رع و الرابعة عشر">رع و الرابعة عشر</option><option value="رع و الخامسة عشر">رع و الخامسة عشر</option><option value="ملازم تان">ملازم تان</option><option value="ملازم أول">ملازم أول</option><option value="نقيب">نقيب</option><option value="رائد">رائد</option><option value="مقدم">مقدم</option><option value="عقيد">عقيد</option><option value="عميد">عميد</option><option value="لواء">لواء</option><option value="ملازم تان شرف">ملازم تان شرف</option><option value="ملازم أول شرف">ملازم أول شرف</option><option value="نقيب شرف">نقيب شرف</option><option value="رائد شرف">رائد شرف</option><option value="مقدم شرف">مقدم شرف</option><option value="عقيد شرف">عقيد شرف</option><option value="عميد شرف">عميد شرف</option><option value="الأولى">الأولى</option><option value="الثانية">الثانية</option><option value="الثالثة">الثالثة</option><option value="الرابعة">الرابعة</option><option value="الخامسة">الخامسة</option><option value="السادسة">السادسة</option><option value="السابعة">السابعة</option><option value="الثامنة">الثامنة</option><option value="التاسعة">التاسعة</option><option value="العاشرة">العاشرة</option><option value="الحادية عشر">الحادية عشر</option><option value="الثانية عشر">الثانية عشر</option><option value="الثالثة عشر">الثالثة عشر</option><option value="الرابعة عشر">الرابعة عشر</option><option value="الخامسة عشر">الخامسة عشر</option>
                     </select>
                 </div>
-                <div class="form-group"><label>تاريخ استحقاقها (السنة فقط)</label><input type="text" id="martyrPromotionDueDate" placeholder="مثال: 2024"></div>
+                <div class="form-group"><label>تاريخ استحقاقها (السنة فقط)</label><input type="text" id="martyrPromotionDueDate" placeholder="مثال: 2024" oninput="updateMartyrPromotionSchedule()"></div>
                 <div class="form-group"><label>رقم القرار</label><input type="text" id="martyrPromotionDecisionNo"></div>
+            </div>
+            <div id="martyrPromotionScheduleBox" style="display:none; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 15px; margin: -10px 0 15px 0;">
+                <div style="font-weight: bold; margin-bottom: 8px; color: var(--text-color);">📅 الرتب والدرجات المستحقة مستقبلاً (بناءً على الرتبة الحالية وتاريخ استحقاقها)</div>
+                <div id="martyrPromotionScheduleList" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
             </div>
             <h3>📋 المعلومات الشخصية</h3>
             <div class="form-grid">
@@ -3251,7 +3348,7 @@
                 <div class="form-group"><label>اسم المصرف</label><input type="text" id="martyrBankName"></div>
                 <div class="form-group"><label>رقم الحساب</label><input type="text" id="martyrAccountNo"></div>
                 <div class="form-group"><label>رقم الهاتف</label><input type="text" id="martyrPhone"></div>
-                <div class="form-group"><label>الحالة</label><select id="martyrEmploymentStatus"><option value="">اختر</option><option value="متقاعد">متقاعد</option><option value="غير متقاعد">غير متقاعد</option><option value="موقوف">موقوف</option><option value="متوفي">💀 متوفي</option></select></div>
+                <div class="form-group"><label>الحالة</label><select id="martyrEmploymentStatus" onchange="updateMartyrSalaryTypeOptions(null, true); updateMartyrPromotionSchedule();"><option value="">اختر</option><option value="متقاعد">متقاعد</option><option value="غير متقاعد">غير متقاعد</option><option value="موقوف">موقوف</option><option value="متوفي">💀 متوفي</option></select></div>
                 <div class="form-group"><label>نوع المرتب</label><select id="martyrSalaryType"><option value="">اختر</option><option value="راتب شهري">راتب شهري</option><option value="منحة شهرية">منحة شهرية</option><option value="لا يتقاضي">لا يتقاضي</option></select></div>
 
                 <!-- قسم رفع الملفات -->
@@ -3560,6 +3657,7 @@
 
                 <!-- أزرار الإجراءات -->
                 <div class="report-actions" id="reportActions" style="display:none;">
+                    <button class="btn clear-filters-btn" onclick="clearAllReportFilters()">🧹 مسح التصفية</button>
                     <button class="btn print-btn" onclick="printReport()">🖨️ تحويل إلى PDF / طباعة</button>
                     <button class="btn excel-btn" onclick="exportToExcel()">📊 تصدير إلى Excel</button>
                     <button class="btn-whatsapp" onclick="sendReportToWhatsApp()">📱 إرسال إلى واتساب</button>
@@ -3889,6 +3987,20 @@
     <span class="modal-btn-icon">📋</span>
     <span class="modal-btn-text">جرحى يتقاضون منحة</span>
 </button>
+
+                <!-- تقارير المستحقين للترقية -->
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showPromotionEligibleReport('officer');">
+                    <span class="modal-btn-icon">📋</span>
+                    <span class="modal-btn-text">الضباط المستحقين للترقية</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showPromotionEligibleReport('enlisted');">
+                    <span class="modal-btn-icon">📋</span>
+                    <span class="modal-btn-text">العسكريين المستحقين للترقية</span>
+                </button>
+                <button class="modal-report-btn martyr-style" onclick="closeMartyrsReportsModal(); showPromotionEligibleReport('employee');">
+                    <span class="modal-btn-icon">📋</span>
+                    <span class="modal-btn-text">الموظفين المستحقين للترقية</span>
+                </button>
             </div>
         </div>
     </div>
@@ -4065,6 +4177,7 @@ function exportToExcelData(type) {
         let currentUser = null;
         let currentReportHtml = '';
         let currentReportTitle = '';
+        let currentReportPrintOrientation = 'portrait';
         let editMilitaryId = null;
         let editCivilianId = null;
         let editMartyrId = null;
@@ -6337,6 +6450,7 @@ function search() {
                     <div class="result-item"><span class="result-label">الرتبة الحالية:</span><span class="result-value">${result.promotionRank || '-'}</span></div>
                     <div class="result-item"><span class="result-label">تاريخ استحقاق الترقية:</span><span class="result-value">${result.promotionDueDate || '-'}</span></div>
                     <div class="result-item"><span class="result-label">رقم قرار الترقية:</span><span class="result-value">${result.promotionDecisionNo || '-'}</span></div>
+                    <div class="result-item" style="grid-column: 1 / -1;"><span class="result-label">📅 الرتب والدرجات المستحقة مستقبلاً:</span><span class="result-value">${renderMartyrPromotionScheduleBadges(getMartyrPromotionScheduleItems(result.rank, result.promotionRank, result.promotionDueDate, result.employmentStatus)) || '-'}</span></div>
                     <div class="result-item"><span class="result-label">الرقم الوطني:</span><span class="result-value">${result.nationalId || '-'}</span></div>
                     <div class="result-item"><span class="result-label">رقم القيد:</span><span class="result-value">${result.recordNo || '-'}</span></div>
                     <div class="result-item"><span class="result-label">تاريخ الميلاد:</span><span class="result-value">${result.birthDate || '-'}</span></div>
@@ -6796,7 +6910,8 @@ if (!isValidMartyrNationalId(nationalId)) {
                     document.getElementById('martyrAccountNo').value = martyr.accountNo || '';
                     document.getElementById('martyrPhone').value = martyr.phone || '';
                     document.getElementById('martyrEmploymentStatus').value = martyr.employmentStatus || '';
-                    document.getElementById('martyrSalaryType').value = martyr.salaryType || '';
+                    updateMartyrSalaryTypeOptions(martyr.salaryType || '', false);
+                    updateMartyrPromotionSchedule();
 
                     // عرض الملفات الموجودة
                     window._martyrExistingFiles = martyr.files ? [...martyr.files] : [];
@@ -7010,6 +7125,176 @@ async function updateCivilian() {
     showMessage('✅ تم تعديل بيانات الموظف بنجاح');
     document.getElementById('civId').style.borderColor = '';
     backToMenu();
+}
+
+// ==================== نظام الترقيات (سلالم الرتب/الدرجات المستقبلية) ====================
+// سلّم ترقيات رتب/درجات صف الضباط والجنود
+const ENLISTED_PROMOTION_LADDER = [
+    { rank: 'جندي', years: 0 },
+    { rank: 'جندي أول', years: 1 },
+    { rank: 'نائب عريف', years: 2 },
+    { rank: 'عريف', years: 3 },
+    { rank: 'رع س', years: 4 },
+    { rank: 'رع و', years: 4 },
+    { rank: 'رع و السابعة', years: 4 },
+    { rank: 'رع و الثامنة', years: 4 },
+    { rank: 'رع و التاسعة', years: 4 },
+    { rank: 'رع و العاشرة', years: 4 },
+    { rank: 'رع و الحادية عشر', years: 4 },
+    { rank: 'رع و الثانية عشر', years: 4 },
+    { rank: 'رع و الثالثة عشر', years: 4 }
+];
+
+// سلّم درجات الموظفين (من الأولى إلى الثالثة عشر)
+const EMPLOYEE_GRADE_LADDER = [
+    { rank: 'الأولى', years: 0 },
+    { rank: 'الثانية', years: 4 },
+    { rank: 'الثالثة', years: 4 },
+    { rank: 'الرابعة', years: 4 },
+    { rank: 'الخامسة', years: 4 },
+    { rank: 'السادسة', years: 4 },
+    { rank: 'السابعة', years: 4 },
+    { rank: 'الثامنة', years: 4 },
+    { rank: 'التاسعة', years: 4 },
+    { rank: 'العاشرة', years: 4 },
+    { rank: 'الحادية عشر', years: 4 },
+    { rank: 'الثانية عشر', years: 4 },
+    { rank: 'الثالثة عشر', years: 4 }
+];
+
+// سلّم ترقيات رتب الضباط (من ملازم ثان إلى عميد)
+const OFFICER_PROMOTION_LADDER = [
+    { rank: 'ملازم ثان', years: 0 },
+    { rank: 'ملازم أول', years: 3 },
+    { rank: 'نقيب', years: 3 },
+    { rank: 'رائد', years: 5 },
+    { rank: 'مقدم', years: 4 },
+    { rank: 'عقيد', years: 5 },
+    { rank: 'عميد', years: 4 }
+];
+const OFFICER_BASE_RANKS = ['ملازم ثان', 'ملازم أول', 'نقيب', 'رائد', 'مقدم', 'عقيد', 'عميد'];
+
+// سلّم رتب الضباط الشرفية
+const OFFICER_HONORARY_LADDER = [
+    { rank: 'ملازم ثان شرف', years: 0 },
+    { rank: 'ملازم أول شرف', years: 3 },
+    { rank: 'نقيب شرف', years: 3 },
+    { rank: 'رائد شرف', years: 5 },
+    { rank: 'مقدم شرف', years: 4 },
+    { rank: 'عقيد شرف', years: 5 },
+    { rank: 'عميد شرف', years: 4 }
+];
+const OFFICER_HONORARY_BASE_RANKS = ['ملازم ثان شرف', 'ملازم أول شرف', 'نقيب شرف', 'رائد شرف', 'مقدم شرف', 'عقيد شرف', 'عميد شرف'];
+
+// يوحّد الإملاء القديم "ملازم تان" مع الصحيح "ملازم ثان" حتى تتطابق مهما كان مصدر القيمة
+function normalizeRankTypo(r) {
+    return (r || '').replace('ملازم تان', 'ملازم ثان');
+}
+
+// يحدد أي سلّم يُستخدم بناءً على الرتبة الرئيسية: موظف / ضابط شرفي / ضابط / صف وجندي
+function getMartyrRankCategory(mainRank) {
+    if (mainRank === 'موظف') return 'employee';
+    const normalizedMain = normalizeRankTypo(mainRank);
+    if (OFFICER_HONORARY_BASE_RANKS.includes(normalizedMain)) return 'officer';
+    const strippedMain = normalizedMain.replace(/ (بحار|طيار)$/, '');
+    if (OFFICER_BASE_RANKS.includes(strippedMain)) return 'officer';
+    return 'enlisted';
+}
+
+function getMartyrPromotionLadder(mainRank) {
+    const category = getMartyrRankCategory(mainRank);
+    if (category === 'employee') return EMPLOYEE_GRADE_LADDER;
+    if (category === 'officer') {
+        const normalizedMain = normalizeRankTypo(mainRank);
+        return OFFICER_HONORARY_BASE_RANKS.includes(normalizedMain) ? OFFICER_HONORARY_LADDER : OFFICER_PROMOTION_LADDER;
+    }
+    return ENLISTED_PROMOTION_LADDER;
+}
+
+// يحسب الرتب/الدرجات المستحقة مستقبلاً (حتى السنة الحالية فقط)، ولا يُعيد أي شيء إذا كانت الحالة الوظيفية "متقاعد"
+function getMartyrPromotionScheduleItems(mainRank, rank, dueDateRaw, employmentStatus) {
+    if (employmentStatus === 'متقاعد') return [];
+    const ladder = getMartyrPromotionLadder(mainRank);
+    const normalizedRank = normalizeRankTypo(rank);
+    const startYear = parseInt((dueDateRaw || '').toString().trim(), 10);
+    const currentIdx = ladder.findIndex(r => r.rank === normalizedRank);
+    if (currentIdx === -1 || currentIdx === ladder.length - 1 || !dueDateRaw || isNaN(startYear)) return [];
+
+    const currentYear = new Date().getFullYear();
+    let year = startYear;
+    const items = [];
+    for (let i = currentIdx + 1; i < ladder.length; i++) {
+        year += ladder[i].years;
+        if (year > currentYear) break; // نتوقف عند السنة الحالية ولا نعرض رتباً مستقبلية بعدها
+        items.push({ rank: ladder[i].rank, year });
+    }
+    return items;
+}
+
+function renderMartyrPromotionScheduleBadges(items) {
+    if (!items || !items.length) return '';
+    return items.map(it => `<span style="display:inline-block; background: var(--input-focus); color:#fff; padding:5px 11px; border-radius:8px; font-size:12px; margin:2px; white-space:nowrap;">${it.rank} — ${it.year}</span>`).join(' ');
+}
+
+function updateMartyrPromotionSchedule() {
+    const box = document.getElementById('martyrPromotionScheduleBox');
+    const list = document.getElementById('martyrPromotionScheduleList');
+    if (!box || !list) return;
+    const mainRank = (document.getElementById('martyrRank') || {}).value || '';
+    const rank = document.getElementById('martyrPromotionRank').value;
+    const dueDateRaw = document.getElementById('martyrPromotionDueDate').value.trim();
+    const employmentStatus = (document.getElementById('martyrEmploymentStatus') || {}).value || '';
+
+    const items = getMartyrPromotionScheduleItems(mainRank, rank, dueDateRaw, employmentStatus);
+    const html = renderMartyrPromotionScheduleBadges(items);
+    if (!html) {
+        box.style.display = 'none';
+        list.innerHTML = '';
+        return;
+    }
+    list.innerHTML = html;
+    box.style.display = 'block';
+}
+
+function updateMartyrSalaryTypeOptions(desiredValue, forceAuto) {
+    const statusEl = document.getElementById('martyrEmploymentStatus');
+    const salaryEl = document.getElementById('martyrSalaryType');
+    if (!statusEl || !salaryEl) return;
+    const status = statusEl.value;
+
+    const FULL_OPTIONS = [
+        { value: 'راتب شهري', label: 'راتب شهري' },
+        { value: 'منحة شهرية', label: 'منحة شهرية' },
+        { value: 'لا يتقاضي', label: 'لا يتقاضي' }
+    ];
+    const RETIRED_OPTIONS = [
+        { value: 'منحة شهرية', label: 'منحة شهرية' },
+        { value: 'لا يتقاضي', label: 'لا يتقاضي' }
+    ];
+
+    let optionsList = FULL_OPTIONS;
+    let autoValue = null;
+    if (status === 'غير متقاعد') {
+        autoValue = 'راتب شهري';
+    } else if (status === 'موقوف') {
+        autoValue = 'لا يتقاضي';
+    } else if (status === 'متقاعد') {
+        optionsList = RETIRED_OPTIONS; // متقاعد: خياران فقط - منحة شهرية أو لا يتقاضي
+    }
+
+    const valueToKeep = (typeof desiredValue !== 'undefined' && desiredValue !== null) ? desiredValue : salaryEl.value;
+
+    salaryEl.innerHTML = '<option value="">اختر</option>' + optionsList.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+
+    if (forceAuto && autoValue) {
+        salaryEl.value = autoValue;
+    } else if (valueToKeep && optionsList.some(o => o.value === valueToKeep)) {
+        salaryEl.value = valueToKeep;
+    } else if (autoValue) {
+        salaryEl.value = autoValue;
+    } else {
+        salaryEl.value = '';
+    }
 }
 
 async function updateMartyr() {
@@ -7296,6 +7581,10 @@ function showMilitarySummary() {
 
 function showReportTable(headers, rows) {
     window._isBarcodeCardReport = false;
+    // ✅ إعادة ضبط اتجاه الطباعة الافتراضي (عمودي) عند إنشاء تقرير جديد
+    currentReportPrintOrientation = 'portrait';
+    // ✅ إعادة ضبط أي تصفية سابقة عند إنشاء تقرير جديد
+    reportColumnFilters = {};
     const excelBtnReset = document.querySelector('#reportActions .excel-btn');
     const waBtnReset = document.querySelector('#reportActions .btn-whatsapp');
     if (excelBtnReset) excelBtnReset.style.display = '';
@@ -7325,7 +7614,8 @@ function showReportTable(headers, rows) {
 </div>`;
 
     html += `<div class="report-title" style="text-align: center; white-space: pre-line; font-size: 18px; font-weight: bold; margin-bottom: 15px;">${currentReportTitle}</div>`;
-    html += `<div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</thead><tbody>`;
+    html += `<div id="reportFilterInfo" style="display:none; text-align:center; margin-bottom:10px; font-size:13px; color:#c9a13b; font-weight:bold;"></div>`;
+    html += `<div style="overflow-x:auto;"><table class="report-table"><thead><tr>${headers.map((h, idx) => `<th>${h}<button type="button" class="col-filter-btn" data-col-index="${idx}" onclick="toggleColumnFilter(event, ${idx})" title="تصفية هذا العمود">▾</button></th>`).join('')}</thead><tbody>`;
     
     if (rows.length === 0) {
         html += `<tr><td colspan="${headers.length}" style="text-align:center; padding: 20px;">لا توجد بيانات متطابقة</td></tr>`;
@@ -7366,6 +7656,208 @@ function showReportTable(headers, rows) {
             }
         }, 200);
     }
+}
+// ==================== نظام تصفية التقارير (تصفية أعمدة مثل إكسل) ====================
+let reportColumnFilters = {}; // { colIndex: Set(['قيمة1','قيمة2', ...]) } - غياب المفتاح يعني عدم وجود تصفية على هذا العمود
+
+function getReportColumnValues(colIndex) {
+    const rows = document.querySelectorAll('#reportContent table tbody tr');
+    const values = new Set();
+    rows.forEach(tr => {
+        const td = tr.children[colIndex];
+        if (td) values.add(td.textContent.trim());
+    });
+    return Array.from(values).sort((a, b) => a.localeCompare(b, 'ar'));
+}
+
+function closeAnyOpenColumnFilterPanel() {
+    const existing = document.querySelector('.col-filter-panel');
+    if (existing) existing.remove();
+    document.removeEventListener('click', outsideColumnFilterClickHandler, true);
+}
+
+function outsideColumnFilterClickHandler(e) {
+    const panel = document.querySelector('.col-filter-panel');
+    if (panel && !panel.contains(e.target) && !e.target.classList.contains('col-filter-btn')) {
+        closeAnyOpenColumnFilterPanel();
+    }
+}
+
+function toggleColumnFilter(event, colIndex) {
+    event.stopPropagation();
+    const btn = event.currentTarget;
+    const existing = document.querySelector('.col-filter-panel');
+    if (existing && existing.dataset.colIndex == colIndex) {
+        closeAnyOpenColumnFilterPanel();
+        return;
+    }
+    closeAnyOpenColumnFilterPanel();
+
+    const allValues = getReportColumnValues(colIndex);
+    const activeSet = reportColumnFilters[colIndex]; // undefined = كل القيم محددة
+
+    const panel = document.createElement('div');
+    panel.className = 'col-filter-panel';
+    panel.dataset.colIndex = colIndex;
+
+    const rect = btn.getBoundingClientRect();
+    let leftPos = rect.left - 180;
+    if (leftPos < 8) leftPos = 8;
+    if (leftPos + 230 > window.innerWidth - 8) leftPos = window.innerWidth - 238;
+    panel.style.top = (rect.bottom + 4) + 'px';
+    panel.style.left = leftPos + 'px';
+
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = '🔍 بحث في القيم...';
+    panel.appendChild(searchInput);
+
+    const selectAllBtn = document.createElement('button');
+    selectAllBtn.type = 'button';
+    selectAllBtn.className = 'col-filter-select-all';
+    selectAllBtn.textContent = 'تحديد الكل / إلغاء الكل';
+    panel.appendChild(selectAllBtn);
+
+    const listDiv = document.createElement('div');
+    listDiv.className = 'col-filter-list';
+    panel.appendChild(listDiv);
+
+    function renderList(filterText) {
+        listDiv.innerHTML = '';
+        allValues.filter(v => !filterText || v.includes(filterText)).forEach(v => {
+            const label = document.createElement('label');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = v;
+            cb.checked = !activeSet || activeSet.has(v);
+            label.appendChild(cb);
+            const span = document.createElement('span');
+            span.textContent = v === '' ? '(فارغ)' : v;
+            label.appendChild(span);
+            listDiv.appendChild(label);
+        });
+    }
+    renderList('');
+
+    searchInput.addEventListener('input', () => renderList(searchInput.value.trim()));
+
+    selectAllBtn.addEventListener('click', () => {
+        const boxes = listDiv.querySelectorAll('input[type="checkbox"]');
+        const allChecked = Array.from(boxes).every(b => b.checked);
+        boxes.forEach(b => b.checked = !allChecked);
+    });
+
+    const actions = document.createElement('div');
+    actions.className = 'col-filter-actions';
+
+    const applyBtn = document.createElement('button');
+    applyBtn.type = 'button';
+    applyBtn.className = 'col-filter-apply';
+    applyBtn.textContent = '✔ تطبيق';
+    applyBtn.addEventListener('click', () => {
+        const boxes = listDiv.querySelectorAll('input[type="checkbox"]');
+        const checkedVisible = Array.from(boxes).filter(b => b.checked).map(b => b.value);
+        const uncheckedVisible = Array.from(boxes).filter(b => !b.checked).map(b => b.value);
+        let newSet;
+        if (searchInput.value.trim()) {
+            // أثناء البحث تُعدَّل فقط القيم الظاهرة حالياً، وتبقى بقية القيم كما كانت
+            const base = activeSet ? new Set(activeSet) : new Set(allValues);
+            uncheckedVisible.forEach(v => base.delete(v));
+            checkedVisible.forEach(v => base.add(v));
+            newSet = base;
+        } else {
+            newSet = new Set(checkedVisible);
+        }
+        if (newSet.size >= allValues.length) {
+            delete reportColumnFilters[colIndex]; // كل القيم محددة = بدون تصفية فعلية
+        } else {
+            reportColumnFilters[colIndex] = newSet;
+        }
+        applyReportFilters();
+        closeAnyOpenColumnFilterPanel();
+    });
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'col-filter-clear-btn';
+    clearBtn.textContent = '✖ مسح تصفية العمود';
+    clearBtn.addEventListener('click', () => {
+        delete reportColumnFilters[colIndex];
+        applyReportFilters();
+        closeAnyOpenColumnFilterPanel();
+    });
+
+    actions.appendChild(applyBtn);
+    actions.appendChild(clearBtn);
+    panel.appendChild(actions);
+
+    document.body.appendChild(panel);
+    setTimeout(() => document.addEventListener('click', outsideColumnFilterClickHandler, true), 0);
+}
+
+function applyReportFilters() {
+    const rows = document.querySelectorAll('#reportContent table tbody tr');
+    let visibleCount = 0;
+    rows.forEach(tr => {
+        let visible = true;
+        for (const colIndex in reportColumnFilters) {
+            const td = tr.children[colIndex];
+            const val = td ? td.textContent.trim() : '';
+            if (!reportColumnFilters[colIndex].has(val)) { visible = false; break; }
+        }
+        tr.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+    });
+
+    // ✅ إعادة ترقيم عمود التسلسل (م) للصفوف الظاهرة فقط بعد التصفية
+    let serial = 1;
+    rows.forEach(tr => {
+        if (tr.style.display !== 'none') {
+            const firstTd = tr.children[0];
+            if (firstTd) firstTd.textContent = serial++;
+        }
+    });
+
+    // تحديث شكل أزرار التصفية النشطة
+    document.querySelectorAll('.col-filter-btn').forEach(btn => {
+        const idx = btn.getAttribute('data-col-index');
+        btn.classList.toggle('filter-active', reportColumnFilters.hasOwnProperty(idx));
+    });
+
+    // تحديث عداد النتائج
+    const infoEl = document.getElementById('reportFilterInfo');
+    if (infoEl) {
+        const hasActiveFilters = Object.keys(reportColumnFilters).length > 0;
+        if (hasActiveFilters && rows.length > 0) {
+            infoEl.style.display = 'block';
+            infoEl.textContent = `🔎 التصفية مُفعَّلة: عرض ${visibleCount} من أصل ${rows.length} سجل`;
+        } else {
+            infoEl.style.display = 'none';
+            infoEl.textContent = '';
+        }
+    }
+}
+
+function clearAllReportFilters() {
+    reportColumnFilters = {};
+    applyReportFilters();
+    closeAnyOpenColumnFilterPanel();
+    showMessage('✅ تم مسح كل عوامل التصفية');
+}
+
+// نسخة من محتوى التقرير المعروض حالياً بعد استبعاد الصفوف المخفية بسبب التصفية وأزرار التصفية نفسها
+// تُستخدم عند الطباعة أو التصدير إلى Excel حتى تعكس النتائج المصفّاة فقط
+function getCurrentReportHtmlForExport() {
+    const contentEl = document.getElementById('reportContent');
+    if (!contentEl) return currentReportHtml;
+    const clone = contentEl.cloneNode(true);
+    clone.querySelectorAll('.col-filter-btn').forEach(btn => btn.remove());
+    const filterInfo = clone.querySelector('#reportFilterInfo');
+    if (filterInfo) filterInfo.remove();
+    clone.querySelectorAll('tbody tr').forEach(tr => {
+        if (tr.style.display === 'none') tr.remove();
+    });
+    return clone.innerHTML;
 }
 
 // ========== تقرير بطاقات الباركود (اسم + باركود لكل شخص) ==========
@@ -7607,6 +8099,44 @@ if (reportType === 'martyrs_suspended') {
 }
 }
 
+// ==================== تقرير المستحقين للترقية ====================
+function showPromotionEligibleReport(category) {
+    const currentYear = new Date().getFullYear();
+    const titles = {
+        officer: `كشف بأسماء الشهداء والجرحى الضباط المستحقين للترقية التابعين الي\nفرع شؤون الشهداء المرقب\nلسنة ${currentYear}`,
+        enlisted: `كشف بأسماء الشهداء والجرحى العسكريين المستحقين للترقية التابعين الي\nفرع شؤون الشهداء المرقب\nلسنة ${currentYear}`,
+        employee: `كشف بأسماء الشهداء والجرحى الموظفين المستحقين للترقية التابعين الي\nفرع شؤون الشهداء المرقب\nلسنة ${currentYear}`
+    };
+
+    const rows = martyrs
+        .filter(m => getMartyrRankCategory(m.rank) === category)
+        .map(m => {
+            const items = getMartyrPromotionScheduleItems(m.rank, m.promotionRank, m.promotionDueDate, m.employmentStatus);
+            if (!items.length) return null;
+            const deservedText = items.map(it => `${it.rank} (${it.year})`).join('، ');
+            return [
+                m.id || '-',
+                m.rank || '-',
+                m.name || '-',
+                m.status || '-',
+                m.promotionDueDate || '-',
+                m.promotionDecisionNo || '-',
+                deservedText
+            ];
+        })
+        .filter(r => r !== null);
+
+    currentReportTitle = titles[category] || '📋 كشف المستحقين للترقية';
+    showReportTable(
+        ['م', 'الرقم العسكري', 'الرتبة', 'الاسم', 'الصفة', 'تاريخ آخر ترقية', 'رقم القرار', 'الرتبة المستحقة'],
+        rows.map((r, i) => [i + 1, ...r])
+    );
+    // ✅ تقرير العسكريين المستحقين للترقية يُطبع أفقياً لاتساع أعمدته
+    if (category === 'enlisted') {
+        currentReportPrintOrientation = 'landscape';
+    }
+}
+
 function showOfficersReport(type) {
     const officerRanks = [
         'ملازم تان', 'ملازم أول', 'نقيب', 'رائد', 'مقدم', 'عقيد', 'عميد', 'لواء',
@@ -7697,7 +8227,8 @@ function showOfficersReport(type) {
 
         function exportToExcel() {
             if (!currentReportHtml) { showMessage('اختر تقريراً أولاً', true); return; }
-            const html = `<html dir="rtl"><head><meta charset="UTF-8"><title>${currentReportTitle}</title><style>body{font-family:'Segoe UI';direction:rtl;padding:20px}table{border-collapse:collapse;width:100%}th{background:#667eea;color:white;padding:8px;border:1px solid #ddd}td{padding:6px;border:1px solid #ddd}</style></head><body>${currentReportHtml}</body></html>`;
+            const exportHtml = getCurrentReportHtmlForExport();
+            const html = `<html dir="rtl"><head><meta charset="UTF-8"><title>${currentReportTitle}</title><style>body{font-family:'Segoe UI';direction:rtl;padding:20px}table{border-collapse:collapse;width:100%}th{background:#667eea;color:white;padding:8px;border:1px solid #ddd}td{padding:6px;border:1px solid #ddd}</style></head><body>${exportHtml}</body></html>`;
             const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -7721,6 +8252,7 @@ function sendReportToWhatsApp() {
     if (table) {
         const rows = table.querySelectorAll('tr');
         rows.forEach((row, rowIndex) => {
+            if (row.style.display === 'none') return;
             const cells = row.querySelectorAll('th, td');
             const rowText = Array.from(cells).map(cell => cell.textContent.trim()).join(' | ');
             tableText += rowText + '\n';
@@ -7770,7 +8302,7 @@ function printReport() {
     
     var firstName = '';
     var lastName = '';
-    var tableRows = document.querySelectorAll('#reportContent .report-table tbody tr');
+    var tableRows = Array.from(document.querySelectorAll('#reportContent .report-table tbody tr')).filter(function(tr) { return tr.style.display !== 'none'; });
     if (tableRows.length > 0) {
         var firstRow = tableRows[0];
         var lastRow = tableRows[tableRows.length - 1];
@@ -7793,7 +8325,7 @@ function printReport() {
     </div>`;
     footerText += '</div>';
 
-    let reportHtml = currentReportHtml;
+    let reportHtml = getCurrentReportHtmlForExport();
     if (qrHtml) {
         reportHtml = reportHtml.replace(/<div id="qrcode_[^"]*"[^>]*>[\s\S]*?<\/div>/, qrHtml);
     }
@@ -7835,14 +8367,16 @@ function printReport() {
             border: 0.5px solid #5568d3;
             text-align: center !important;
             font-size: 10px;
-            white-space: nowrap;
+            white-space: normal;
+            word-break: break-word;
         }
         td {
             padding: 4px 2px;
             border: 0.5px solid #ddd;
             text-align: center !important;
             font-size: 10px;
-            white-space: nowrap;
+            white-space: normal;
+            word-break: break-word;
         }
         .report-title {
             text-align: center;
@@ -7851,8 +8385,15 @@ function printReport() {
             margin-bottom: 8px;
             white-space: pre-line;
         }
+        /* ✅ إصلاح مشكلة تقسيم الصفوف بين الصفحات مع ترك فراغ كبير:
+           الحاوية الأصلية على الشاشة تستخدم overflow-x:auto للتمرير، وهذا يمنع
+           متصفح الطباعة من توزيع صفوف الجدول بشكل طبيعي بين الصفحات.
+           لذلك نُلغي أي overflow عند الطباعة ليمتلئ كل مكان فارغ في الورقة أولاً. */
+        div {
+            overflow: visible !important;
+        }
         @page {
-            size: A4;
+            size: A4 ${currentReportPrintOrientation === 'landscape' ? 'landscape' : 'portrait'};
             margin: 3mm;
         }
         @media print {
@@ -9663,7 +10204,8 @@ function clearMartyrForm() {
     document.getElementById('martyrAccountNo').value = '';
     document.getElementById('martyrPhone').value = '';
     document.getElementById('martyrEmploymentStatus').value = '';
-    document.getElementById('martyrSalaryType').value = '';
+    updateMartyrSalaryTypeOptions('', false);
+    updateMartyrPromotionSchedule();
     // تنظيف الملفات
     const fp = document.getElementById('martyrFilesPreview');
     if (fp) fp.innerHTML = '';
@@ -9761,6 +10303,7 @@ function inquirySearch() {
             '<div class="result-item"><span class="result-label">الرتبة الحالية:</span><span class="result-value">' + (result.promotionRank || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">تاريخ استحقاق الترقية:</span><span class="result-value">' + (result.promotionDueDate || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">رقم قرار الترقية:</span><span class="result-value">' + (result.promotionDecisionNo || '-') + '</span></div>' +
+            '<div class="result-item" style="grid-column: 1 / -1;"><span class="result-label">📅 الرتب والدرجات المستحقة مستقبلاً:</span><span class="result-value">' + (renderMartyrPromotionScheduleBadges(getMartyrPromotionScheduleItems(result.rank, result.promotionRank, result.promotionDueDate, result.employmentStatus)) || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">الرقم الوطني:</span><span class="result-value">' + (result.nationalId || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">رقم القيد:</span><span class="result-value">' + (result.recordNo || '-') + '</span></div>' +
             '<div class="result-item"><span class="result-label">تاريخ الميلاد:</span><span class="result-value">' + (result.birthDate || '-') + '</span></div>' +
