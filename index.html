@@ -1374,6 +1374,22 @@
             border: 1px solid var(--border-color);
         }
 
+        .report-filter-panel {
+            display: none;
+            align-items: end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0 0 16px;
+            padding: 16px;
+            background: var(--user-bar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        .report-filter-panel .filter-control { flex: 1 1 180px; }
+        .report-filter-panel label { margin-bottom: 6px; font-size: 13px; }
+        .report-filter-panel input, .report-filter-panel select { min-width: 0; }
+        .report-filter-panel .btn { margin: 0; white-space: nowrap; }
+
         .report-title {
             text-align: center;
             font-family: 'Amiri', serif;
@@ -3551,6 +3567,40 @@
                         <span class="report-btn-icon">🕊️</span>
                         تقارير الشهداء والجرحى
                     </button>
+                </div>
+
+                <div id="reportFilterPanel" class="report-filter-panel">
+                    <div class="filter-control">
+                        <label for="reportSearchInput">🔎 بحث في التقرير</label>
+                        <input id="reportSearchInput" type="search" placeholder="اكتب الاسم أو الرقم أو أي بيانات" oninput="applyReportFilters()">
+                    </div>
+                    <div class="filter-control">
+                        <label for="reportFilterColumn">تصفية حسب العمود</label>
+                        <select id="reportFilterColumn" onchange="refreshReportFilterValues()">
+                            <option value="-1">بدون تصفية حسب عمود</option>
+                        </select>
+                    </div>
+                    <div class="filter-control">
+                        <label for="reportFilterValue">قيمة العمود</label>
+                        <select id="reportFilterValue" onchange="applyReportFilters()" disabled>
+                            <option value="">كل القيم</option>
+                        </select>
+                    </div>
+                    <div class="filter-control">
+                        <label for="reportSortColumn">ترتيب حسب</label>
+                        <select id="reportSortColumn" onchange="applyReportFilters()">
+                            <option value="-1">ترتيب التقرير الحالي</option>
+                        </select>
+                    </div>
+                    <div class="filter-control">
+                        <label for="reportSortDirection">اتجاه الترتيب</label>
+                        <select id="reportSortDirection" onchange="applyReportFilters()">
+                            <option value="asc">تصاعدي</option>
+                            <option value="desc">تنازلي</option>
+                        </select>
+                    </div>
+                    <button class="btn" type="button" onclick="resetReportFilters()">مسح التصفية</button>
+                    <span id="reportFilterCount" style="font-size:12px;color:var(--text-secondary);padding:8px 4px;"></span>
                 </div>
 
                 <!-- منطقة عرض التقرير -->
@@ -7294,7 +7344,111 @@ function showMilitarySummary() {
 }
         function showCivilianFull() { currentReportTitle = 'بيانات الموظفين (كاملة)'; showReportTable(['م', 'الرقم', 'الرتبة', 'الاسم', 'الأم', 'الحالة', 'الدرجة', 'تاريخ الترقية', 'القرار', 'الوطني', 'البطاقة', 'الجواز', 'القيد', 'الميلاد', 'مكان الميلاد', 'العنوان', 'الهاتف'], civilians.map((c, i) => [i+1, c.id, c.rank, c.name, c.motherName, c.maritalStatus, c.promotionRank, c.lastPromotionDate, c.decisionInfo, c.nationalId, c.idCardNumber, c.passportNumber, c.recordNo, c.birthDate, c.birthPlace, c.address, c.phone])); }
 
+let reportSourceHeaders = [];
+let reportSourceRows = [];
+
 function showReportTable(headers, rows) {
+    reportSourceHeaders = headers.slice();
+    reportSourceRows = rows.map(row => row.slice());
+    const panel = document.getElementById('reportFilterPanel');
+    const filterColumn = document.getElementById('reportFilterColumn');
+    const sortColumn = document.getElementById('reportSortColumn');
+    if (panel) panel.style.display = 'flex';
+    if (filterColumn) {
+        filterColumn.innerHTML = '<option value="-1">بدون تصفية حسب عمود</option>';
+        headers.forEach((header, index) => {
+            const option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = String(header);
+            filterColumn.appendChild(option);
+        });
+    }
+    if (sortColumn) {
+        sortColumn.innerHTML = '<option value="-1">ترتيب التقرير الحالي</option>';
+        headers.forEach((header, index) => {
+            const option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = String(header);
+            sortColumn.appendChild(option);
+        });
+    }
+    const search = document.getElementById('reportSearchInput');
+    const direction = document.getElementById('reportSortDirection');
+    if (search) search.value = '';
+    if (direction) direction.value = 'asc';
+    refreshReportFilterValues(false);
+    applyReportFilters();
+}
+
+function refreshReportFilterValues(applyNow = true) {
+    const columnSelect = document.getElementById('reportFilterColumn');
+    const valueSelect = document.getElementById('reportFilterValue');
+    if (!columnSelect || !valueSelect) return;
+    const columnIndex = Number(columnSelect.value);
+    valueSelect.innerHTML = '<option value="">كل القيم</option>';
+    valueSelect.disabled = columnIndex < 0;
+    if (columnIndex >= 0) {
+        const values = [...new Set(reportSourceRows.map(row => String(row[columnIndex] ?? '').trim()).filter(Boolean))]
+            .sort((a, b) => a.localeCompare(b, 'ar', { numeric: true, sensitivity: 'base' }));
+        values.forEach(value => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            valueSelect.appendChild(option);
+        });
+    }
+    if (applyNow) applyReportFilters();
+}
+
+function applyReportFilters() {
+    if (!reportSourceHeaders.length) return;
+    const query = (document.getElementById('reportSearchInput')?.value || '').trim().toLocaleLowerCase('ar');
+    const filterColumn = Number(document.getElementById('reportFilterColumn')?.value ?? -1);
+    const filterValue = document.getElementById('reportFilterValue')?.value || '';
+    const sortColumn = Number(document.getElementById('reportSortColumn')?.value ?? -1);
+    const direction = document.getElementById('reportSortDirection')?.value === 'desc' ? -1 : 1;
+    let rows = reportSourceRows.filter(row => {
+        const matchesSearch = !query || row.some(cell => String(cell ?? '').replace(/<[^>]*>/g, '').toLocaleLowerCase('ar').includes(query));
+        const matchesColumn = filterColumn < 0 || !filterValue || String(row[filterColumn] ?? '').trim() === filterValue;
+        return matchesSearch && matchesColumn;
+    });
+    if (sortColumn >= 0) {
+        rows = rows.map((row, index) => ({ row, index })).sort((a, b) => {
+            const left = String(a.row[sortColumn] ?? '').trim();
+            const right = String(b.row[sortColumn] ?? '').trim();
+            const leftNumber = Number(left.replace(/,/g, ''));
+            const rightNumber = Number(right.replace(/,/g, ''));
+            const bothNumeric = left !== '' && right !== '' && Number.isFinite(leftNumber) && Number.isFinite(rightNumber);
+            const comparison = bothNumeric
+                ? leftNumber - rightNumber
+                : left.localeCompare(right, 'ar', { numeric: true, sensitivity: 'base' });
+            return comparison === 0 ? a.index - b.index : comparison * direction;
+        }).map(item => item.row);
+    }
+    const count = document.getElementById('reportFilterCount');
+    if (count) count.textContent = `النتائج: ${rows.length} من ${reportSourceRows.length}`;
+    const displayedRows = rows.map((row, index) => {
+        const copy = row.slice();
+        if (String(reportSourceHeaders[0] || '').trim() === 'م') copy[0] = index + 1;
+        return copy;
+    });
+    renderReportTable(reportSourceHeaders, displayedRows);
+}
+
+function resetReportFilters() {
+    const search = document.getElementById('reportSearchInput');
+    const filterColumn = document.getElementById('reportFilterColumn');
+    const sortColumn = document.getElementById('reportSortColumn');
+    const direction = document.getElementById('reportSortDirection');
+    if (search) search.value = '';
+    if (filterColumn) filterColumn.value = '-1';
+    if (sortColumn) sortColumn.value = '-1';
+    if (direction) direction.value = 'asc';
+    refreshReportFilterValues(false);
+    applyReportFilters();
+}
+
+function renderReportTable(headers, rows) {
     window._isBarcodeCardReport = false;
     const excelBtnReset = document.querySelector('#reportActions .excel-btn');
     const waBtnReset = document.querySelector('#reportActions .btn-whatsapp');
@@ -7371,6 +7525,8 @@ function showReportTable(headers, rows) {
 // ========== تقرير بطاقات الباركود (اسم + باركود لكل شخص) ==========
 function showBarcodeNameReport(kind) {
     window._isBarcodeCardReport = true;
+    const filterPanel = document.getElementById('reportFilterPanel');
+    if (filterPanel) filterPanel.style.display = 'none';
 
     let data = [];
     let title = '';
