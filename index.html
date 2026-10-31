@@ -2481,8 +2481,7 @@
 }
 
 /* ============================================================
-   إعادة تصميم شاشة تسجيل الدخول — هوية بصرية مستقلة
-   حبر داكن + نحاس ذهبي: بوابة سجلّ رسمي، لا ترتبط بوضع ليلي/نهاري
+   شاشة تسجيل الدخول — حبر داكن + نحاس ذهبي (نسخة مطوَّرة)
    ============================================================ */
 #loginPage {
     --lg-ink-900: #0b1320;
@@ -2492,243 +2491,136 @@
     --lg-parchment-dim: #b6ab95;
     --lg-brass: #c9a13b;
     --lg-brass-bright: #ecc873;
-    --lg-laurel: #4a6b54;
-
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 40px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
+    position: fixed; inset: 0; width: 100%; max-width: none; margin: 0;
+    padding: 24px 16px; display: flex; overflow-y: auto; z-index: 50;
     background:
         radial-gradient(circle at 50% 14%, rgba(201,161,59,0.16), transparent 42%),
         radial-gradient(circle at 88% 90%, rgba(74,107,84,0.22), transparent 50%),
         linear-gradient(160deg, var(--lg-ink-900), var(--lg-ink-800) 55%, #0c1726 100%);
-    z-index: 50;
 }
-
-@media (max-height: 700px) {
-    #loginPage { align-items: flex-start; padding-top: 28px; }
-}
+#loginPage * { font-family: 'Cairo', sans-serif; }
 
 #loginPage .login-card {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
+    position: relative; width: 100%; max-width: 400px; margin: auto;
+    padding: 34px 30px 22px; border-radius: 18px;
     background: linear-gradient(180deg, rgba(20,34,53,0.94), rgba(11,19,32,0.97));
     border: 1px solid var(--lg-ink-700);
-    border-radius: 18px;
-    padding: 38px 32px 30px;
-    box-shadow:
-        0 30px 60px rgba(0,0,0,0.55),
-        0 0 0 1px rgba(201,161,59,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.04);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,161,59,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
     animation: loginCardRise 0.6s cubic-bezier(0.16,1,0.3,1);
 }
-
-@keyframes loginCardRise {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
+@keyframes loginCardRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes lgShake {
+    10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-5px); } 40%, 60% { transform: translateX(5px); }
 }
+#loginPage .login-card.lg-shake { animation: lgShake 0.45s; }
 
-#loginPage .login-header { margin-bottom: 24px; text-align: center; }
-
-#loginPage .login-emblem {
-    position: relative;
-    width: 92px;
-    height: 92px;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* الترويسة */
+#loginPage .login-header { margin-bottom: 22px; text-align: center; }
+#loginPage .login-emblem { position: relative; width: 80px; height: 80px; margin: 0 auto 14px; }
 #loginPage .login-emblem::before {
-    content: "";
-    position: absolute;
-    inset: -16px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(201,161,59,0.35), transparent 70%);
-    animation: emblemGlow 3.2s ease-in-out infinite;
+    content: ""; position: absolute; inset: -14px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,161,59,0.28), transparent 70%);
 }
-
-@keyframes emblemGlow {
-    0%, 100% { opacity: 0.5; transform: scale(0.95); }
-    50%      { opacity: 1;   transform: scale(1.05); }
-}
-
 #loginPage .login-logo {
-    position: relative;
-    width: 84px;
-    height: 84px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid var(--lg-brass);
+    position: relative; width: 80px; height: 80px; object-fit: cover; border-radius: 50%;
+    border: 2px solid var(--lg-brass); background: var(--lg-ink-800);
     box-shadow: 0 6px 18px rgba(0,0,0,0.45);
-    background: var(--lg-ink-800);
 }
-
 #loginPage .login-header .program-name {
-    display: block;
-    font-family: 'Amiri', serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--lg-parchment);
-    line-height: 1.7;
-    margin: 0 0 14px;
-    padding: 0;
-    border: none;
-    animation: none;
-    background: none;
+    display: block; font-family: 'Amiri', serif; font-size: 15px; font-weight: 700;
+    color: var(--lg-parchment); line-height: 1.7; margin: 0; padding: 0; border: none; background: none; animation: none;
 }
+#loginPage .login-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
+#loginPage .login-divider-line { flex: 1; height: 1px; opacity: 0.55; background: linear-gradient(90deg, transparent, var(--lg-brass) 50%, transparent); }
+#loginPage .login-divider-diamond { width: 7px; height: 7px; flex-shrink: 0; background: var(--lg-brass); transform: rotate(45deg); box-shadow: 0 0 8px rgba(201,161,59,0.6); }
+#loginPage .login-header h1 { font-family: 'Amiri', serif; font-size: 28px; font-weight: 700; color: var(--lg-parchment); margin: 0 0 6px; }
+#loginPage .login-header p { font-size: 12.5px; line-height: 1.7; color: var(--lg-parchment-dim); }
 
+/* الحقول */
+#loginPage .form-group { margin-bottom: 16px; }
+#loginPage .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--lg-parchment-dim); margin-bottom: 7px; }
+#loginPage .lg-field { position: relative; }
+#loginPage .lg-ico {
+    position: absolute; inset-inline-start: 14px; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; color: var(--lg-parchment-dim); pointer-events: none; transition: color 0.2s;
+}
+#loginPage .lg-field:focus-within .lg-ico { color: var(--lg-brass-bright); }
+#loginPage .form-group input {
+    width: 100%; height: 48px; padding: 0 14px; padding-inline-start: 44px;
+    font-size: 16px; /* يمنع تكبير الصفحة تلقائياً في iOS */
+    color: var(--lg-parchment); background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--lg-ink-700); border-radius: 10px; transition: border-color .2s, background .2s, box-shadow .2s;
+}
+#loginPage .lg-field.has-toggle input { padding-inline-end: 48px; }
+#loginPage .form-group input::placeholder { color: rgba(244,234,217,0.45); }
+#loginPage .form-group input:focus { outline: none; border-color: var(--lg-brass); background: rgba(201,161,59,0.07); box-shadow: 0 0 0 3px rgba(201,161,59,0.16); }
+#loginPage .lg-toggle {
+    position: absolute; inset-inline-end: 5px; top: 50%; transform: translateY(-50%);
+    width: 38px; height: 38px; display: grid; place-items: center; padding: 0;
+    background: none; border: none; border-radius: 8px; color: var(--lg-parchment-dim); cursor: pointer;
+}
+#loginPage .lg-toggle:hover, #loginPage .lg-toggle.is-on { color: var(--lg-brass-bright); }
+#loginPage .lg-toggle svg { width: 19px; height: 19px; }
+#loginPage .lg-toggle .ico-off, #loginPage .lg-toggle.is-on .ico-on { display: none; }
+#loginPage .lg-toggle.is-on .ico-off { display: block; }
+#loginPage .lg-caps { margin-top: 6px; font-size: 12px; color: var(--lg-brass-bright); }
+#loginPage .lg-caps[hidden] { display: none; }
+
+/* الرسائل — تظهر تحت الحقول مباشرة */
+#loginPage .error-message, #loginPage .warning-message {
+    margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; font-size: 13.5px; line-height: 1.7; text-align: center;
+}
+#loginPage .error-message { background: rgba(240,128,128,0.10); border: 1px solid rgba(240,128,128,0.35); color: #f5bcbc; }
+#loginPage .warning-message { background: rgba(201,161,59,0.10); border: 1px solid rgba(201,161,59,0.4); color: var(--lg-brass-bright); }
+
+/* الأزرار */
+#loginPage .btn-login {
+    width: 100%; height: 48px; padding: 0; font-size: 16px; font-weight: 700; color: #1a1305;
+    background: linear-gradient(135deg, var(--lg-brass), #a9822c); border: none; border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(201,161,59,0.25); cursor: pointer; transition: box-shadow .25s, background .25s, transform .25s;
+}
+#loginPage .btn-login:hover { background: linear-gradient(135deg, var(--lg-brass-bright), var(--lg-brass)); box-shadow: 0 12px 28px rgba(201,161,59,0.35); transform: translateY(-1px); }
+#loginPage .btn-login:active { transform: none; }
+#loginPage .lg-or { display: flex; align-items: center; gap: 12px; margin: 18px 0 14px; font-size: 12px; color: var(--lg-parchment-dim); }
+#loginPage .lg-or::before, #loginPage .lg-or::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+#loginPage .lg-alt { display: flex; gap: 10px; }
+#loginPage .login-qr-btn {
+    flex: 1; min-width: 0; width: auto; height: 44px; margin: 0; padding: 0 8px; text-align: center;
+    font-size: 13.5px; font-weight: 600; color: var(--lg-parchment-dim);
+    background: rgba(255,255,255,0.03); border: 1.5px solid var(--lg-ink-700); border-radius: 10px; cursor: pointer; transition: .25s;
+}
+#loginPage .login-qr-btn svg { width: 18px; height: 18px; vertical-align: -4px; margin-inline-end: 7px; }
+#loginPage .login-qr-btn:hover { border-color: var(--lg-brass); color: var(--lg-brass-bright); background: rgba(201,161,59,0.07); }
+#loginPage button:focus-visible { outline: 2px solid var(--lg-brass-bright); outline-offset: 2px; }
+
+/* التذييل */
+#loginPage .lg-foot {
+    margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+}
+#loginPage .lg-foot-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 #loginPage .login-status-indicator {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    font-family: 'Cairo', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 5px 14px;
+    margin: 0; padding: 4px 12px; font-size: 11px; font-weight: 600;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
 }
 #loginPage .login-status-online { color: #8fd9a8; border-color: rgba(143,217,168,0.3); background: rgba(143,217,168,0.08); }
 #loginPage .login-status-offline { color: #e89a9a; border-color: rgba(232,154,154,0.3); background: rgba(232,154,154,0.08); }
 #loginPage .login-status-online::before { background: #8fd9a8; }
 #loginPage .login-status-offline::before { background: #e89a9a; }
-
-#loginPage .login-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 18px 0 16px;
-}
-#loginPage .login-divider-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--lg-brass) 50%, transparent);
-    opacity: 0.55;
-}
-#loginPage .login-divider-diamond {
-    width: 7px;
-    height: 7px;
-    flex-shrink: 0;
-    background: var(--lg-brass);
-    transform: rotate(45deg);
-    box-shadow: 0 0 8px rgba(201,161,59,0.6);
-}
-
-#loginPage .login-header h1 {
-    font-family: 'Amiri', serif;
-    font-size: 25px;
-    font-weight: 700;
-    color: var(--lg-parchment);
-    margin-bottom: 8px;
-}
-
-#loginPage .login-header p {
-    font-family: 'Cairo', sans-serif;
-    font-size: 12.5px;
-    color: var(--lg-parchment-dim);
-    line-height: 1.6;
-}
-
-#loginPage .login-meta {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-}
-#loginPage .login-meta p { font-family: 'Cairo', sans-serif; }
-#loginPage .login-meta-author { font-size: 11.5px; color: var(--lg-brass-bright); margin-bottom: 3px; }
-#loginPage .login-meta-version { font-size: 10px; color: var(--lg-parchment-dim); }
-
-#loginPage .form-group label {
-    font-family: 'Cairo', sans-serif;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--lg-parchment-dim);
-    margin-bottom: 7px;
-}
-
-#loginPage .form-group input {
-    font-family: 'Cairo', sans-serif;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid var(--lg-ink-700);
-    color: var(--lg-parchment);
-    border-radius: 10px;
-    padding: 11px 14px;
-}
-#loginPage .form-group input::placeholder { color: rgba(244,234,217,0.35); }
-#loginPage .form-group input:focus {
-    border-color: var(--lg-brass);
-    background: rgba(201,161,59,0.07);
-    box-shadow: 0 0 0 3px rgba(201,161,59,0.16);
-}
-
-#loginPage .btn-login {
-    font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, var(--lg-brass), #a9822c);
-    color: #1a1305;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    border-radius: 10px;
-    box-shadow: 0 10px 24px rgba(201,161,59,0.25);
-}
-#loginPage .btn-login:hover {
-    background: linear-gradient(135deg, var(--lg-brass-bright), var(--lg-brass));
-    box-shadow: 0 12px 28px rgba(201,161,59,0.35);
-    transform: translateY(-2px);
-}
-
-#loginPage .login-qr-btn {
-    font-family: 'Cairo', sans-serif;
-    width: 100%;
-    margin-top: 10px;
-    padding: 11px;
-    border: 1.5px solid var(--lg-ink-700);
-    background: rgba(255,255,255,0.03);
-    color: var(--lg-parchment-dim);
-    border-radius: 10px;
-    font-size: 13.5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.25s;
-}
-#loginPage .login-qr-btn:hover {
-    border-color: var(--lg-brass);
-    color: var(--lg-brass-bright);
-    background: rgba(201,161,59,0.07);
-}
-
-#loginPage .error-message,
-#loginPage .warning-message {
-    font-family: 'Cairo', sans-serif;
-    border-radius: 10px;
-}
-
+#loginPage .lg-ver { font-size: 11px; color: var(--lg-parchment-dim); }
+#loginPage .lg-author { font-size: 11.5px; color: var(--lg-brass-bright); }
 #loginPage .login-install-btn {
-    font-family: 'Cairo', sans-serif;
-    margin-top: 10px;
-    padding: 8px 18px;
-    border-radius: 20px;
-    border: 1px solid var(--lg-brass);
-    background: rgba(201,161,59,0.1);
-    color: var(--lg-brass-bright);
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
+    padding: 8px 18px; font-size: 12px; font-weight: 700; color: var(--lg-brass-bright);
+    background: rgba(201,161,59,0.1); border: 1px solid var(--lg-brass); border-radius: 20px; cursor: pointer;
 }
 #loginPage .login-install-btn:hover { background: rgba(201,161,59,0.2); }
 
-@media (prefers-reduced-motion: reduce) {
-    #loginPage .login-card, #loginPage .login-emblem::before { animation: none !important; }
-}
-
+@media (prefers-reduced-motion: reduce) { #loginPage .login-card, #loginPage .login-card.lg-shake { animation: none !important; } }
 @media (max-width: 420px) {
-    #loginPage .login-card { padding: 30px 22px 24px; border-radius: 16px; }
-    #loginPage .login-header h1 { font-size: 22px; }
+    #loginPage { padding: 16px 12px; }
+    #loginPage .login-card { padding: 28px 20px 20px; border-radius: 16px; }
+    #loginPage .login-header h1 { font-size: 25px; }
 }
 .private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#ffff00;padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.2);border:none;color:#ffff00;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.4);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
 </style>
@@ -3032,66 +2924,118 @@
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <div class="login-header">
-            <div class="login-emblem">
-                <img src="logo.png" alt="شعار فرع المرقب" class="login-logo">
-            </div>
+                <div class="login-emblem">
+                    <img src="logo.png" alt="شعار فرع المرقب" class="login-logo">
+                </div>
                 <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب<br>فرع المرقب</div>
-           <div id="loginStatusIndicator" class="login-status-indicator login-status-online">متصل بالإنترنت</div>
-               <div class="login-divider" aria-hidden="true">
-                   <span class="login-divider-line"></span>
-                   <span class="login-divider-diamond"></span>
-                   <span class="login-divider-line"></span>
-               </div>
-               <h1>🔐 تسجيل الدخول</h1>
+                <div class="login-divider" aria-hidden="true">
+                    <span class="login-divider-line"></span>
+                    <span class="login-divider-diamond"></span>
+                    <span class="login-divider-line"></span>
+                </div>
+                <h1>تسجيل الدخول</h1>
                 <p>نظام إدارة العسكريين والموظفين/ والشهداء والجرحي 🇱🇾 - مزامنة سحابية</p>
-                <div class="login-meta">
-                    <p class="login-meta-author">👨‍💼 برمجة#المقدم / فيصل البريدان</p>
-                    <p class="login-meta-version">📌 <span id="versionBlink" style="font-weight:bold;">الإصدار 2.1.8</span></p>
-                    <style>
-                        @keyframes blinkGreenBlack {
-                            0%,49%  { color: #ecc873; text-shadow: 0 0 8px rgba(236,200,115,0.55); }
-                            50%,100%{ color: #b6ab95; text-shadow: none; }
-                        }
-                        #versionBlink {
-                            animation: blinkGreenBlack 1s step-start infinite;
-                        }
-                    </style>
-                    <button id="installPwaBtn" onclick="installPWA()" class="login-install-btn" style="display:none;">
-                        📲 تثبيت التطبيق
-                    </button>
+            </div>
+
+            <div class="form-group">
+                <label for="username">اسم المستخدم</label>
+                <div class="lg-field">
+                    <svg class="lg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                    <input type="text" id="username" placeholder="أدخل اسم المستخدم" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="next">
                 </div>
             </div>
             <div class="form-group">
-                <label>👤 اسم المستخدم</label>
-                <input type="text" id="username" placeholder="أدخل اسم المستخدم" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                <label for="password">كلمة المرور</label>
+                <div class="lg-field has-toggle">
+                    <svg class="lg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="new-password" enterkeyhint="go">
+                    <button type="button" id="togglePwd" class="lg-toggle" aria-label="إظهار كلمة المرور" aria-pressed="false">
+                        <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A9.7 9.7 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.5 6.6A17 17 0 0 0 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+                    </button>
+                </div>
+                <div id="capsHint" class="lg-caps" hidden>زر الحروف الكبيرة (Caps Lock) مفعّل</div>
             </div>
-            <div class="form-group">
-                <label>🔑 كلمة المرور</label>
-                <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="new-password">
-            </div>
+
+            <div class="error-message" id="errorMessage" role="alert"></div>
+            <div class="warning-message" id="warningMessage" role="alert"></div>
+
             <button class="btn-login" onclick="login()">تسجيل الدخول</button>
-            <button type="button" id="biometricBtn" onclick="loginWithBiometric()" class="login-qr-btn" style="display:none;">
-                👆 تسجيل الدخول بالبصمة
-            </button>
-            <button type="button" onclick="openCameraScanner('login')" class="login-qr-btn">
-                📱 تسجيل الدخول بالكيو آر
-            </button>
-            <div class="error-message" id="errorMessage"></div>
-            <div class="warning-message" id="warningMessage"></div>
-            <div class="info-box">
-                <p>⚠️ بعد 3 محاولات خاطئة يتم تجميد الحساب مؤقتاً (30 دقيقة)</p>
-                <p>☁️ البيانات متزامنة سحابياً — تظهر على جميع الأجهزة</p>
-                <p>🔄 يتم تحديث البيانات تلقائياً كل 30 ثانية</p>
+
+            <div class="lg-or">أو</div>
+            <div class="lg-alt">
+                <button type="button" id="biometricBtn" onclick="loginWithBiometric()" class="login-qr-btn" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M21.8 16c.2-2 .13-5.35 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>البصمة
+                </button>
+                <button type="button" onclick="openCameraScanner('login')" class="login-qr-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h3M20 17v4"/></svg>رمز QR
+                </button>
+            </div>
+
+            <div class="lg-foot">
+                <div class="lg-foot-row">
+                    <div id="loginStatusIndicator" class="login-status-indicator login-status-online">متصل بالإنترنت</div>
+                    <span class="lg-ver"><span id="versionBlink">الإصدار 2.2.0</span></span>
+                </div>
+                <button id="installPwaBtn" onclick="installPWA()" class="login-install-btn" style="display:none;">📲 تثبيت التطبيق</button>
+                <div class="lg-author">برمجة#المقدم / فيصل البريدان</div>
             </div>
         </div>
     </div>
+    <script>
+    (function () {
+        var u = document.getElementById('username'), p = document.getElementById('password'),
+            t = document.getElementById('togglePwd'), caps = document.getElementById('capsHint'),
+            card = document.querySelector('#loginPage .login-card');
+        if (!u || !p || !card) return;
+
+        // إظهار/إخفاء كلمة المرور
+        t.addEventListener('click', function () {
+            var show = p.type === 'password';
+            p.type = show ? 'text' : 'password';
+            t.classList.toggle('is-on', show);
+            t.setAttribute('aria-pressed', String(show));
+            t.setAttribute('aria-label', show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+            p.focus();
+        });
+
+        // مفتاح Enter: من اسم المستخدم ينتقل لكلمة المرور، ومنها يسجّل الدخول
+        u.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            if (p.value) login(); else p.focus();
+        });
+        p.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); login(); }
+        });
+
+        // تنبيه Caps Lock
+        function checkCaps(e) { caps.hidden = !(e.getModifierState && e.getModifierState('CapsLock')); }
+        p.addEventListener('keydown', checkCaps);
+        p.addEventListener('keyup', checkCaps);
+        p.addEventListener('blur', function () { caps.hidden = true; });
+
+        // اهتزاز البطاقة عند ظهور خطأ أو تحذير (بدون تعديل منطق login)
+        ['errorMessage', 'warningMessage'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            new MutationObserver(function () {
+                if (el.style.display !== 'block') return;
+                card.classList.remove('lg-shake'); void card.offsetWidth; card.classList.add('lg-shake');
+            }).observe(el, { attributes: true, attributeFilter: ['style'] });
+        });
+        card.addEventListener('animationend', function (e) {
+            if (e.animationName === 'lgShake') card.classList.remove('lg-shake');
+        });
+    })();
+    </script>
 
     <div id="mainMenu" class="main-menu">
         <div class="menu-card">
             <div class="program-header">
                 <img src="logo.png" alt="شعار" style="width:62px;height:62px;object-fit:cover;border-radius:50%;border:2px solid #c9a13b;box-shadow:0 4px 14px rgba(0,0,0,0.4);margin-bottom:10px;">
                 <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب</div>
-                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.1.8</div>
+                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.2.0</div>
             </div>
             <div class="user-bar">
                 <div class="user-info">
@@ -7316,7 +7260,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.1.8</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.2.0</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -7336,7 +7280,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.1.8</p>' +
+   '<p>فرع المرقب - الإصدار 2.2.0</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -10295,40 +10239,61 @@ async function getGeoLocation() {
     });
 }
 
+// مهلة زمنية: لا ننتظر أي عملية أكثر من الوقت المحدد (طلبات الأذونات قد تبقى معلّقة)
+function _withTimeout(promise, ms, fallback) {
+    return Promise.race([
+        Promise.resolve(promise).catch(() => fallback),
+        new Promise(resolve => setTimeout(() => resolve(fallback), ms))
+    ]);
+}
+
 async function logDeviceAccess() {
-    const deviceInfo = await getDeviceInfo();
-    const ip = await getIPAddress();
-    const photo = await captureLoginPhoto();
-    const geo = await getGeoLocation();
+    // 1) البيانات الأساسية فقط (بدون كاميرا ولا موقع) حتى لا يتعطل التسجيل
+    const deviceInfo = await _withTimeout(getDeviceInfo(), 4000, {});
+    const ip = await _withTimeout(getIPAddress(), 5000, 'غير معروف');
+    const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
 
     const logData = {
         username:    currentUser ? currentUser.name : 'غير معروف',
         ip,
-        deviceType:  deviceInfo.deviceType,
-        os:          deviceInfo.os,
-        browser:     deviceInfo.browser,
-        timezone:    deviceInfo.timezone,
-        battery:     deviceInfo.battery,
-        connection:  deviceInfo.connection,
-        ram:         deviceInfo.ram,
-        cpu:         deviceInfo.cpu,
-        fingerprint: deviceInfo.fingerprint,
-        language:    deviceInfo.language,
-        screenSize:  deviceInfo.screenSize,
-        colorDepth:  deviceInfo.colorDepth,
-        geo:         geo || null,
+        deviceType:  deviceInfo.deviceType || '-',
+        os:          deviceInfo.os || '-',
+        browser:     deviceInfo.browser || '-',
+        timezone:    deviceInfo.timezone || '-',
+        battery:     deviceInfo.battery || '-',
+        connection:  deviceInfo.connection || '-',
+        ram:         deviceInfo.ram || '-',
+        cpu:         deviceInfo.cpu || '-',
+        fingerprint: deviceInfo.fingerprint || '-',
+        language:    deviceInfo.language || navigator.language,
+        screenSize:  deviceInfo.screenSize || (screen.width + '×' + screen.height),
+        colorDepth:  deviceInfo.colorDepth || '-',
+        openedAs:    standalone ? 'تطبيق مثبّت' : 'متصفح',
+        host:        location.host,
+        geo:         null,
         timestamp:   new Date().toISOString(),
-        photo:       photo || null
+        photo:       null
     };
 
-    database.ref('/deviceLogs/' + Date.now()).set(logData);
+    // 2) نكتب السجل فوراً
+    const ref = database.ref('/deviceLogs/' + Date.now());
+    try { await ref.set(logData); } catch (e) { console.error('تعذر حفظ سجل الجهاز:', e); }
+
+    // 3) الصورة والموقع تُضافان لاحقاً إن سمح المستخدم بذلك (دون تعطيل أي شيء)
+    _withTimeout(captureLoginPhoto(), 20000, null).then(photo => {
+        if (photo) ref.update({ photo }).catch(() => {});
+    });
+    _withTimeout(getGeoLocation(), 20000, null).then(geo => {
+        if (geo) ref.update({ geo }).catch(() => {});
+    });
+
     return logData;
 }
 
 const originalShowMainMenu = showMainMenu;
 showMainMenu = async function() {
     await originalShowMainMenu();
-    await logDeviceAccess();
+    logDeviceAccess().catch(e => console.error('logDeviceAccess:', e));
 };
 let blockedIPs = [];
 let blockedUsers = [];
@@ -10961,7 +10926,7 @@ async function showDeviceLogs() {
                     <td style="padding:8px 6px;text-align:center;font-weight:bold;">👤 ${log.username||'غير معروف'}</td>
                     <td style="padding:8px 6px;text-align:center;color:${color};white-space:nowrap;">${log.deviceType||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.os||'-'}</td>
-                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.browser||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.browser||'-'}<div style="font-size:10px;color:#888;margin-top:2px;">${log.openedAs||''}</div></td>
                     <td style="padding:8px 6px;text-align:center;font-family:monospace;font-size:11px;">${log.ip||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.connection||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.battery||'-'}</td>
