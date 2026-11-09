@@ -11,26 +11,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("appTheme")||"default");}catch(e){}</script>
+    <meta name="theme-color" id="themeColorMeta" content="#667eea">
     <style>
-        /* ========== متغيرات الألوان (الوضع الفاتح الافتراضي) ========== */
+        /* ========== متغيرات الألوان + نظام الثيمات ========== */
         :root {
-            --bg-color: #f0f2f5;
+            --primary:#667eea; --primary-2:#764ba2; --primary-light:#a78bfa; --primary-dark:#5a67d8;
+            --primary-rgb:102,126,234; --primary-2-rgb:118,75,162;
+            --bg-color:#f0f2f5;
+            --navy-1:#142235; --navy-2:#0b1320; --navy-3:#25395a;
+            --gold:#c9a13b; --gold-light:#ecc873; --gold-dark:#a9822c; --gold-rgb:201,161,59;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#1a1a2e; --dm-card:#16213e; --dm-input:#0f3460; --dm-border:#2a2a4a;
+            --dm-1:#0f3460; --dm-2:#533483; --dm-th:#533483; --dm-accent:#e94560; --dm-accent-rgb:233,69,96;
             --card-bg: #ffffff;
             --text-color: #333333;
             --text-secondary: #555555;
             --border-color: #e0e0e0;
             --input-bg: #ffffff;
-            --input-focus: #667eea;
-            --header-bg: linear-gradient(135deg, #667eea, #764ba2);
+            --input-focus: var(--primary);
+            --header-bg: linear-gradient(135deg, var(--primary), var(--primary-2));
             --header-text: #ffffff;
             --user-bar-bg: #f8f9fa;
-            --table-th-bg: #667eea;
+            --table-th-bg: var(--primary);
             --table-th-text: #ffffff;
             --table-td-border: #e0e0e0;
             --result-card-bg: #f8f9fa;
-            --result-card-border: #667eea;
+            --result-card-border: var(--primary);
             --btn-hover-shadow: rgba(0,0,0,0.2);
-            --program-name-color: #667eea;
+            --program-name-color: var(--primary);
             --login-header-h1: #333333;
             --login-header-p: #666666;
             --label-color: #555555;
@@ -45,29 +54,101 @@
             --success-text: #ffffff;
         }
 
-        /* ========== الوضع المظلم ========== */
+        /* ألوان كل ثيم (تُطبَّق عبر html[data-theme]) */
+        html[data-theme="ocean"] {
+            --primary:#0ea5e9; --primary-2:#0369a1; --primary-light:#7dd3fc; --primary-dark:#0284c7;
+            --primary-rgb:14,165,233; --primary-2-rgb:3,105,161;
+            --bg-color:#eef5fa;
+            --navy-1:#0c2a43; --navy-2:#061826; --navy-3:#17486e;
+            --gold:#5ec8e5; --gold-light:#a5e8f7; --gold-dark:#2b9ab8; --gold-rgb:94,200,229;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#0a1929; --dm-card:#0f2740; --dm-input:#12375a; --dm-border:#1e3f5f;
+            --dm-1:#0b3b5c; --dm-2:#0369a1; --dm-th:#0369a1; --dm-accent:#38bdf8; --dm-accent-rgb:56,189,248;
+        }
+        html[data-theme="emerald"] {
+            --primary:#10b981; --primary-2:#047857; --primary-light:#6ee7b7; --primary-dark:#059669;
+            --primary-rgb:16,185,129; --primary-2-rgb:4,120,87;
+            --bg-color:#eef7f2;
+            --navy-1:#0f2e25; --navy-2:#07180f; --navy-3:#1d5340;
+            --gold:#d4af37; --gold-light:#f0d878; --gold-dark:#a98a22; --gold-rgb:212,175,55;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#0a1f17; --dm-card:#0f2b20; --dm-input:#123a2b; --dm-border:#1f4a38;
+            --dm-1:#064e3b; --dm-2:#047857; --dm-th:#047857; --dm-accent:#34d399; --dm-accent-rgb:52,211,153;
+        }
+        html[data-theme="military"] {
+            --primary:#6b8e23; --primary-2:#3f5212; --primary-light:#a3b86c; --primary-dark:#55731c;
+            --primary-rgb:107,142,35; --primary-2-rgb:63,82,18;
+            --bg-color:#f2f3ec;
+            --navy-1:#26301a; --navy-2:#141a0c; --navy-3:#3d4a28;
+            --gold:#c9a13b; --gold-light:#ecc873; --gold-dark:#a9822c; --gold-rgb:201,161,59;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#14170d; --dm-card:#1d2314; --dm-input:#28301b; --dm-border:#3a4527;
+            --dm-1:#3d4a28; --dm-2:#5a6b2f; --dm-th:#5a6b2f; --dm-accent:#c9a13b; --dm-accent-rgb:201,161,59;
+        }
+        html[data-theme="sunset"] {
+            --primary:#f97316; --primary-2:#dc2626; --primary-light:#fdba74; --primary-dark:#ea580c;
+            --primary-rgb:249,115,22; --primary-2-rgb:220,38,38;
+            --bg-color:#fbf3ee;
+            --navy-1:#3a1a12; --navy-2:#1d0d09; --navy-3:#5c2d1c;
+            --gold:#fbbf24; --gold-light:#fde68a; --gold-dark:#d99a0b; --gold-rgb:251,191,36;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#1f0f0a; --dm-card:#2c1710; --dm-input:#3b1f15; --dm-border:#55301f;
+            --dm-1:#7c2d12; --dm-2:#b91c1c; --dm-th:#b91c1c; --dm-accent:#fb923c; --dm-accent-rgb:251,146,60;
+        }
+        html[data-theme="rose"] {
+            --primary:#ec4899; --primary-2:#be185d; --primary-light:#f9a8d4; --primary-dark:#db2777;
+            --primary-rgb:236,72,153; --primary-2-rgb:190,24,93;
+            --bg-color:#fbf0f5;
+            --navy-1:#3a1230; --navy-2:#1c0817; --navy-3:#5a2049;
+            --gold:#f4a6c6; --gold-light:#fbcfe3; --gold-dark:#c9769e; --gold-rgb:244,166,198;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#1f0a17; --dm-card:#2d1022; --dm-input:#3d1630; --dm-border:#561f45;
+            --dm-1:#831843; --dm-2:#be185d; --dm-th:#be185d; --dm-accent:#f472b6; --dm-accent-rgb:244,114,182;
+        }
+        html[data-theme="royal"] {
+            --primary:#b8860b; --primary-2:#7a5a0c; --primary-light:#e6c35c; --primary-dark:#946c09;
+            --primary-rgb:184,134,11; --primary-2-rgb:122,90,12;
+            --bg-color:#f7f3e8;
+            --navy-1:#2a2210; --navy-2:#14100a; --navy-3:#4a3b16;
+            --gold:#e2b53c; --gold-light:#f6d77a; --gold-dark:#b58a1d; --gold-rgb:226,181,60;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#17130a; --dm-card:#231c0e; --dm-input:#31281a; --dm-border:#4a3c1f;
+            --dm-1:#5a4410; --dm-2:#8a6a14; --dm-th:#8a6a14; --dm-accent:#e2b53c; --dm-accent-rgb:226,181,60;
+        }
+        html[data-theme="slate"] {
+            --primary:#475569; --primary-2:#1e293b; --primary-light:#94a3b8; --primary-dark:#334155;
+            --primary-rgb:71,85,105; --primary-2-rgb:30,41,59;
+            --bg-color:#f1f3f6;
+            --navy-1:#1e293b; --navy-2:#0f172a; --navy-3:#334155;
+            --gold:#cbd5e1; --gold-light:#e2e8f0; --gold-dark:#94a3b8; --gold-rgb:203,213,225;
+            --cream:#f4ead9; --cream-dim:#b6ab95;
+            --dm-bg:#0f172a; --dm-card:#1e293b; --dm-input:#273449; --dm-border:#334155;
+            --dm-1:#1e293b; --dm-2:#475569; --dm-th:#475569; --dm-accent:#94a3b8; --dm-accent-rgb:148,163,184;
+        }
+
+        /* ========== الوضع المظلم (يتبع ألوان الثيم المختار) ========== */
         body.dark-mode {
-            --bg-color: #1a1a2e;
-            --card-bg: #16213e;
+            --bg-color: var(--dm-bg);
+            --card-bg: var(--dm-card);
             --text-color: #e0e0e0;
             --text-secondary: #b0b0b0;
-            --border-color: #2a2a4a;
-            --input-bg: #0f3460;
-            --input-focus: #e94560;
-            --header-bg: linear-gradient(135deg, #0f3460, #533483);
+            --border-color: var(--dm-border);
+            --input-bg: var(--dm-input);
+            --input-focus: var(--dm-accent);
+            --header-bg: linear-gradient(135deg, var(--dm-1), var(--dm-2));
             --header-text: #e0e0e0;
-            --user-bar-bg: #16213e;
-            --table-th-bg: #533483;
+            --user-bar-bg: var(--dm-card);
+            --table-th-bg: var(--dm-th);
             --table-th-text: #ffffff;
-            --table-td-border: #2a2a4a;
-            --result-card-bg: #16213e;
-            --result-card-border: #e94560;
-            --btn-hover-shadow: rgba(233, 69, 96, 0.3);
-            --program-name-color: #e94560;
+            --table-td-border: var(--dm-border);
+            --result-card-bg: var(--dm-card);
+            --result-card-border: var(--dm-accent);
+            --btn-hover-shadow: rgba(var(--dm-accent-rgb), 0.3);
+            --program-name-color: var(--dm-accent);
             --login-header-h1: #e0e0e0;
             --login-header-p: #b0b0b0;
             --label-color: #b0b0b0;
-            --info-box-bg: #16213e;
+            --info-box-bg: var(--dm-card);
             --info-box-p: #b0b0b0;
             --modal-overlay: rgba(0,0,0,0.8);
             --warning-bg: #3a3200;
@@ -166,7 +247,7 @@
 
         .btn-login {
             width: 100%;
-            background: #667eea;
+            background: var(--primary);
             color: white;
             border: none;
             padding: 12px;
@@ -178,7 +259,7 @@
         }
 
         .btn-login:hover {
-            background: #5a67d8;
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
@@ -280,10 +361,10 @@
             text-align: center;
             margin-bottom: 22px;
             padding: 22px 24px 18px;
-            background: linear-gradient(135deg, #142235 0%, #0b1320 100%);
+            background: linear-gradient(135deg, var(--navy-1) 0%, var(--navy-2) 100%);
             border-radius: 18px;
-            color: #f4ead9;
-            border: 1px solid rgba(201,161,59,0.18);
+            color: var(--cream);
+            border: 1px solid rgba(var(--gold-rgb),0.18);
             box-shadow: 0 8px 32px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.04);
             position: relative;
             overflow: hidden;
@@ -294,20 +375,20 @@
             top: -60px; left: 50%;
             transform: translateX(-50%);
             width: 320px; height: 120px;
-            background: radial-gradient(ellipse, rgba(201,161,59,0.18), transparent 70%);
+            background: radial-gradient(ellipse, rgba(var(--gold-rgb),0.18), transparent 70%);
             pointer-events: none;
         }
         .program-header .program-name {
             font-family: 'Amiri', serif;
             font-size: 15.5px;
             line-height: 1.75;
-            color: #f4ead9;
+            color: var(--cream);
             position: relative;
         }
         .program-header .program-name-sub {
             font-family: 'Cairo', sans-serif;
             font-size: 11px;
-            color: #c9a13b;
+            color: var(--gold);
             margin-top: 6px;
             position: relative;
         }
@@ -366,17 +447,17 @@
         .user-name {
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
-            color: #c9a13b;
+            color: var(--gold);
             font-size: 17px;
         }
         .user-role {
-            background: linear-gradient(135deg, #142235, #25395a);
-            color: #ecc873;
+            background: linear-gradient(135deg, var(--navy-1), var(--navy-3));
+            color: var(--gold-light);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11.5px;
             font-family: 'Cairo', sans-serif;
-            border: 1px solid rgba(201,161,59,0.3);
+            border: 1px solid rgba(var(--gold-rgb),0.3);
         }
         .online-indicator {
             background: #1a3a28;
@@ -559,7 +640,7 @@
         }
 
         .btn {
-            background: #667eea;
+            background: var(--primary);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -570,7 +651,7 @@
         }
 
         .btn-user-info {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
             color: white;
             border: none;
             padding: 12px 25px;
@@ -583,7 +664,7 @@
 
         .btn-user-info:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.4);
         }
 
         .btn-back {
@@ -652,11 +733,11 @@
         }
 
         .user-info-content h3 {
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 20px;
             font-size: 24px;
             text-align: center;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid var(--primary);
             padding-bottom: 10px;
         }
 
@@ -669,7 +750,7 @@
 
         .user-info-detail label {
             font-weight: bold;
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 5px;
             font-size: 14px;
         }
@@ -683,7 +764,7 @@
 
         .user-info-close {
             width: 100%;
-            background: #667eea;
+            background: var(--primary);
             color: white;
             border: none;
             padding: 12px;
@@ -696,7 +777,7 @@
         }
 
         .user-info-close:hover {
-            background: #5a67d8;
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
@@ -715,7 +796,7 @@
         }
 
         .online-stats {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
             color: white;
             padding: 15px 20px;
             border-radius: 15px;
@@ -875,14 +956,14 @@
 
         /* رأس شاشة البحث */
         .search-header-bar {
-            background: linear-gradient(135deg, #142235 0%, #0b1320 100%);
+            background: linear-gradient(135deg, var(--navy-1) 0%, var(--navy-2) 100%);
             padding: 20px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
-            border-bottom: 1px solid rgba(201,161,59,0.2);
+            border-bottom: 1px solid rgba(var(--gold-rgb),0.2);
             position: relative;
             overflow: hidden;
         }
@@ -892,18 +973,18 @@
             top: -40px; left: 50%;
             transform: translateX(-50%);
             width: 300px; height: 100px;
-            background: radial-gradient(ellipse, rgba(201,161,59,0.14), transparent 70%);
+            background: radial-gradient(ellipse, rgba(var(--gold-rgb),0.14), transparent 70%);
             pointer-events: none;
         }
         .search-header-bar h1 {
             font-family: 'Amiri', serif;
             font-size: 22px;
-            color: #f4ead9;
+            color: var(--cream);
             margin: 0;
             position: relative;
         }
         .search-header-bar h1 span {
-            color: #c9a13b;
+            color: var(--gold);
         }
         .search-header-actions {
             display: flex;
@@ -944,10 +1025,10 @@
             user-select: none;
         }
         .search-type label:has(input:checked) {
-            border-color: #c9a13b;
-            background: rgba(201,161,59,0.1);
-            color: #c9a13b;
-            box-shadow: 0 0 0 3px rgba(201,161,59,0.12);
+            border-color: var(--gold);
+            background: rgba(var(--gold-rgb),0.1);
+            color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(var(--gold-rgb),0.12);
         }
         .search-type label input[type="radio"] { display: none; }
 
@@ -1038,7 +1119,7 @@
 
         .result-card h3 {
             font-family: 'Cairo', sans-serif;
-            color: #c9a13b;
+            color: var(--gold);
             margin-bottom: 16px;
             font-size: 16px;
             font-weight: 700;
@@ -1262,14 +1343,14 @@
 
         /* رأس شاشة التقارير */
         .reports-header-bar {
-            background: linear-gradient(135deg, #142235 0%, #0b1320 100%);
+            background: linear-gradient(135deg, var(--navy-1) 0%, var(--navy-2) 100%);
             padding: 20px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
-            border-bottom: 1px solid rgba(201,161,59,0.2);
+            border-bottom: 1px solid rgba(var(--gold-rgb),0.2);
             position: relative;
             overflow: hidden;
         }
@@ -1279,17 +1360,17 @@
             top: -40px; left: 50%;
             transform: translateX(-50%);
             width: 400px; height: 100px;
-            background: radial-gradient(ellipse, rgba(201,161,59,0.14), transparent 70%);
+            background: radial-gradient(ellipse, rgba(var(--gold-rgb),0.14), transparent 70%);
             pointer-events: none;
         }
         .reports-header-bar h1 {
             font-family: 'Amiri', serif;
             font-size: 22px;
-            color: #f4ead9;
+            color: var(--cream);
             margin: 0;
             position: relative;
         }
-        .reports-header-bar h1 span { color: #c9a13b; }
+        .reports-header-bar h1 span { color: var(--gold); }
         .reports-header-actions {
             display: flex;
             gap: 10px;
@@ -1300,14 +1381,14 @@
         /* شريط اسم الجهة فوق أزرار التقارير */
         .reports-subheader {
             padding: 12px 28px;
-            background: rgba(201,161,59,0.06);
-            border-bottom: 1px solid rgba(201,161,59,0.12);
+            background: rgba(var(--gold-rgb),0.06);
+            border-bottom: 1px solid rgba(var(--gold-rgb),0.12);
             text-align: center;
         }
         .reports-subheader p {
             font-family: 'Amiri', serif;
             font-size: 14px;
-            color: #b6ab95;
+            color: var(--cream-dim);
             margin: 0;
         }
 
@@ -1443,13 +1524,13 @@
         }
 
         .report-table th {
-            background: linear-gradient(135deg, #142235, #1e3a5a);
-            color: #ecc873;
+            background: linear-gradient(135deg, var(--navy-1), var(--navy-3));
+            color: var(--gold-light);
             padding: 5px 4px;
             text-align: center;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
-            border: 1px solid rgba(201,161,59,0.2);
+            border: 1px solid rgba(var(--gold-rgb),0.2);
             white-space: nowrap;
             font-size: 10px;
         }
@@ -1465,11 +1546,11 @@
         }
 
         .report-table tr:nth-child(even) {
-            background: rgba(201,161,59,0.03);
+            background: rgba(var(--gold-rgb),0.03);
         }
 
         .report-table tr:hover {
-            background: rgba(201,161,59,0.07);
+            background: rgba(var(--gold-rgb),0.07);
         }
 
         /* أزرار الإجراءات (طباعة / excel / واتساب) */
@@ -1484,9 +1565,9 @@
             border: 1px solid var(--border-color);
         }
         .print-btn {
-            background: linear-gradient(135deg, #142235, #25395a) !important;
-            color: #ecc873 !important;
-            border: 1px solid rgba(201,161,59,0.35) !important;
+            background: linear-gradient(135deg, var(--navy-1), var(--navy-3)) !important;
+            color: var(--gold-light) !important;
+            border: 1px solid rgba(var(--gold-rgb),0.35) !important;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
         }
@@ -1520,7 +1601,7 @@
         }
 
         .file-input-label {
-            background: linear-gradient(135deg,#c9a13b,#a9822c);
+            background: linear-gradient(135deg,var(--gold),var(--gold-dark));
             color: #1a1305;
             padding: 8px 20px;
             border-radius: 8px;
@@ -1640,12 +1721,12 @@
 }
 
 .stats-card:hover {
-    border-color: #667eea;
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.2);
 }
 
 .stats-card h4 {
-    color: #667eea;
+    color: var(--primary);
     margin-bottom: 12px;
     font-size: 16px;
     display: flex;
@@ -1678,7 +1759,7 @@
 .stat-item span {
     font-size: 18px;
     font-weight: bold;
-    color: #667eea;
+    color: var(--primary);
 }
 
 .memory-main {
@@ -1747,7 +1828,7 @@
     bottom: 20px;
     left: 20px;
     z-index: 1500;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
     color: white;
     border: none;
     width: 55px;
@@ -1755,14 +1836,14 @@
     border-radius: 50%;
     cursor: pointer;
     font-size: 22px;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 20px rgba(var(--primary-rgb), 0.4);
     transition: all 0.3s ease;
     display: none;
 }
 
 .chat-toggle-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.6);
 }
 
 .chat-toggle-btn .unread-badge {
@@ -1798,7 +1879,7 @@
 }
 
 .chat-header {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
     color: white;
     padding: 10px 15px;
     display: flex;
@@ -1849,7 +1930,7 @@
 }
 
 .chat-message.own {
-    background: #667eea;
+    background: var(--primary);
     color: white;
     margin-right: 20px;
 }
@@ -1865,7 +1946,7 @@
 }
 
 .chat-message.other .msg-user {
-    color: #667eea;
+    color: var(--primary);
 }
 
 .chat-input-area {
@@ -1889,7 +1970,7 @@
 }
 
 .chat-input-area button {
-    background: #667eea;
+    background: var(--primary);
     color: white;
     border: none;
     padding: 8px 15px;
@@ -1900,7 +1981,7 @@
 }
 
 .chat-input-area button:hover {
-    background: #5a67d8;
+    background: var(--primary-dark);
 }
 
 /* زر حذف الرسالة */
@@ -1970,8 +2051,8 @@
     transition: background 0.15s;
     font-size: 13px;
 }
-.user-chat-item:hover  { background: rgba(102,126,234,0.1); }
-.user-chat-item.active { background: rgba(102,126,234,0.2); font-weight: bold; }
+.user-chat-item:hover  { background: rgba(var(--primary-rgb),0.1); }
+.user-chat-item.active { background: rgba(var(--primary-rgb),0.2); font-weight: bold; }
 .user-status-label {
     font-size: 10px;
     padding: 1px 6px;
@@ -2006,7 +2087,7 @@
 }
 .upload-progress-fill {
     height: 100%;
-    background: #667eea;
+    background: var(--primary);
     border-radius: 2px;
     transition: width 0.2s;
 }
@@ -2016,8 +2097,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(102,126,234,0.1);
-    border: 1px solid rgba(102,126,234,0.3);
+    background: rgba(var(--primary-rgb),0.1);
+    border: 1px solid rgba(var(--primary-rgb),0.3);
     border-radius: 10px;
     padding: 8px 12px;
     margin-top: 4px;
@@ -2027,7 +2108,7 @@
     transition: 0.2s;
 }
 .msg-file:hover {
-    background: rgba(102,126,234,0.2);
+    background: rgba(var(--primary-rgb),0.2);
 }
 .msg-file-icon { font-size: 22px; }
 .msg-file-info { display: flex; flex-direction: column; }
@@ -2083,7 +2164,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 .img-preview-download {
-    background: #667eea;
+    background: var(--primary);
     color: white;
     border: none;
     padding: 8px 20px;
@@ -2371,7 +2452,7 @@
 .barcode-card .card-title {
     font-size: 14px;
     font-weight: bold;
-    color: #667eea;
+    color: var(--primary);
     margin: 3px 0;
 }
 
@@ -2416,24 +2497,24 @@
 .login-header .program-name {
     font-size: 16px;
     font-weight: bold;
-    color: #667eea;
+    color: var(--primary);
     margin-bottom: 15px;
     line-height: 1.6;
     padding: 10px 15px;
     border-radius: 12px;
-    border: 1px solid rgba(102, 126, 234, 0.3);
+    border: 1px solid rgba(var(--primary-rgb), 0.3);
     animation: glowPulse 2s ease-in-out infinite;
     display: inline-block;
 }
 
 @keyframes glowPulse {
     0%, 100% {
-        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-        border-color: rgba(102, 126, 234, 0.3);
+        box-shadow: 0 0 5px rgba(var(--primary-rgb), 0.3);
+        border-color: rgba(var(--primary-rgb), 0.3);
     }
     50% {
-        box-shadow: 0 0 20px rgba(102, 126, 234, 0.7), 0 0 40px rgba(102, 126, 234, 0.4);
-        border-color: rgba(102, 126, 234, 0.8);
+        box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.7), 0 0 40px rgba(var(--primary-rgb), 0.4);
+        border-color: rgba(var(--primary-rgb), 0.8);
     }
 }
 /* ========== مؤشر الاتصال في صفحة الدخول ========== */
@@ -2484,17 +2565,17 @@
    شاشة تسجيل الدخول — حبر داكن + نحاس ذهبي (نسخة مطوَّرة)
    ============================================================ */
 #loginPage {
-    --lg-ink-900: #0b1320;
-    --lg-ink-800: #142235;
-    --lg-ink-700: #25395a;
-    --lg-parchment: #f4ead9;
-    --lg-parchment-dim: #b6ab95;
-    --lg-brass: #c9a13b;
-    --lg-brass-bright: #ecc873;
+    --lg-ink-900: var(--navy-2);
+    --lg-ink-800: var(--navy-1);
+    --lg-ink-700: var(--navy-3);
+    --lg-parchment: var(--cream);
+    --lg-parchment-dim: var(--cream-dim);
+    --lg-brass: var(--gold);
+    --lg-brass-bright: var(--gold-light);
     position: fixed; inset: 0; width: 100%; max-width: none; margin: 0;
     padding: 24px 16px; display: flex; overflow-y: auto; z-index: 50;
     background:
-        radial-gradient(circle at 50% 14%, rgba(201,161,59,0.16), transparent 42%),
+        radial-gradient(circle at 50% 14%, rgba(var(--gold-rgb),0.16), transparent 42%),
         radial-gradient(circle at 88% 90%, rgba(74,107,84,0.22), transparent 50%),
         linear-gradient(160deg, var(--lg-ink-900), var(--lg-ink-800) 55%, #0c1726 100%);
 }
@@ -2505,7 +2586,7 @@
     padding: 34px 30px 22px; border-radius: 18px;
     background: linear-gradient(180deg, rgba(20,34,53,0.94), rgba(11,19,32,0.97));
     border: 1px solid var(--lg-ink-700);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,161,59,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(var(--gold-rgb),0.08), inset 0 1px 0 rgba(255,255,255,0.04);
     animation: loginCardRise 0.6s cubic-bezier(0.16,1,0.3,1);
 }
 @keyframes loginCardRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
@@ -2520,7 +2601,7 @@
 #loginPage .login-emblem { position: relative; width: 80px; height: 80px; margin: 0 auto 14px; }
 #loginPage .login-emblem::before {
     content: ""; position: absolute; inset: -14px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(201,161,59,0.28), transparent 70%);
+    background: radial-gradient(circle, rgba(var(--gold-rgb),0.28), transparent 70%);
 }
 #loginPage .login-logo {
     position: relative; width: 80px; height: 80px; object-fit: cover; border-radius: 50%;
@@ -2533,7 +2614,7 @@
 }
 #loginPage .login-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
 #loginPage .login-divider-line { flex: 1; height: 1px; opacity: 0.55; background: linear-gradient(90deg, transparent, var(--lg-brass) 50%, transparent); }
-#loginPage .login-divider-diamond { width: 7px; height: 7px; flex-shrink: 0; background: var(--lg-brass); transform: rotate(45deg); box-shadow: 0 0 8px rgba(201,161,59,0.6); }
+#loginPage .login-divider-diamond { width: 7px; height: 7px; flex-shrink: 0; background: var(--lg-brass); transform: rotate(45deg); box-shadow: 0 0 8px rgba(var(--gold-rgb),0.6); }
 #loginPage .login-header h1 { font-family: 'Amiri', serif; font-size: 28px; font-weight: 700; color: var(--lg-parchment); margin: 0 0 6px; }
 #loginPage .login-header p { font-size: 12.5px; line-height: 1.7; color: var(--lg-parchment-dim); }
 
@@ -2554,7 +2635,7 @@
 }
 #loginPage .lg-field.has-toggle input { padding-inline-end: 48px; }
 #loginPage .form-group input::placeholder { color: rgba(244,234,217,0.45); }
-#loginPage .form-group input:focus { outline: none; border-color: var(--lg-brass); background: rgba(201,161,59,0.07); box-shadow: 0 0 0 3px rgba(201,161,59,0.16); }
+#loginPage .form-group input:focus { outline: none; border-color: var(--lg-brass); background: rgba(var(--gold-rgb),0.07); box-shadow: 0 0 0 3px rgba(var(--gold-rgb),0.16); }
 #loginPage .lg-toggle {
     position: absolute; inset-inline-end: 5px; top: 50%; transform: translateY(-50%);
     width: 38px; height: 38px; display: grid; place-items: center; padding: 0;
@@ -2572,15 +2653,15 @@
     margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; font-size: 13.5px; line-height: 1.7; text-align: center;
 }
 #loginPage .error-message { background: rgba(240,128,128,0.10); border: 1px solid rgba(240,128,128,0.35); color: #f5bcbc; }
-#loginPage .warning-message { background: rgba(201,161,59,0.10); border: 1px solid rgba(201,161,59,0.4); color: var(--lg-brass-bright); }
+#loginPage .warning-message { background: rgba(var(--gold-rgb),0.10); border: 1px solid rgba(var(--gold-rgb),0.4); color: var(--lg-brass-bright); }
 
 /* الأزرار */
 #loginPage .btn-login {
     width: 100%; height: 48px; padding: 0; font-size: 16px; font-weight: 700; color: #1a1305;
-    background: linear-gradient(135deg, var(--lg-brass), #a9822c); border: none; border-radius: 10px;
-    box-shadow: 0 10px 24px rgba(201,161,59,0.25); cursor: pointer; transition: box-shadow .25s, background .25s, transform .25s;
+    background: linear-gradient(135deg, var(--lg-brass), var(--gold-dark)); border: none; border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(var(--gold-rgb),0.25); cursor: pointer; transition: box-shadow .25s, background .25s, transform .25s;
 }
-#loginPage .btn-login:hover { background: linear-gradient(135deg, var(--lg-brass-bright), var(--lg-brass)); box-shadow: 0 12px 28px rgba(201,161,59,0.35); transform: translateY(-1px); }
+#loginPage .btn-login:hover { background: linear-gradient(135deg, var(--lg-brass-bright), var(--lg-brass)); box-shadow: 0 12px 28px rgba(var(--gold-rgb),0.35); transform: translateY(-1px); }
 #loginPage .btn-login:active { transform: none; }
 #loginPage .lg-or { display: flex; align-items: center; gap: 12px; margin: 18px 0 14px; font-size: 12px; color: var(--lg-parchment-dim); }
 #loginPage .lg-or::before, #loginPage .lg-or::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
@@ -2591,7 +2672,7 @@
     background: rgba(255,255,255,0.03); border: 1.5px solid var(--lg-ink-700); border-radius: 10px; cursor: pointer; transition: .25s;
 }
 #loginPage .login-qr-btn svg { width: 18px; height: 18px; vertical-align: -4px; margin-inline-end: 7px; }
-#loginPage .login-qr-btn:hover { border-color: var(--lg-brass); color: var(--lg-brass-bright); background: rgba(201,161,59,0.07); }
+#loginPage .login-qr-btn:hover { border-color: var(--lg-brass); color: var(--lg-brass-bright); background: rgba(var(--gold-rgb),0.07); }
 #loginPage button:focus-visible { outline: 2px solid var(--lg-brass-bright); outline-offset: 2px; }
 
 /* التذييل */
@@ -2612,9 +2693,9 @@
 #loginPage .lg-author { font-size: 11.5px; color: var(--lg-brass-bright); }
 #loginPage .login-install-btn {
     padding: 8px 18px; font-size: 12px; font-weight: 700; color: var(--lg-brass-bright);
-    background: rgba(201,161,59,0.1); border: 1px solid var(--lg-brass); border-radius: 20px; cursor: pointer;
+    background: rgba(var(--gold-rgb),0.1); border: 1px solid var(--lg-brass); border-radius: 20px; cursor: pointer;
 }
-#loginPage .login-install-btn:hover { background: rgba(201,161,59,0.2); }
+#loginPage .login-install-btn:hover { background: rgba(var(--gold-rgb),0.2); }
 
 @media (prefers-reduced-motion: reduce) { #loginPage .login-card, #loginPage .login-card.lg-shake { animation: none !important; } }
 @media (max-width: 420px) {
@@ -2623,6 +2704,34 @@
     #loginPage .login-header h1 { font-size: 25px; }
 }
 .private-notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#f7971e,#ffd200);color:#ffff00;padding:12px 25px;border-radius:25px;box-shadow:0 10px 30px rgba(247,151,30,0.5);font-size:14px;font-weight:bold;display:flex;align-items:center;gap:10px;cursor:pointer;animation:slideDownNotify 0.4s ease,fadeOutNotify 0.5s ease 4.5s forwards;direction:rtl}.private-notification .notify-icon{font-size:20px;animation:bounceNotify 0.6s ease infinite alternate}.private-notification .notify-text{flex:1}.private-notification .notify-close{background:rgba(0,0,0,0.2);border:none;color:#ffff00;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:bold}.private-notification .notify-close:hover{background:rgba(0,0,0,0.4);color:white}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:80px;opacity:1}}@keyframes fadeOutNotify{from{opacity:1}to{opacity:0;top:-50px}}@keyframes bounceNotify{from{transform:translateY(0)}to{transform:translateY(-5px)}}@media(max-width:600px){.private-notification{width:90%;font-size:12px;padding:10px 18px;top:60px}@keyframes slideDownNotify{from{top:-50px;opacity:0}to{top:60px;opacity:1}}}
+
+/* ========== واجهة اختيار الثيم ========== */
+.theme-fab { position: fixed; top: 14px; left: 14px; z-index: 50; width: 42px; height: 42px; border-radius: 50%;
+    border: 2px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-size: 20px;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.18); transition: .3s; }
+.theme-fab:hover { transform: scale(1.1) rotate(15deg); border-color: var(--input-focus); }
+#themeModal { display:none; position:fixed; inset:0; background: var(--modal-overlay); z-index:100001;
+    align-items:center; justify-content:center; padding:16px; }
+#themeModal.open { display:flex; }
+#themeModal .theme-box { background: var(--card-bg); color: var(--text-color); width:100%; max-width:460px; max-height:90vh;
+    overflow-y:auto; border-radius:20px; padding:20px; direction:rtl; box-shadow:0 20px 50px rgba(0,0,0,.4); animation: fadeIn .3s ease; }
+#themeModal .theme-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+#themeModal .theme-head h3 { margin:0; font-size:18px; }
+#themeModal .theme-close { background:#e53e3e; color:#fff; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:16px; }
+.theme-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+.theme-card { border:2px solid var(--border-color); border-radius:14px; padding:10px; cursor:pointer; background:var(--result-card-bg);
+    transition:.25s; text-align:center; position:relative; }
+.theme-card:hover { transform:translateY(-3px); border-color:var(--input-focus); }
+.theme-card.active { border-color:var(--input-focus); box-shadow:0 0 0 3px rgba(var(--primary-rgb),.25); }
+.theme-card.active::after { content:"✓"; position:absolute; top:6px; left:8px; background:var(--input-focus); color:#fff;
+    width:20px; height:20px; border-radius:50%; font-size:12px; line-height:20px; }
+.theme-preview { height:46px; border-radius:10px; margin-bottom:8px; display:flex; overflow:hidden; border:1px solid rgba(0,0,0,.12); }
+.theme-preview span { flex:1; }
+.theme-card .theme-name { font-size:13px; font-weight:bold; }
+.theme-mode-row { display:flex; gap:10px; margin-top:16px; }
+.theme-mode-row button { flex:1; padding:11px; border-radius:10px; border:2px solid var(--border-color); background:var(--result-card-bg);
+    color:var(--text-color); font-weight:bold; font-size:14px; cursor:pointer; transition:.25s; }
+.theme-mode-row button.active { border-color:var(--input-focus); background:var(--input-focus); color:#fff; }
 </style>
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -2774,20 +2883,20 @@
     animation: loSpin var(--spd, 1.4s) linear infinite;
 }
 #loadingOverlay .lo-ring-1 {
-    border-top-color: #667eea;
-    border-right-color: rgba(102,126,234,0.3);
+    border-top-color: var(--primary);
+    border-right-color: rgba(var(--primary-rgb),0.3);
     --spd: 1.2s;
 }
 #loadingOverlay .lo-ring-2 {
     inset: 8px;
-    border-bottom-color: #764ba2;
-    border-left-color: rgba(118,75,162,0.3);
+    border-bottom-color: var(--primary-2);
+    border-left-color: rgba(var(--primary-2-rgb),0.3);
     --spd: 1.8s;
     animation-direction: reverse;
 }
 #loadingOverlay .lo-ring-3 {
     inset: 16px;
-    border-top-color: #a78bfa;
+    border-top-color: var(--primary-light);
     --spd: 2.4s;
 }
 #loadingOverlay .lo-icon-center {
@@ -2838,10 +2947,10 @@
 #loadingOverlay #loadingBar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #667eea, #a78bfa, #764ba2);
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary-2));
     border-radius: 20px;
     transition: width 0.4s ease;
-    box-shadow: 0 0 10px rgba(102,126,234,0.7);
+    box-shadow: 0 0 10px rgba(var(--primary-rgb),0.7);
 }
 
 /* نص الحالة */
@@ -2863,14 +2972,14 @@
 #loadingOverlay .lo-dot {
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: rgba(102,126,234,0.6);
+    background: rgba(var(--primary-rgb),0.6);
     animation: loDot 1.4s ease-in-out infinite;
 }
 #loadingOverlay .lo-dot:nth-child(2) { animation-delay: 0.2s; }
 #loadingOverlay .lo-dot:nth-child(3) { animation-delay: 0.4s; }
 @keyframes loDot {
     0%,80%,100% { transform: scale(0.7); opacity:0.4; }
-    40%          { transform: scale(1.2); opacity:1;   background:#a78bfa; }
+    40%          { transform: scale(1.2); opacity:1;   background:var(--primary-light); }
 }
 </style>
 
@@ -2922,6 +3031,7 @@
 })();
 </script>
     <div id="loginPage" class="login-container">
+        <button class="theme-fab" onclick="openThemeModal()" title="تغيير الثيم والألوان">🎨</button>
         <div class="login-card">
             <div class="login-header">
                 <div class="login-emblem">
@@ -2975,7 +3085,7 @@
             <div class="lg-foot">
                 <div class="lg-foot-row">
                     <div id="loginStatusIndicator" class="login-status-indicator login-status-online">متصل بالإنترنت</div>
-                    <span class="lg-ver"><span id="versionBlink">الإصدار 2.2.0</span></span>
+                    <span class="lg-ver"><span id="versionBlink">الإصدار 2.2.1</span></span>
                 </div>
                 <button id="installPwaBtn" onclick="installPWA()" class="login-install-btn" style="display:none;">📲 تثبيت التطبيق</button>
                 <div class="lg-author">برمجة#المقدم / فيصل البريدان</div>
@@ -3033,9 +3143,9 @@
     <div id="mainMenu" class="main-menu">
         <div class="menu-card">
             <div class="program-header">
-                <img src="logo.png" alt="شعار" style="width:62px;height:62px;object-fit:cover;border-radius:50%;border:2px solid #c9a13b;box-shadow:0 4px 14px rgba(0,0,0,0.4);margin-bottom:10px;">
+                <img src="logo.png" alt="شعار" style="width:62px;height:62px;object-fit:cover;border-radius:50%;border:2px solid var(--gold);box-shadow:0 4px 14px rgba(0,0,0,0.4);margin-bottom:10px;">
                 <div class="program-name">إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب</div>
-                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.2.0</div>
+                <div class="program-name-sub">👨‍💼 برمجة: المقدم / فيصل البريدان &nbsp;|&nbsp; 📌 الإصدار 2.2.1</div>
             </div>
             <div class="user-bar">
                 <div class="user-info">
@@ -3044,7 +3154,8 @@
                     <span class="user-role" id="userRole"></span>
                     <span class="online-indicator" id="onlineIndicator">🟢 متصل</span>
                     <span class="sync-status" id="syncStatus">☁️ متزامن</span>
-                    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>           
+                    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="تفعيل/إيقاف الوضع المظلم">🌙</button>
+                    <button class="dark-mode-toggle" onclick="openThemeModal()" title="تغيير الثيم والألوان">🎨</button>           
 <button class="dark-mode-toggle" onclick="openTimerSettings()" title="إعدادات التايمر" style="font-size: 14px;">⏰</button>         
 <span id="logoutTimeDisplay" style="background: #fed7d7; color: #c53030; padding: 5px 12px; border-radius: 20px; font-size: 11px; direction: rtl; font-weight: bold;">
     🚪 الإغلاق: <span id="logoutTimeValue">--:--:--</span>
@@ -3258,7 +3369,7 @@
                         cursor: pointer;
                         transition: border-color 0.2s, background 0.2s;
                         background: var(--input-bg);
-                    " onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    " onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border-color)'">
                         <div style="font-size: 32px;">📎</div>
                         <div style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">اضغط لاختيار صور أو ملفات PDF</div>
                         <div style="font-size: 11px; color: #aaa; margin-top: 4px;">يمكن اختيار أكثر من ملف</div>
@@ -3266,7 +3377,7 @@
                     <input type="file" id="martyrFilesInput" multiple accept="image/*,.pdf" style="display:none" onchange="previewMartyrFiles(this)">
                     <div id="martyrExistingFiles" style="margin-top: 10px;"></div>
                     <div id="martyrFilesPreview" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    <div id="martyrFilesUploadProgress" style="display:none; margin-top: 8px; font-size: 13px; color: #667eea;">⏳ جارٍ رفع الملفات...</div>
+                    <div id="martyrFilesUploadProgress" style="display:none; margin-top: 8px; font-size: 13px; color: var(--primary);">⏳ جارٍ رفع الملفات...</div>
                 </div>
             </div>
             <button class="btn" id="submitMartyrBtn" onclick="addMartyr()">➕ إضافة</button>
@@ -3278,8 +3389,8 @@
 
         <!-- رأس الشاشة -->
         <div class="search-header-bar">
-            <h1 style="font-family:'Amiri',serif;font-size:22px;color:#f4ead9;margin:0;position:relative;">
-                🔍 <span style="color:#c9a13b;">خدمة الاستعلام</span>
+            <h1 style="font-family:'Amiri',serif;font-size:22px;color:var(--cream);margin:0;position:relative;">
+                🔍 <span style="color:var(--gold);">خدمة الاستعلام</span>
             </h1>
             <div class="search-header-actions">
                 <button class="btn btn-back" onclick="_confirmLogout()">🚪 تسجيل خروج</button>
@@ -3287,9 +3398,9 @@
         </div>
 
         <!-- شريط اسم الجهة -->
-        <div style="padding:10px 28px;background:rgba(201,161,59,0.06);border-bottom:1px solid rgba(201,161,59,0.12);text-align:center;">
-            <img src="logo.png" alt="شعار" style="width:46px;height:46px;object-fit:cover;border-radius:50%;border:2px solid #c9a13b;vertical-align:middle;margin-left:10px;">
-            <span style="font-family:'Amiri',serif;font-size:13.5px;color:#b6ab95;vertical-align:middle;">
+        <div style="padding:10px 28px;background:rgba(var(--gold-rgb),0.06);border-bottom:1px solid rgba(var(--gold-rgb),0.12);text-align:center;">
+            <img src="logo.png" alt="شعار" style="width:46px;height:46px;object-fit:cover;border-radius:50%;border:2px solid var(--gold);vertical-align:middle;margin-left:10px;">
+            <span style="font-family:'Amiri',serif;font-size:13.5px;color:var(--cream-dim);vertical-align:middle;">
                 إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب — فرع المرقب
             </span>
         </div>
@@ -3316,7 +3427,7 @@
             <div class="form-group">
                 <label>📷 بحث بالباركود</label>
                 <div style="display:flex;gap:10px;margin-bottom:10px;">
-                    <button onclick="openCameraScanner('inquiry')" style="flex:1;padding:14px;background:linear-gradient(135deg,#142235,#25395a);color:#ecc873;border:1.5px solid rgba(201,161,59,0.4);border-radius:12px;cursor:pointer;font-size:14px;font-weight:bold;font-family:'Cairo',sans-serif;">
+                    <button onclick="openCameraScanner('inquiry')" style="flex:1;padding:14px;background:linear-gradient(135deg,var(--navy-1),var(--navy-3));color:var(--gold-light);border:1.5px solid rgba(var(--gold-rgb),0.4);border-radius:12px;cursor:pointer;font-size:14px;font-weight:bold;font-family:'Cairo',sans-serif;">
                         📸 فتح الكاميرا
                     </button>
                     <button onclick="document.getElementById('inquiryBarcodeInput').click()" style="flex:1;padding:14px;background:var(--input-bg);color:var(--text-secondary);border:1.5px solid var(--border-color);border-radius:12px;cursor:pointer;font-size:14px;font-weight:bold;font-family:'Cairo',sans-serif;">
@@ -3386,7 +3497,7 @@
                 <div class="form-group" id="searchBarcodeDiv" style="display:none;">
                     <label>📷 قراءة الباركود</label>
                     <div style="display:flex; gap:10px; margin-bottom:10px;">
-                        <button onclick="openCameraScanner('search')" style="flex:1; padding:14px; background:linear-gradient(135deg,#142235,#25395a); color:#ecc873; border:1.5px solid rgba(201,161,59,0.4); border-radius:12px; cursor:pointer; font-size:14px; font-weight:bold; font-family:'Cairo',sans-serif;">
+                        <button onclick="openCameraScanner('search')" style="flex:1; padding:14px; background:linear-gradient(135deg,var(--navy-1),var(--navy-3)); color:var(--gold-light); border:1.5px solid rgba(var(--gold-rgb),0.4); border-radius:12px; cursor:pointer; font-size:14px; font-weight:bold; font-family:'Cairo',sans-serif;">
                             📸 فتح الكاميرا
                         </button>
                         <button onclick="document.getElementById('searchBarcodeInput').click()" style="flex:1; padding:14px; background:var(--input-bg); color:var(--text-secondary); border:1.5px solid var(--border-color); border-radius:12px; cursor:pointer; font-size:14px; font-weight:bold; font-family:'Cairo',sans-serif;">
@@ -3472,8 +3583,8 @@
                 </button>
             </div>
             <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);">
-                🔑 الرمز الحالي: <span id="currentPinDisplay" style="color:#667eea;font-weight:bold;">••••</span>
-                <button onclick="toggleShowPin()" style="margin-right:8px;background:none;border:none;color:#667eea;cursor:pointer;font-size:12px;">👁 إظهار</button>
+                🔑 الرمز الحالي: <span id="currentPinDisplay" style="color:var(--primary);font-weight:bold;">••••</span>
+                <button onclick="toggleShowPin()" style="margin-right:8px;background:none;border:none;color:var(--primary);cursor:pointer;font-size:12px;">👁 إظهار</button>
             </div>
         </div>
     </div>
@@ -3619,7 +3730,7 @@
             </div>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn" onclick="saveTimerSettings()" style="flex: 1; background: #11998e; font-size: 16px;">💾 حفظ الإعدادات</button>
-                <button class="btn" onclick="resetTimerToDefault()" style="flex: 1; background: #667eea; font-size: 16px;">🔄 الوضع الافتراضي</button>
+                <button class="btn" onclick="resetTimerToDefault()" style="flex: 1; background: var(--primary); font-size: 16px;">🔄 الوضع الافتراضي</button>
             </div>
             <p style="text-align: center; margin-top: 12px; font-size: 11px; color: #888;">
                 ⏳ الافتراضي: الرجوع 1 دقيقة | 🚪 الإغلاق 2 دقيقة
@@ -3648,10 +3759,10 @@
             <div style="border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 5px;">
                 <p style="font-size: 13px; color: #555; margin-bottom: 10px; font-weight: bold;">📷 قراءة الباركود</p>
                 <div style="display:flex; gap:8px; margin-bottom:8px;">
-                    <button onclick="openCameraScanner('modal')" style="flex:1; padding:10px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:10px; cursor:pointer; font-size:13px; font-weight:bold;">
+                    <button onclick="openCameraScanner('modal')" style="flex:1; padding:10px; background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:white; border:none; border-radius:10px; cursor:pointer; font-size:13px; font-weight:bold;">
                         📸 فتح الكاميرا
                     </button>
-                    <button onclick="document.getElementById('barcodeImageUpload').click()" style="flex:1; padding:10px; background:#f0f4ff; color:#667eea; border:2px solid #667eea; border-radius:10px; cursor:pointer; font-size:13px; font-weight:bold;">
+                    <button onclick="document.getElementById('barcodeImageUpload').click()" style="flex:1; padding:10px; background:#f0f4ff; color:var(--primary); border:2px solid var(--primary); border-radius:10px; cursor:pointer; font-size:13px; font-weight:bold;">
                         🖼️ رفع صورة
                     </button>
                 </div>
@@ -3662,7 +3773,7 @@
                 </div>
             </div>
             <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-                <button onclick="printBarcodeCard()" style="background: #667eea; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold;">🖨️ طباعة</button>
+                <button onclick="printBarcodeCard()" style="background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold;">🖨️ طباعة</button>
                 <button onclick="closeBarcodeModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 16px;">إغلاق</button>
             </div>
         </div>
@@ -3680,7 +3791,7 @@
             </div>
             <p style="font-size: 11px; color: #b91c1c; margin-bottom: 10px;">⚠️ يحتوي هذا الرمز على كلمة المرور، احتفظ به بشكل آمن ولا تشاركه مع أحد.</p>
             <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
-                <button onclick="printUserQRCard()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">🖨️ طباعة</button>
+                <button onclick="printUserQRCard()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">🖨️ طباعة</button>
                 <button onclick="downloadUserQRCard()" style="background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">💾 حفظ</button>
                 <button onclick="closeUserQRModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px;">إغلاق</button>
             </div>
@@ -3715,7 +3826,7 @@
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: center;">
-                <button id="cpSaveBtn" onclick="confirmChangePassword()" style="background: #667eea; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">💾 حفظ</button>
+                <button id="cpSaveBtn" onclick="confirmChangePassword()" style="background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold;">💾 حفظ</button>
                 <button onclick="closeChangePasswordModal()" style="background: #e53e3e; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 14px;">إغلاق</button>
             </div>
         </div>
@@ -3730,7 +3841,7 @@
     <div id="editUserRoles" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
     
     <div id="subPermissionsDiv" style="display:none; margin-bottom:12px; padding:12px; background:var(--user-bar-bg); border-radius:10px;">
-      <p style="font-weight:bold; color:#667eea; margin-bottom:8px; text-align:center; font-size:14px;">⚙️ تحديد الصلاحيات الفرعية</p>
+      <p style="font-weight:bold; color:var(--primary); margin-bottom:8px; text-align:center; font-size:14px;">⚙️ تحديد الصلاحيات الفرعية</p>
       <div id="subPermissionsCheckboxes" style="display:flex; flex-direction:column; gap:6px;"></div>
     </div>
 
@@ -5520,7 +5631,7 @@ function showUserQRCode(userId) {
         document.getElementById('userQRContent').innerHTML = `
             <img src="${url}" style="width:220px;height:220px;display:block;margin:0 auto;" alt="QR">
             <p style="font-size:16px;font-weight:bold;color:#333;margin-top:12px;">${user.username}</p>
-            <p style="font-size:12px;color:#667eea;font-weight:bold;">${getRoleName(user.role)}</p>
+            <p style="font-size:12px;color:var(--primary);font-weight:bold;">${getRoleName(user.role)}</p>
         `;
     });
 }
@@ -5912,7 +6023,7 @@ function openSubPermissionsForAdd(role) {
     }
     
     document.getElementById('editUserName').textContent = 'إضافة مستخدم جديد: ' + pendingUserData.username;
-    document.getElementById('editUserRoles').innerHTML = `<p style="text-align:center; color:#667eea;">الصلاحية: ${getRoleName(role)}</p>`;
+    document.getElementById('editUserRoles').innerHTML = `<p style="text-align:center; color:var(--primary);">الصلاحية: ${getRoleName(role)}</p>`;
     
     const modal = document.getElementById('editUserModal');
     modal.style.display = 'flex';
@@ -7260,7 +7371,7 @@ function exportAuditLogToPDF() {
     '<h2>إدارة شؤون الشهداء والأسرى والمفقودين وجرحى الحرب</h2>' +
     '<h3>📋 سجل التغييرات - فرع المرقب</h3>' +
     '<p>📅 تاريخ التصدير: ' + currentDate + '</p>' +
-   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.2.0</p>' +
+   '<p>👨‍💼 برمجة: المقدم / فيصل البريدان | الإصدار 2.2.1</p>' +
     '</div>' +
     '<div class="stats">📊 إجمالي عدد السجلات: <strong>' + auditLogs.length + '</strong> سجل تغيير</div>' +
     '<table>' +
@@ -7280,7 +7391,7 @@ function exportAuditLogToPDF() {
     '</table>' +
     '<div class="footer">' +
     '<p>تم إنشاء هذا التقرير بواسطة نظام إدارة شؤون الشهداء</p>' +
-   '<p>فرع المرقب - الإصدار 2.2.0</p>' +
+   '<p>فرع المرقب - الإصدار 2.2.1</p>' +
     '</div>' +
     '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
     '</body>' +
@@ -7551,7 +7662,7 @@ function showBarcodeNameReport(kind) {
         sorted.forEach((m, i) => {
             const cardBarcodeId = `bcname_${i}_${Date.now()}`;
             html += `
-            <div class="barcode-name-card" style="border:2px solid #667eea; border-radius:14px; padding:14px 10px; text-align:center; background:var(--result-card-bg,#f8f9fa);">
+            <div class="barcode-name-card" style="border:2px solid var(--primary); border-radius:14px; padding:14px 10px; text-align:center; background:var(--result-card-bg,#f8f9fa);">
                 <div style="font-size:13px; color:#888; margin-bottom:6px;">#${i + 1}</div>
                 <svg id="${cardBarcodeId}" data-barcode-value="${m.id || ''}" style="width:100%; max-width:180px; height:50px;"></svg>
                 <div style="font-size:15px; font-weight:bold; color:#333; margin-top:6px;">${m.name || '-'}</div>
@@ -9340,7 +9451,7 @@ function showMartyrsBreakdown() {
             const rowTotal = counts.reduce((a,b) => a+b, 0);
             html += `<tr style="border-bottom:1px solid var(--border-color);">
                 <td style="padding:7px 8px;font-weight:600;">${cat.icon} ${cat.label} (${rowTotal})</td>
-                ${counts.map(c => `<td style="padding:7px 8px;text-align:center;font-weight:bold;color:${c>0?'#667eea':'var(--text-secondary)'};">${c}</td>`).join('')}
+                ${counts.map(c => `<td style="padding:7px 8px;text-align:center;font-weight:bold;color:${c>0?'var(--primary)':'var(--text-secondary)'};">${c}</td>`).join('')}
             </tr>`;
         });
 
@@ -9484,8 +9595,8 @@ function displayMemoryStats() {
         .new-stats-total .nst-count {
             font-size: 20px;
             font-weight: 800;
-            color: #667eea;
-            background: rgba(102,126,234,0.1);
+            color: var(--primary);
+            background: rgba(var(--primary-rgb),0.1);
             padding: 2px 14px;
             border-radius: 20px;
         }
@@ -9730,7 +9841,7 @@ function showSalaryEditForm(martyrId) {
     overlay.innerHTML = `
         <div style="background: var(--card-bg, #fff); border-radius: 16px; padding: 24px;
                     width: 92%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-            <h3 style="text-align:center; color:#667eea; margin-bottom:16px;">💰 تعديل المرتب والحالة</h3>
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:16px;">💰 تعديل المرتب والحالة</h3>
             <div style="background: var(--bg-secondary, #f7f8fa); border-radius:10px; padding:12px; margin-bottom:16px; font-size:14px; line-height:2;">
                 <div>👤 <strong>${martyr.name}</strong></div>
                 <div>⭐ ${martyr.rank} &nbsp;|&nbsp; 🕊️ ${martyr.status}</div>
@@ -9793,7 +9904,7 @@ function showSalaryEditForm(martyrId) {
 
             <div style="display:flex; gap:10px;">
                 <button onclick="confirmSalaryEdit('${martyrId}')"
-                    style="flex:1; padding:12px; background:#667eea; color:white; border:none;
+                    style="flex:1; padding:12px; background:var(--primary); color:white; border:none;
                            border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer;">
                     ✅ حفظ
                 </button>
@@ -9818,8 +9929,8 @@ function salarySelectOption(btn, group, value) {
         b.style.background = 'var(--card-bg, #fff)';
         b.style.color = 'var(--text-primary, #333)';
     });
-    btn.style.borderColor = '#667eea';
-    btn.style.background = '#667eea';
+    btn.style.borderColor = 'var(--primary)';
+    btn.style.background = 'var(--primary)';
     btn.style.color = 'white';
     btn.dataset.selected = value;
 
@@ -10368,7 +10479,7 @@ async function showBlockedDevices() {
         ? `<tr><td colspan="3" style="text-align:center;padding:16px;color:#999;">لا توجد عناوين محظورة</td></tr>`
         : blockedIPs.map((ip, i) => `
             <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
-                <td style="padding:10px;text-align:center;color:#667eea;font-weight:bold;">${i+1}</td>
+                <td style="padding:10px;text-align:center;color:var(--primary);font-weight:bold;">${i+1}</td>
                 <td style="padding:10px;text-align:center;font-family:monospace;">${ip}</td>
                 <td style="padding:10px;text-align:center;">
                     <button onclick="confirmUnblockIP('${ip}')"
@@ -10382,7 +10493,7 @@ async function showBlockedDevices() {
         ? `<tr><td colspan="3" style="text-align:center;padding:16px;color:#999;">لا يوجد مستخدمون محظورون</td></tr>`
         : blockedUsers.map((u, i) => `
             <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
-                <td style="padding:10px;text-align:center;color:#667eea;font-weight:bold;">${i+1}</td>
+                <td style="padding:10px;text-align:center;color:var(--primary);font-weight:bold;">${i+1}</td>
                 <td style="padding:10px;text-align:center;">👤 ${u}</td>
                 <td style="padding:10px;text-align:center;">
                     <button onclick="confirmUnblockUser('${u}')"
@@ -10444,7 +10555,7 @@ async function showBlockedDevices() {
 
             <div style="padding:16px 20px;text-align:center;">
                 <button onclick="document.getElementById('blockModal').remove()"
-                    style="padding:10px 36px;background:#667eea;color:white;border:none;
+                    style="padding:10px 36px;background:var(--primary);color:white;border:none;
                            border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;">
                     ✅ إغلاق
                 </button>
@@ -10791,7 +10902,7 @@ function previewImportExcel() {
                     <strong>📋 عينة من البيانات:</strong>
                     <div style="overflow-x:auto;margin-top:8px;">
                         <table style="width:100%;border-collapse:collapse;font-size:12px;">
-                            <tr style="background:#667eea;color:white;">
+                            <tr style="background:var(--primary);color:white;">
                                 <th style="padding:6px;text-align:center;">الرقم</th>
                                 <th style="padding:6px;text-align:center;">الاسم</th>
                                 <th style="padding:6px;text-align:center;">الحالة</th>
@@ -10910,11 +11021,11 @@ async function showDeviceLogs() {
             const color = typeColor(log.deviceType);
             const photoCell = log.photo
                 ? `<td style="padding:6px;text-align:center;">
-                       <img src="${log.photo}" style="width:60px;height:45px;object-fit:cover;border-radius:8px;border:2px solid #667eea;cursor:pointer;display:block;margin:0 auto 5px;"
+                       <img src="${log.photo}" style="width:60px;height:45px;object-fit:cover;border-radius:8px;border:2px solid var(--primary);cursor:pointer;display:block;margin:0 auto 5px;"
                             onclick="this.style.transform=this.style.transform?'':'scale(3.5)';this.style.zIndex=this.style.zIndex?'':'999';this.style.position=this.style.position?'':'relative';"
                             title="اضغط لتكبير الصورة">
                        <a href="${log.photo}" download="دخول_${(log.username||'مجهول').replace(/\s/g,'_')}_${new Date(log.timestamp).toLocaleDateString('ar-SA').replace(/\//g,'-')}.jpg"
-                          style="display:inline-block;padding:3px 10px;background:linear-gradient(135deg,#142235,#25395a);color:#ecc873;border-radius:6px;font-size:11px;font-weight:bold;text-decoration:none;border:1px solid rgba(201,161,59,0.35);">
+                          style="display:inline-block;padding:3px 10px;background:linear-gradient(135deg,var(--navy-1),var(--navy-3));color:var(--gold-light);border-radius:6px;font-size:11px;font-weight:bold;text-decoration:none;border:1px solid rgba(var(--gold-rgb),0.35);">
                            💾 تحميل
                        </a>
                    </td>`
@@ -10922,7 +11033,7 @@ async function showDeviceLogs() {
 
             return `
                 <tr style="background:${i%2===0?'var(--bg-secondary,#f7f8fa)':'var(--card-bg,#fff)'}; border-bottom:1px solid #eee;">
-                    <td style="padding:8px 6px;text-align:center;font-weight:bold;color:#667eea;">${i+1}</td>
+                    <td style="padding:8px 6px;text-align:center;font-weight:bold;color:var(--primary);">${i+1}</td>
                     <td style="padding:8px 6px;text-align:center;font-weight:bold;">👤 ${log.username||'غير معروف'}</td>
                     <td style="padding:8px 6px;text-align:center;color:${color};white-space:nowrap;">${log.deviceType||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.os||'-'}</td>
@@ -10933,7 +11044,7 @@ async function showDeviceLogs() {
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.ram||'-'} / ${log.cpu||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.screenSize||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">${log.timezone||'-'}</td>
-                    <td style="padding:8px 6px;text-align:center;font-family:monospace;font-size:10px;color:#764ba2;">${log.fingerprint||'-'}</td>
+                    <td style="padding:8px 6px;text-align:center;font-family:monospace;font-size:10px;color:var(--primary-2);">${log.fingerprint||'-'}</td>
                     <td style="padding:8px 6px;text-align:center;font-size:11px;">
                         ${log.geo
                             ? `<a href="${log.geo.mapsUrl}" target="_blank"
@@ -10986,7 +11097,7 @@ async function showDeviceLogs() {
             <div style="overflow-x:auto; padding:0;">
                 <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:1400px;">
                     <thead>
-                        <tr style="background:linear-gradient(135deg,#667eea,#764ba2);">
+                        <tr style="background:linear-gradient(135deg,var(--primary),var(--primary-2));">
                             <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">#</th>
                             <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">👤 المستخدم</th>
                             <th style="padding:10px 8px;color:white;text-align:center;white-space:nowrap;">📱 الجهاز</th>
@@ -11011,7 +11122,7 @@ async function showDeviceLogs() {
             <!-- تذييل -->
             <div style="padding:14px 20px;text-align:center;border-top:1px solid #eee;">
                 <button onclick="document.getElementById('deviceLogsOverlay').remove()"
-                    style="padding:10px 40px;background:#667eea;color:white;border:none;border-radius:10px;
+                    style="padding:10px 40px;background:var(--primary);color:white;border:none;border-radius:10px;
                            font-size:14px;font-weight:bold;cursor:pointer;">
                     ✅ إغلاق
                 </button>
@@ -12031,7 +12142,7 @@ function _renderMartyrFilesModalContent(martyrId) {
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
                 <div>
                     <div style="font-size:18px;font-weight:800;">📁 ملف الرقم العسكري</div>
-                    <div style="font-size:13px;color:#667eea;font-weight:700;">${martyrId} — ${martyr.name}</div>
+                    <div style="font-size:13px;color:var(--primary);font-weight:700;">${martyrId} — ${martyr.name}</div>
                 </div>
                 <button onclick="document.getElementById('martyrFilesModal').style.display='none';"
                     style="background:var(--border-color);border:none;border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer;color:var(--text-color);">✕</button>
@@ -12040,10 +12151,10 @@ function _renderMartyrFilesModalContent(martyrId) {
             ${canAddFiles ? `
             <div style="margin-top:16px;border-top:1px solid var(--border-color);padding-top:14px;">
                 <button onclick="addFilesToMartyrModal('${martyrId}')"
-                    style="width:100%;padding:12px;border-radius:12px;border:2px dashed #667eea;background:rgba(102,126,234,0.07);color:#667eea;font-size:14px;font-weight:700;cursor:pointer;">
+                    style="width:100%;padding:12px;border-radius:12px;border:2px dashed var(--primary);background:rgba(var(--primary-rgb),0.07);color:var(--primary);font-size:14px;font-weight:700;cursor:pointer;">
                     ➕ إضافة ملف جديد (صورة أو PDF)
                 </button>
-                <div id="martyrModalUploadProgress" style="display:none;text-align:center;padding:10px;font-size:13px;color:#667eea;">⏳ جارٍ الرفع...</div>
+                <div id="martyrModalUploadProgress" style="display:none;text-align:center;padding:10px;font-size:13px;color:var(--primary);">⏳ جارٍ الرفع...</div>
             </div>` : ''}
         </div>`;
     modal.style.display = 'flex';
@@ -12680,7 +12791,7 @@ function readBarcodeFromImage(input) {
     const status = document.getElementById('barcodeReadStatus');
     
     preview.style.display = 'block';
-    status.style.color = '#667eea';
+    status.style.color = 'var(--primary)';
     status.textContent = '⏳ جاري قراءة الباركود...';
     
     const reader = new FileReader();
@@ -12735,7 +12846,7 @@ function readBarcodeFromImageForSearch(input) {
     const status = document.getElementById('searchBarcodeStatus');
     
     preview.style.display = 'block';
-    status.style.color = '#667eea';
+    status.style.color = 'var(--primary)';
     status.textContent = '⏳ جاري قراءة الباركود...';
     window._lastScannedBarcodeNumber = null;
     
@@ -12781,7 +12892,7 @@ function readBarcodeFromImageForInquiry(input) {
     const status = document.getElementById('inquiryBarcodeStatus');
     
     preview.style.display = 'block';
-    status.style.color = '#667eea';
+    status.style.color = 'var(--primary)';
     status.textContent = '⏳ جاري قراءة الباركود...';
     
     const reader = new FileReader();
@@ -13044,6 +13155,60 @@ function closeCameraScanner() {
 // ========== نهاية كاميرا الباركود ==========
    </script>
 
+
+<!-- ========== مودال اختيار الثيم ========== -->
+<div id="themeModal" onclick="if(event.target===this)closeThemeModal()">
+    <div class="theme-box">
+        <div class="theme-head">
+            <h3>🎨 ثيمات البرنامج</h3>
+            <button class="theme-close" onclick="closeThemeModal()">✕</button>
+        </div>
+        <div class="theme-grid" id="themeGrid"></div>
+        <div class="theme-mode-row">
+            <button id="themeModeLight" onclick="setThemeMode(false)">☀️ فاتح</button>
+            <button id="themeModeDark" onclick="setThemeMode(true)">🌙 مظلم</button>
+        </div>
+    </div>
+</div>
+<script>
+const APP_THEMES = [{"id": "default", "name": "البنفسجي (الأصلي)", "c1": "#667eea", "c2": "#764ba2", "c3": "#142235", "c4": "#c9a13b"}, {"id": "ocean", "name": "المحيط", "c1": "#0ea5e9", "c2": "#0369a1", "c3": "#0c2a43", "c4": "#5ec8e5"}, {"id": "emerald", "name": "الزمرد", "c1": "#10b981", "c2": "#047857", "c3": "#0f2e25", "c4": "#d4af37"}, {"id": "military", "name": "العسكري", "c1": "#6b8e23", "c2": "#3f5212", "c3": "#26301a", "c4": "#c9a13b"}, {"id": "sunset", "name": "الغروب", "c1": "#f97316", "c2": "#dc2626", "c3": "#3a1a12", "c4": "#fbbf24"}, {"id": "rose", "name": "الوردي", "c1": "#ec4899", "c2": "#be185d", "c3": "#3a1230", "c4": "#f4a6c6"}, {"id": "royal", "name": "الذهبي الملكي", "c1": "#b8860b", "c2": "#7a5a0c", "c3": "#2a2210", "c4": "#e2b53c"}, {"id": "slate", "name": "الرمادي الهادئ", "c1": "#475569", "c2": "#1e293b", "c3": "#1e293b", "c4": "#cbd5e1"}];
+function getCurrentTheme() {
+    try { return localStorage.getItem('appTheme') || 'default'; } catch (e) { return 'default'; }
+}
+function applyTheme(id) {
+    if (!APP_THEMES.some(t => t.id === id)) id = 'default';
+    document.documentElement.setAttribute('data-theme', id);
+    try { localStorage.setItem('appTheme', id); } catch (e) {}
+    const t = APP_THEMES.find(x => x.id === id);
+    const meta = document.getElementById('themeColorMeta');
+    if (meta && t) meta.setAttribute('content', t.c1);
+    renderThemeGrid();
+}
+function renderThemeGrid() {
+    const cur = getCurrentTheme();
+    const grid = document.getElementById('themeGrid');
+    if (!grid) return;
+    grid.innerHTML = APP_THEMES.map(t => `
+        <div class="theme-card ${t.id === cur ? 'active' : ''}" onclick="applyTheme('${t.id}')">
+            <div class="theme-preview">
+                <span style="background:${t.c1}"></span><span style="background:${t.c2}"></span>
+                <span style="background:${t.c3}"></span><span style="background:${t.c4}"></span>
+            </div>
+            <div class="theme-name">${t.name}</div>
+        </div>`).join('');
+    const dark = document.body.classList.contains('dark-mode');
+    document.getElementById('themeModeLight').classList.toggle('active', !dark);
+    document.getElementById('themeModeDark').classList.toggle('active', dark);
+}
+function setThemeMode(wantDark) {
+    if (document.body.classList.contains('dark-mode') !== wantDark) toggleDarkMode();
+    renderThemeGrid();
+}
+function openThemeModal() { renderThemeGrid(); document.getElementById('themeModal').classList.add('open'); }
+function closeThemeModal() { document.getElementById('themeModal').classList.remove('open'); }
+applyTheme(getCurrentTheme());
+</script>
+
 <!-- ========== مودال الكاميرا لقراءة الباركود ========== -->
 <div id="cameraScannerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:99999; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
     <div style="width:100%; max-width:420px; direction:rtl;">
@@ -13054,12 +13219,12 @@ function closeCameraScanner() {
         <div style="position:relative; width:100%; border-radius:16px; overflow:hidden; background:#000;">
             <video id="cameraVideo" autoplay playsinline muted style="width:100%; display:block; max-height:60vh; object-fit:cover;"></video>
             <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
-                <div style="width:65%; height:38%; border:3px solid #667eea; border-radius:12px; box-shadow:0 0 0 2000px rgba(0,0,0,0.35); position:relative;">
+                <div style="width:65%; height:38%; border:3px solid var(--primary); border-radius:12px; box-shadow:0 0 0 2000px rgba(0,0,0,0.35); position:relative;">
                     <div style="position:absolute; top:-3px; right:-3px; width:22px; height:22px; border-top:4px solid #fff; border-right:4px solid #fff; border-radius:0 6px 0 0;"></div>
                     <div style="position:absolute; top:-3px; left:-3px; width:22px; height:22px; border-top:4px solid #fff; border-left:4px solid #fff; border-radius:6px 0 0 0;"></div>
                     <div style="position:absolute; bottom:-3px; right:-3px; width:22px; height:22px; border-bottom:4px solid #fff; border-right:4px solid #fff; border-radius:0 0 6px 0;"></div>
                     <div style="position:absolute; bottom:-3px; left:-3px; width:22px; height:22px; border-bottom:4px solid #fff; border-left:4px solid #fff; border-radius:0 0 0 6px;"></div>
-                    <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #667eea, #fff, #667eea, transparent); animation:scanAnim 1.8s linear infinite;"></div>
+                    <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, var(--primary), #fff, var(--primary), transparent); animation:scanAnim 1.8s linear infinite;"></div>
                 </div>
             </div>
             <canvas id="cameraCanvas" style="display:none;"></canvas>
@@ -13067,7 +13232,7 @@ function closeCameraScanner() {
         <p id="cameraStatus" style="color:#ccc; text-align:center; margin:12px 0 8px; font-size:14px;">🔍 وجّه الكاميرا نحو الباركود...</p>
         <div style="display:flex; gap:10px; margin-top:4px;">
             <button onclick="switchCamera()" style="flex:1; padding:12px; background:#2d3748; color:#fff; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold;">🔄 تبديل الكاميرا</button>
-            <button onclick="captureAndScan()" style="flex:1; padding:12px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold;">📷 التقاط</button>
+            <button onclick="captureAndScan()" style="flex:1; padding:12px; background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold;">📷 التقاط</button>
         </div>
         <div id="cameraResult" style="display:none; margin-top:12px; padding:14px; background:#1a2e1a; border-radius:12px; border:2px solid #48bb78; text-align:center;">
             <p style="color:#48bb78; font-size:14px; font-weight:bold; margin:0 0 4px;">✅ تم قراءة الباركود</p>
@@ -13079,7 +13244,7 @@ function closeCameraScanner() {
 @keyframes scanAnim {
     0%   { top: 4%; }
     50%  { top: 88%; }
-    100% { top: 4%; }
+    100% { top: %; }
 }
 </style>
 
